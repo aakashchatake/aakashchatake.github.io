@@ -265,8 +265,8 @@
                 <button onclick="switchTab('team')" class="nav-btn px-6 py-3 rounded-lg font-semibold transition-all hover:bg-gray-100 whitespace-nowrap">
                     👥 Team
                 </button>
-                <button onclick="switchTab('video')" class="nav-btn px-6 py-3 rounded-lg font-semibold transition-all hover:bg-gray-100 whitespace-nowrap">
-                    🎬 Video
+                <button onclick="switchTab('visuals')" class="nav-btn px-6 py-3 rounded-lg font-semibold transition-all hover:bg-gray-100 whitespace-nowrap">
+                    🖼️ Visuals
                 </button>
             </div>
         </div>
@@ -883,212 +883,28 @@
             </div>
         </div>
 
-        <!-- TAB: VIDEO -->
-        <div id="video" class="tab-content hidden">
-            <!-- Hero Section -->
-            <div class="bg-gradient-to-r from-red-600 to-red-700 rounded-xl p-8 text-white shadow-lg mb-8">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <h2 class="text-4xl font-black mb-2">🎬 Apollo AgriGuard</h2>
-                        <p class="text-xl opacity-90">AI-Powered Precision Agriculture for DIPEX 2026</p>
-                    </div>
-                    <div class="text-6xl opacity-20">▶️</div>
-                </div>
-            </div>
-
-            <!-- Video Gallery Grid -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-                
-                <!-- Main YouTube Video -->
-                <div class="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
-                    <div class="bg-gray-900 p-6 text-center">
-                        <div class="aspect-video bg-gray-800 rounded-lg flex items-center justify-center mb-4">
-                            <a href="https://youtu.be/os06aEhzVL0" target="_blank" class="group relative w-full h-full flex items-center justify-center hover:bg-gray-700 transition">
-                                <img src="https://img.youtube.com/vi/os06aEhzVL0/maxresdefault.jpg" alt="Video Thumbnail" class="w-full h-full object-cover absolute inset-0" onerror="this.style.display='none'">
-                                <div class="absolute inset-0 bg-black bg-opacity-30 group-hover:bg-opacity-50 transition flex items-center justify-center">
-                                    <div class="bg-red-600 rounded-full p-4 group-hover:scale-110 transition transform">
-                                        <span class="text-4xl">▶️</span>
+        <!-- TAB: VISUALS -->
+                            <div id="visuals" class="tab-content hidden">
+                                <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-6 mb-8">
+                                    <h2 class="text-2xl font-bold text-gray-800 mb-4">🖼️ Visuals & Gallery</h2>
+                                    <p class="mb-4 text-gray-700">A curated collection of Apollo AgriGuard visuals, field operations, and system highlights. Explore the gallery below for real-world deployment images and key moments from the project.</p>
+                                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                        <img src="assets/images/WhatsApp Image 2025-12-21 at 15.20.14.jpeg" class="rounded-lg shadow hover:scale-105 transition cursor-pointer" alt="Visual 1">
+                                        <img src="assets/images/WhatsApp Image 2025-12-21 at 18.25.54 (1).jpeg" class="rounded-lg shadow hover:scale-105 transition cursor-pointer" alt="Visual 2">
+                                        <img src="assets/images/WhatsApp Image 2025-12-21 at 18.25.54.jpeg" class="rounded-lg shadow hover:scale-105 transition cursor-pointer" alt="Visual 3">
+                                        <img src="assets/images/WhatsApp Image 2025-12-21 at 18.25.55 (1).jpeg" class="rounded-lg shadow hover:scale-105 transition cursor-pointer" alt="Visual 4">
+                                        <img src="assets/images/WhatsApp Image 2025-12-21 at 18.25.55.jpeg" class="rounded-lg shadow hover:scale-105 transition cursor-pointer" alt="Visual 5">
+                                        <img src="assets/images/WhatsApp Image 2025-12-21 at 18.25.56.jpeg" class="rounded-lg shadow hover:scale-105 transition cursor-pointer" alt="Visual 6">
+                                        <img src="assets/images/WhatsApp Image 2025-12-21 at 18.25.57 (1).jpeg" class="rounded-lg shadow hover:scale-105 transition cursor-pointer" alt="Visual 7">
+                                        <img src="assets/images/WhatsApp Image 2025-12-21 at 18.25.57.jpeg" class="rounded-lg shadow hover:scale-105 transition cursor-pointer" alt="Visual 8">
+                                        <img src="assets/images/WhatsApp Image 2025-12-21 at 18.25.58 (1).jpeg" class="rounded-lg shadow hover:scale-105 transition cursor-pointer" alt="Visual 9">
+                                        <img src="assets/images/WhatsApp Image 2025-12-21 at 18.25.58 (2).jpeg" class="rounded-lg shadow hover:scale-105 transition cursor-pointer" alt="Visual 10">
+                                        <img src="assets/images/WhatsApp Image 2025-12-21 at 18.25.58.jpeg" class="rounded-lg shadow hover:scale-105 transition cursor-pointer" alt="Visual 11">
+                                        <img src="assets/images/WhatsApp Image 2025-12-21 at 18.25.59.jpeg" class="rounded-lg shadow hover:scale-105 transition cursor-pointer" alt="Visual 12">
                                     </div>
-                                </div>
-                            </a>
-                        </div>
-                        <h3 class="text-white text-lg font-bold mb-2">Full Presentation</h3>
-                        <p class="text-gray-300 text-sm mb-4">Complete Apollo AgriGuard demonstration</p>
-                        <a href="https://youtu.be/os06aEhzVL0" target="_blank" class="inline-block bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-6 rounded-lg transition">
-                            Watch on YouTube →
-                        </a>
-                    </div>
-                </div>
-
-                <!-- Quick Demo Video -->
-                <div class="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
-                    <div class="bg-gray-900 p-6 text-center">
-                        <div class="aspect-video bg-gray-800 rounded-lg flex items-center justify-center mb-4">
-                            <div class="w-full h-full bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center">
-                                <div class="text-center">
-                                    <div class="text-6xl mb-2">⚡</div>
-                                    <p class="text-white font-bold">10-Second Quick Demo</p>
+                                    <p class="text-gray-500 text-xs mt-4">Click any image to highlight.</p>
                                 </div>
                             </div>
-                        </div>
-                        <h3 class="text-white text-lg font-bold mb-2">Quick Overview</h3>
-                        <p class="text-gray-300 text-sm mb-4">Fast-track Apollo system highlights</p>
-                        <button class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg transition" onclick="alert('10-sec demo video link coming soon!')">
-                            Coming Soon
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Media Gallery -->
-            <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-6 mb-8">
-                <h3 class="text-2xl font-bold text-gray-800 mb-6">📸 Media Gallery</h3>
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <!-- Placeholder Images -->
-                    <div class="bg-gradient-to-br from-green-400 to-green-600 rounded-lg aspect-square flex items-center justify-center text-white text-center p-4 hover:shadow-lg transition">
-                        <div>
-                            <div class="text-4xl mb-2">🚜</div>
-                            <p class="text-sm font-semibold">Field Operations</p>
-                        </div>
-                    </div>
-                    <div class="bg-gradient-to-br from-blue-400 to-blue-600 rounded-lg aspect-square flex items-center justify-center text-white text-center p-4 hover:shadow-lg transition">
-                        <div>
-                            <div class="text-4xl mb-2">🤖</div>
-                            <p class="text-sm font-semibold">Robotics</p>
-                        </div>
-                    </div>
-                    <div class="bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-lg aspect-square flex items-center justify-center text-white text-center p-4 hover:shadow-lg transition">
-                        <div>
-                            <div class="text-4xl mb-2">🌾</div>
-                            <p class="text-sm font-semibold">Crops</p>
-                        </div>
-                    </div>
-                    <div class="bg-gradient-to-br from-purple-400 to-purple-600 rounded-lg aspect-square flex items-center justify-center text-white text-center p-4 hover:shadow-lg transition">
-                        <div>
-                            <div class="text-4xl mb-2">📊</div>
-                            <p class="text-sm font-semibold">Analytics</p>
-                        </div>
-                    </div>
-                </div>
-                <p class="text-gray-500 text-sm mt-4 text-center">🖼️ Your warehouse photos can be added here</p>
-            </div>
-
-            <!-- Video Description -->
-            <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-8">
-                <h3 class="text-2xl font-bold text-gray-800 mb-6">📹 About This Video</h3>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-                    <div class="text-center">
-                        <div class="text-4xl mb-2">⏱️</div>
-                        <p class="text-gray-600"><strong>Duration:</strong></p>
-                        <p class="text-gray-700 font-semibold">3-4 minutes</p>
-                    </div>
-                    <div class="text-center">
-                        <div class="text-4xl mb-2">🎯</div>
-                        <p class="text-gray-600"><strong>Purpose:</strong></p>
-                        <p class="text-gray-700 font-semibold">DIPEX 2026</p>
-                    </div>
-                    <div class="text-center">
-                        <div class="text-4xl mb-2">🌟</div>
-                        <p class="text-gray-600"><strong>Status:</strong></p>
-                        <p class="text-gray-700 font-semibold">Live on YouTube</p>
-                    </div>
-                </div>
-
-                <div class="bg-gray-50 rounded-lg p-6 border-l-4 border-red-500">
-                    <h4 class="text-lg font-bold text-gray-800 mb-3">🌾 Apollo: The Agri-Guardian</h4>
-                    <p class="text-gray-700 leading-relaxed mb-3">
-                        <strong>🌾 Apollo: Revolutionizing Agriculture through AI, Robotics & IoT</strong>
-                    </p>
-                    <p class="text-gray-700 leading-relaxed mb-4">
-                        Discover <strong>Apollo</strong>, an advanced AI-driven precision agriculture platform developed by <strong>Shri Siddheshwar Women's Polytechnic</strong> in collaboration with <strong>Chatake Innoworks Pvt. Ltd.</strong>, showcased for <strong>DIPEX 2026</strong>.
-                    </p>
-
-                    <h4 class="font-semibold text-gray-800 mt-4 mb-2">6-Module System</h4>
-                    <div class="grid grid-cols-2 gap-3 mb-4">
-                        <div class="bg-white p-3 rounded border-l-4 border-blue-500">
-                            <p class="text-sm font-semibold text-blue-700">🌐 SENSE</p>
-                            <p class="text-xs text-gray-600">Multi-source data collection</p>
-                        </div>
-                        <div class="bg-white p-3 rounded border-l-4 border-purple-500">
-                            <p class="text-sm font-semibold text-purple-700">🧠 THINK</p>
-                            <p class="text-xs text-gray-600">AI-based decision making</p>
-                        </div>
-                        <div class="bg-white p-3 rounded border-l-4 border-green-500">
-                            <p class="text-sm font-semibold text-green-700">🤖 ACT</p>
-                            <p class="text-xs text-gray-600">Autonomous robotics</p>
-                        </div>
-                        <div class="bg-white p-3 rounded border-l-4 border-red-500">
-                            <p class="text-sm font-semibold text-red-700">👁️ SEE</p>
-                            <p class="text-xs text-gray-600">Real-time visualization</p>
-                        </div>
-                        <div class="bg-white p-3 rounded border-l-4 border-yellow-500">
-                            <p class="text-sm font-semibold text-yellow-700">🔗 CONNECT</p>
-                            <p class="text-xs text-gray-600">System integration</p>
-                        </div>
-                        <div class="bg-white p-3 rounded border-l-4 border-indigo-500">
-                            <p class="text-sm font-semibold text-indigo-700">📚 LEARN</p>
-                            <p class="text-xs text-gray-600">Continuous learning</p>
-                        </div>
-                    </div>
-
-                    <h4 class="font-semibold text-gray-800 mt-4 mb-2">Key Features</h4>
-                    <ul class="list-disc list-inside space-y-1 text-sm text-gray-700">
-                        <li>Autonomous rover-based agricultural robotics</li>
-                        <li>Real-time farm simulation with live harvesting</li>
-                        <li>AI-powered crop disease detection using CNN</li>
-                        <li>Market intelligence and commodity analysis</li>
-                        <li>Professional web dashboard with live data</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-
-    </main>
-
-    <script>
-        // --- Global State ---
-        let activeTab = 'overview';
-        let isAutoMode = false;
-        let roverInterval;
-        let charts = {};
-        let crops = [];
-        let simulationRunning = false;
-        let entities = [];
-        let weatherActive = false;
-
-        // --- Initialization ---
-        document.addEventListener('DOMContentLoaded', () => {
-            initCharts();
-            generateFieldMap();
-            generateCrops();
-            startLiveSimulation();
-            initSimulation();
-            drawSimulation(); // Draw initial state
-            loadMarketData();
-            logSystem('System initialized. Connection established with Lander 01, 02, 03.');
-        });
-
-        // --- Tab Switching Logic ---
-        function switchTab(tabId) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-            document.querySelectorAll('.nav-btn').forEach(btn => {
-                btn.classList.remove('active');
-                btn.classList.add('hover:bg-gray-100');
-            });
-
-            document.getElementById(tabId).classList.remove('hidden');
-
-            const activeBtn = document.querySelector(`button[onclick="switchTab('${tabId}')"]`);
-            if(activeBtn) {
-                activeBtn.classList.add('active');
-                activeBtn.classList.remove('hover:bg-gray-100');
-            }
-            activeTab = tabId;
-
-            // Reinitialize simulation if switching to simulation tab
-            if (tabId === 'simulation') {
-                setTimeout(() => {
-                    initSimulation();
                     drawSimulation();
                     updateHarvestStats();
                     // Auto-start the simulation
