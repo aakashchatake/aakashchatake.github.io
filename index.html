@@ -884,6 +884,53 @@
         </div>
 
         <!-- TAB: VISUALS -->
+        <div id="visuals" class="tab-content hidden">
+            <!-- Hero Section -->
+            <div class="bg-gradient-to-r from-red-600 to-red-700 rounded-xl p-8 text-white shadow-lg mb-8">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h2 class="text-4xl font-black mb-2">🎬 Apollo AgriGuard</h2>
+                        <p class="text-xl opacity-90">AI-Powered Precision Agriculture for DIPEX 2026</p>
+                    </div>
+                    <div class="text-6xl opacity-20">▶️</div>
+                </div>
+            </div>
+
+            <!-- Video Gallery Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                
+                <!-- Main YouTube Video -->
+                <div class="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
+                    <div class="bg-gray-900 p-6 text-center">
+                        <!-- YouTube Embed -->
+                        <div class="aspect-video bg-gray-800 rounded-lg flex items-center justify-center mb-4 overflow-hidden">
+                            <iframe width="100%" height="100%" src="https://www.youtube.com/embed/os06aEhzVL0" title="Apollo AgriGuard - Full Presentation" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                        </div>
+                        <h3 class="text-white text-lg font-bold mb-2">Full Presentation</h3>
+                        <p class="text-gray-300 text-sm mb-4">Complete Apollo AgriGuard demonstration on YouTube</p>
+                        <a href="https://youtu.be/os06aEhzVL0" target="_blank" class="inline-block bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-6 rounded-lg transition">
+                            ▶️ Watch on YouTube
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Quick Demo Video -->
+                <div class="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
+                    <div class="bg-gray-900 p-6 text-center">
+                        <!-- YouTube Embed - Short Demo -->
+                        <div class="aspect-video bg-gray-800 rounded-lg flex items-center justify-center mb-4 overflow-hidden">
+                            <div class="w-full h-full bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center">
+                                <div class="text-center">
+                                    <div class="text-6xl mb-2">⚡</div>
+                                    <p class="text-white font-bold">10-Second Quick Demo</p>
+                                    <p class="text-white text-sm mt-2">Coming to YouTube</p>
+                                </div>
+                            </div>
+                        </div>
+                        <h3 class="text-white text-lg font-bold mb-2">Quick Overview</h3>
+                        <p class="text-gray-300 text-sm mb-4">Fast-track Apollo system highlights</p>
+                        <button class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg transition" onclick="alert('10-sec demo video coming soon to YouTube!')">
+                            <!-- TAB: VISUALS -->
                             <div id="visuals" class="tab-content hidden">
                                 <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-6 mb-8">
                                     <h2 class="text-2xl font-bold text-gray-800 mb-4">🖼️ Visuals & Gallery</h2>
@@ -1830,5 +1877,60 @@
         </div>
     </footer>
 
+    <script>
+        function switchTab(tabId) {
+            // Hide all tab contents
+            document.querySelectorAll(".tab-content").forEach(tab => {
+                tab.classList.add("hidden");
+            });
+            
+            // Remove active class from all buttons
+            document.querySelectorAll(".nav-btn").forEach(btn => {
+                btn.classList.remove("active");
+                btn.classList.add("hover:bg-gray-100");
+            });
+            
+            // Show selected tab
+            document.getElementById(tabId).classList.remove("hidden");
+            
+            // Add active class to clicked button
+            event.target.classList.add("active");
+            event.target.classList.remove("hover:bg-gray-100");
+        }
+        
+        // Initialize first tab
+        document.addEventListener("DOMContentLoaded", function() {
+            switchTab("overview");
+        });
+    </script>
+
 </body>
+    <script>
+        function switchTab(tabId) {
+            // Hide all tab contents
+            document.querySelectorAll(".tab-content").forEach(tab => {
+                tab.classList.add("hidden");
+            });
+            
+            // Remove active class from all buttons
+            document.querySelectorAll(".nav-btn").forEach(btn => {
+                btn.classList.remove("active");
+                btn.classList.add("hover:bg-gray-100");
+            });
+            
+            // Show selected tab
+            document.getElementById(tabId).classList.remove("hidden");
+            
+            // Add active class to clicked button
+            event.target.classList.add("active");
+            event.target.classList.remove("hover:bg-gray-100");
+        }
+        
+        // Initialize first tab
+        document.addEventListener("DOMContentLoaded", function() {
+            switchTab("overview");
+        });
+    </script>
+
+</html></body>
 </html>
