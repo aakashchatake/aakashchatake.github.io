@@ -1,0 +1,1910 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>APOLLO 4.0.2 - Agricultural Cyber-Physical System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+
+    <style>
+        * { font-family: 'Inter', sans-serif; }
+
+        .chart-container { position: relative; height: 300px; }
+
+        .sensor-card {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .sensor-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 28px rgba(0,0,0,0.15);
+        }
+
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.6; transform: scale(1.1); }
+        }
+
+        .field-plot {
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);
+            gap: 4px;
+            max-width: 500px;
+        }
+
+        .plot-cell {
+            aspect-ratio: 1;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+
+        .plot-cell:hover {
+            border-color: white;
+            transform: scale(1.1);
+            z-index: 10;
+        }
+
+        .log-entry {
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-10px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .tab-button.active {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+        }
+
+        #rover-field {
+            position: relative;
+            width: 100%;
+            height: 400px;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .rover-icon {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background: #374151;
+            border-radius: 50%;
+            border: 3px solid #ffffff;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+
+        .rover-icon::before {
+            content: '🤖';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 16px;
+        }
+
+        .rover-trail {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 50%;
+            animation: fadeOut 2.5s ease-out forwards;
+        }
+
+        @keyframes fadeOut {
+            0% { opacity: 1; transform: scale(1); }
+            100% { opacity: 0; transform: scale(0.5); }
+        }
+
+        .crop {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: #22c55e;
+            border-radius: 50%;
+            opacity: 0.8;
+            transition: all 0.3s ease;
+        }
+
+        .crop.healthy { background: #22c55e; }
+        .crop.stressed { background: #eab308; }
+        .crop.diseased { background: #ef4444; }
+
+        .crop.harvested {
+            animation: harvest 0.5s ease forwards;
+        }
+
+        @keyframes harvest {
+            0% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.2); opacity: 1; }
+            100% { transform: scale(0); opacity: 0; }
+        }
+
+        .water-effect {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.6) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: waterRipple 1s ease-out forwards;
+            pointer-events: none;
+        }
+
+        @keyframes waterRipple {
+            0% { transform: scale(0); opacity: 1; }
+            100% { transform: scale(3); opacity: 0; }
+        }
+
+        .spray-effect {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background: conic-gradient(from 0deg, rgba(59, 130, 246, 0.8), rgba(147, 197, 253, 0.4), rgba(59, 130, 246, 0.8));
+            border-radius: 50%;
+            animation: spray 0.8s ease-out forwards;
+            pointer-events: none;
+        }
+
+        @keyframes spray {
+            0% { transform: scale(0) rotate(0deg); opacity: 1; }
+            50% { transform: scale(1.5) rotate(180deg); opacity: 0.8; }
+            100% { transform: scale(2) rotate(360deg); opacity: 0; }
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: #e5e7eb;
+            border-radius: 999px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+            transition: width 0.3s ease;
+        }
+
+        .nav-btn.active {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+        }
+
+        .console-log::-webkit-scrollbar {
+            width: 6px;
+        }
+        .console-log::-webkit-scrollbar-track {
+            background: #292524;
+        }
+        .console-log::-webkit-scrollbar-thumb {
+            background: #57534e;
+            border-radius: 3px;
+        }
+
+        #harvestCanvas {
+            width: 100%;
+            height: 300px;
+            background: linear-gradient(to bottom, #bae6fd 0%, #e7e5e4 100%);
+            border-radius: 0.75rem;
+            border: 2px solid #d6d3d1;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+
+    <header class="bg-gradient-to-r from-blue-900 via-indigo-900 to-purple-900 text-white shadow-2xl sticky top-0 z-50">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-3xl font-black flex items-center gap-3">
+                        <span class="text-4xl">⚡</span>
+                        APOLLO
+                        <span class="text-xs font-normal bg-blue-600 px-3 py-1 rounded-full">AGRIVERSE-CPS</span>
+                    </h1>
+                    <p class="text-blue-200 text-sm mt-1">Shri Siddheshwar Women's Polytechnic | Dept. of IT • DIPEX 2026</p>
+                    <p class="text-blue-300 text-xs mt-1 font-mono">Powered by Chatake Innoworks Pvt. Ltd.</p>
+                </div>
+                <div class="flex items-center gap-6">
+                    <div class="text-right hidden md:block">
+                        <div class="text-xs text-blue-300">System Status</div>
+                        <div class="flex items-center gap-2 mt-1">
+                            <div class="status-indicator bg-green-400"></div>
+                            <span class="font-bold">OPERATIONAL</span>
+                        </div>
+                        <div class="text-xs text-blue-400 font-mono mt-1">DIPEX 2026 CANDIDATE</div>
+                    </div>
+                    <div class="text-right hidden md:block">
+                        <div class="text-xs text-blue-300">Live Dashboard</div>
+                        <a href="https://aakashchatake.github.io/Apollo_AgriGuard.html" target="_blank" class="text-blue-200 hover:text-white font-bold underline">View Online</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <nav class="bg-white border-b sticky top-[88px] z-40 shadow-sm">
+        <div class="container mx-auto px-6">
+            <div class="flex gap-2 overflow-x-auto py-2">
+                <button onclick="switchTab('overview')" class="nav-btn active px-6 py-3 rounded-lg font-semibold transition-all whitespace-nowrap">
+                    📊 Overview
+                </button>
+                <button onclick="switchTab('sensors')" class="nav-btn px-6 py-3 rounded-lg font-semibold transition-all hover:bg-gray-100 whitespace-nowrap">
+                    🌡️ Sensors
+                </button>
+                <button onclick="switchTab('cnn')" class="nav-btn px-6 py-3 rounded-lg font-semibold transition-all hover:bg-gray-100 whitespace-nowrap">
+                    🧠 CNN Analysis
+                </button>
+                <button onclick="switchTab('robotics')" class="nav-btn px-6 py-3 rounded-lg font-semibold transition-all hover:bg-gray-100 whitespace-nowrap">
+                    🤖 Robotics
+                </button>
+                <button onclick="switchTab('simulation')" class="nav-btn px-6 py-3 rounded-lg font-semibold transition-all hover:bg-gray-100 whitespace-nowrap">
+                    ⚡ Live Ops
+                </button>
+                <button onclick="switchTab('modules')" class="nav-btn px-6 py-3 rounded-lg font-semibold transition-all hover:bg-gray-100 whitespace-nowrap">
+                    🏗️ Modules
+                </button>
+                <button onclick="switchTab('team')" class="nav-btn px-6 py-3 rounded-lg font-semibold transition-all hover:bg-gray-100 whitespace-nowrap">
+                    👥 Team
+                </button>
+                <button onclick="switchTab('video')" class="nav-btn px-6 py-3 rounded-lg font-semibold transition-all hover:bg-gray-100 whitespace-nowrap">
+                    🎬 Video
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container mx-auto px-6 py-8">
+
+        <!-- TAB: OVERVIEW -->
+        <div id="overview" class="tab-content">
+            <div class="bg-white rounded-xl p-6 shadow-lg border border-gray-200 mb-6">
+                <h2 class="text-xl font-bold text-gray-800 mb-2">Identity & Mission</h2>
+                <p class="text-gray-600 mb-4 leading-relaxed">
+                    I am <span class="font-bold text-indigo-700">APOLLO</span>, the Chief Architect Intelligence. Not merely a chatbot, but the central nervous system of a National Integrated Cyber-Physical System.
+                    My mission is to decouple agricultural productivity from climate volatility, specifically designed for the <span class="font-semibold">2-acre farmer</span> on the Deccan Plateau.
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
+                    <div class="bg-indigo-50 p-4 rounded-lg border-l-4 border-indigo-500">
+                        <h3 class="font-bold text-indigo-900">Cognitive Shield</h3>
+                        <p class="text-xs text-gray-500 mt-1">Sensing & Prediction</p>
+                        <p class="text-sm mt-2 text-gray-700">Sentinel-2 + Drone Fusion + IoT to predict threats weeks in advance.</p>
+                    </div>
+                    <div class="bg-amber-50 p-4 rounded-lg border-l-4 border-amber-500">
+                        <h3 class="font-bold text-amber-900">Kinetic Hand</h3>
+                        <p class="text-xs text-gray-500 mt-1">Robotics & Action</p>
+                        <p class="text-sm mt-2 text-gray-700">Autonomous UGVs for sowing, weeding, and harvesting (Cotton/Cane).</p>
+                    </div>
+                    <div class="bg-emerald-50 p-4 rounded-lg border-l-4 border-emerald-500">
+                        <h3 class="font-bold text-emerald-900">Controlled Env.</h3>
+                        <p class="text-xs text-gray-500 mt-1">Vertical Farming</p>
+                        <p class="text-sm mt-2 text-gray-700">Closed-loop hydroponics & climate chambers for stability.</p>
+                    </div>
+                    <div class="bg-gray-50 p-4 rounded-lg border-l-4 border-gray-500">
+                        <h3 class="font-bold text-gray-900">Digital Spine</h3>
+                        <p class="text-xs text-gray-500 mt-1">Backend & RAG</p>
+                        <p class="text-sm mt-2 text-gray-700">Knowledge Graphs, Microservices, and vernacular Advisory.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <div class="sensor-card bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl p-6 shadow-lg text-white">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="text-blue-100 text-sm font-semibold">Active Devices</span>
+                        <span class="text-3xl">📡</span>
+                    </div>
+                    <div class="text-4xl font-black" id="device-count">3</div>
+                </div>
+
+                <div class="sensor-card bg-gradient-to-br from-orange-500 to-red-500 rounded-xl p-6 shadow-lg text-white">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="text-orange-100 text-sm font-semibold">Avg Temperature</span>
+                        <span class="text-3xl">🌡️</span>
+                    </div>
+                    <div class="text-4xl font-black"><span id="avg-temp">28.5</span>°C</div>
+                </div>
+
+                <div class="sensor-card bg-gradient-to-br from-cyan-500 to-blue-500 rounded-xl p-6 shadow-lg text-white">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="text-cyan-100 text-sm font-semibold">Soil Moisture</span>
+                        <span class="text-3xl">💧</span>
+                    </div>
+                    <div class="text-4xl font-black"><span id="avg-moisture">32</span>%</div>
+                </div>
+
+                <div class="sensor-card bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl p-6 shadow-lg text-white">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="text-green-100 text-sm font-semibold">Health Score</span>
+                        <span class="text-3xl">🌱</span>
+                    </div>
+                    <div class="text-4xl font-black"><span id="health-score">87</span>/100</div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+                <div class="lg:col-span-2 bg-white rounded-xl p-6 shadow-lg border border-gray-200">
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-4">
+                        <div>
+                            <h3 class="text-lg font-bold text-gray-800 flex items-center gap-2">
+                                <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-sm font-bold">MOD D</span> Market Intelligence
+                            </h3>
+                            <p class="text-sm text-gray-500 mt-1">
+                                Real-time crop price trends and planting recommendations.
+                            </p>
+                        </div>
+                        <div class="text-right mt-2 md:mt-0">
+                            <span class="text-xs text-gray-500">Last Updated</span>
+                            <div id="market-timestamp" class="font-bold text-gray-700">Loading...</div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Market Chart -->
+                        <div class="md:col-span-1">
+                            <div class="chart-container" style="height: 250px;">
+                                <canvas id="marketChart"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Market Table -->
+                        <div class="md:col-span-1">
+                            <div class="bg-gray-50 rounded-lg p-4 max-h-64 overflow-y-auto">
+                                <h4 class="text-sm font-bold text-gray-700 mb-3">Crop Price Dashboard</h4>
+                                <div id="market-table" class="space-y-2">
+                                    <!-- JS will populate this -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl p-6 shadow-lg border border-gray-200">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-xl font-bold text-gray-800">Field Health Map</h3>
+                        <button onclick="refreshFieldMap()" class="text-sm bg-blue-100 hover:bg-blue-200 text-blue-700 px-3 py-1 rounded-lg transition-colors">
+                            🔄 Refresh
+                        </button>
+                    </div>
+                    <div class="field-plot mx-auto mb-4" id="field-map"></div>
+                    <div class="flex items-center justify-center gap-6 text-sm">
+                        <div class="flex items-center gap-2">
+                            <div class="w-4 h-4 bg-green-500 rounded"></div>
+                            <span id="healthy-count">0</span> Healthy
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <div class="w-4 h-4 bg-yellow-500 rounded"></div>
+                            <span id="stressed-count">0</span> Stressed
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <div class="w-4 h-4 bg-red-500 rounded"></div>
+                            <span id="critical-count">0</span> Critical
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+
+                <div class="bg-gray-900 rounded-xl p-6 shadow-lg font-mono text-sm">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-xl font-bold text-white">System Logs</h3>
+                        <button onclick="clearLogs()" class="text-xs bg-gray-800 hover:bg-gray-700 text-gray-300 px-3 py-1 rounded transition-colors">
+                            Clear
+                        </button>
+                    </div>
+                    <div id="system-logs" class="space-y-1 h-64 overflow-y-auto"></div>
+                </div>
+            </div>
+
+             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <button onclick="quickAction('scan')" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl transition-all transform hover:scale-105 shadow-lg">
+                    🔍 Run Quick Scan
+                </button>
+                <button onclick="quickAction('analyze')" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-4 rounded-xl transition-all transform hover:scale-105 shadow-lg">
+                    🧠 Analyze All Fields
+                </button>
+                <button onclick="quickAction('report')" class="bg-green-600 hover:bg-green-700 text-white font-bold py-4 rounded-xl transition-all transform hover:scale-105 shadow-lg">
+                    📄 Generate Report
+                </button>
+            </div>
+        </div>
+
+        <!-- TAB: SENSORS -->
+        <div id="sensors" class="tab-content hidden">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                <div class="bg-white rounded-xl p-6 shadow-lg border border-gray-200">
+                    <h3 class="text-xl font-bold mb-4 text-gray-800 flex items-center gap-2">
+                        🌡️ Temperature Trend (24h)
+                    </h3>
+                    <div class="chart-container">
+                        <canvas id="tempChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl p-6 shadow-lg border border-gray-200">
+                    <h3 class="text-xl font-bold mb-4 text-gray-800 flex items-center gap-2">
+                        💧 Soil Moisture Trend (24h)
+                    </h3>
+                    <div class="chart-container">
+                        <canvas id="moistureChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl p-6 shadow-lg border border-gray-200">
+                    <h3 class="text-xl font-bold mb-4 text-gray-800 flex items-center gap-2">
+                        🧪 NPK Nutrient Levels
+                    </h3>
+                    <div class="chart-container">
+                        <canvas id="npkChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl p-6 shadow-lg border border-gray-200">
+                    <h3 class="text-xl font-bold mb-4 text-gray-800 flex items-center gap-2">
+                        📊 Live Sensor Readings
+                    </h3>
+                    <div class="space-y-4" id="live-sensors"></div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-6 border-2 border-blue-200">
+                    <div class="text-sm text-blue-600 font-semibold mb-2">Lander 01</div>
+                    <div class="text-3xl font-bold text-blue-900 mb-1" id="lander1-temp">--</div>
+                    <div class="text-xs text-blue-700">Temperature °C</div>
+                    <div class="mt-3 flex items-center gap-2 text-xs text-blue-600">
+                        <div class="status-indicator bg-blue-500"></div>
+                        Active
+                    </div>
+                </div>
+
+                <div class="bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-6 border-2 border-green-200">
+                    <div class="text-sm text-green-600 font-semibold mb-2">Lander 02</div>
+                    <div class="text-3xl font-bold text-green-900 mb-1" id="lander2-moisture">--</div>
+                    <div class="text-xs text-green-700">Soil Moisture %</div>
+                    <div class="mt-3 flex items-center gap-2 text-xs text-green-600">
+                        <div class="status-indicator bg-green-500"></div>
+                        Active
+                    </div>
+                </div>
+
+                <div class="bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl p-6 border-2 border-purple-200">
+                    <div class="text-sm text-purple-600 font-semibold mb-2">Lander 03</div>
+                    <div class="text-3xl font-bold text-purple-900 mb-1" id="lander3-humidity">--</div>
+                    <div class="text-xs text-purple-700">Humidity %</div>
+                    <div class="mt-3 flex items-center gap-2 text-xs text-purple-600">
+                        <div class="status-indicator bg-purple-500"></div>
+                        Active
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB: CNN ANALYSIS -->
+        <div id="cnn" class="tab-content hidden">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                <div class="bg-white rounded-xl p-6 shadow-lg border border-gray-200">
+                    <h3 class="text-xl font-bold mb-4 text-gray-800 flex items-center gap-2">
+                        🧠 Crop Health Detection (CNN)
+                    </h3>
+
+                    <div class="cnn-image-container mb-6" id="cnn-image">
+                        <div class="text-8xl" id="crop-emoji">🌾</div>
+                    </div>
+
+                    <div class="space-y-4 mb-6">
+                        <div class="flex justify-between items-center">
+                            <span class="font-semibold text-gray-700">Status:</span>
+                            <span class="font-bold text-gray-900" id="cnn-status">Ready</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="font-semibold text-gray-700">Prediction:</span>
+                            <span class="text-xl font-bold" id="cnn-prediction">--</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="font-semibold text-gray-700">Confidence:</span>
+                            <span class="text-xl font-bold" id="cnn-confidence">--</span>
+                        </div>
+                        <div id="cnn-progress" class="hidden">
+                            <div class="text-sm text-gray-600 mb-2">Processing...</div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="cnn-progress-bar" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3">
+                        <button onclick="runCNNInference()" id="cnn-run-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition-all shadow-md">
+                            ▶️ Run Inference
+                        </button>
+                        <button onclick="changeCropImage()" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 rounded-lg transition-all shadow-md">
+                            🔄 Change Image
+                        </button>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl p-6 shadow-lg border border-gray-200">
+                    <h3 class="text-xl font-bold mb-4 text-gray-800 flex items-center gap-2">
+                        📊 Class Probabilities
+                    </h3>
+                    <div class="chart-container mb-4">
+                        <canvas id="cnnChart"></canvas>
+                    </div>
+                    <div class="space-y-3" id="class-probs"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB: ROBOTICS -->
+        <div id="robotics" class="tab-content hidden">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+                <div class="lg:col-span-2 bg-white rounded-xl p-6 shadow-lg border border-gray-200">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-xl font-bold text-gray-800 flex items-center gap-2">
+                            🗺️ Field Navigation
+                        </h3>
+                        <div class="flex gap-2">
+                            <button onclick="resetRover()" class="text-sm bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1 rounded-lg transition-colors">
+                                Reset
+                            </button>
+                            <button onclick="toggleAutoMode()" id="auto-btn" class="text-sm bg-green-100 hover:bg-green-200 text-green-700 px-3 py-1 rounded-lg transition-colors">
+                                🤖 Auto Mode
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="rover-field">
+                        <div class="rover-icon" id="rover" style="left: 50%; top: 50%;"></div>
+                    </div>
+
+                    <div class="mt-4 grid grid-cols-2 gap-3 text-sm">
+                        <div class="bg-gray-50 p-3 rounded-lg">
+                            <div class="text-gray-600">Position</div>
+                            <div class="font-bold">X: <span id="rover-x">50</span> | Y: <span id="rover-y">50</span></div>
+                        </div>
+                        <div class="bg-gray-50 p-3 rounded-lg">
+                            <div class="text-gray-600">Speed</div>
+                            <div class="font-bold"><span id="rover-speed">0</span> px/s</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl p-6 shadow-lg border border-gray-200">
+                    <h3 class="text-xl font-bold mb-4 text-gray-800 flex items-center gap-2">
+                        🎮 Control Panel
+                    </h3>
+
+                    <div class="space-y-4 mb-6">
+                        <div class="bg-blue-50 p-4 rounded-lg border-2 border-blue-200">
+                            <div class="text-sm text-blue-600 font-semibold mb-1">Status</div>
+                            <div class="text-lg font-bold text-blue-900" id="rover-status">IDLE</div>
+                        </div>
+                        <div class="bg-green-50 p-4 rounded-lg border-2 border-green-200">
+                            <div class="text-sm text-green-600 font-semibold mb-1">Battery</div>
+                            <div class="text-lg font-bold text-green-900">
+                                <span id="rover-battery">87</span>%
+                            </div>
+                            <div class="progress-bar mt-2">
+                                <div class="progress-fill bg-green-500" id="battery-bar" style="width: 87%"></div>
+                            </div>
+                        </div>
+                        <div class="bg-purple-50 p-4 rounded-lg border-2 border-purple-200">
+                            <div class="text-sm text-purple-600 font-semibold mb-1">Current Task</div>
+                            <div class="text-sm font-bold text-purple-900" id="rover-task">None</div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3">
+                        <button onclick="sendCommand('navigate')" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition-all shadow-md">
+                            🧭 Navigate
+                        </button>
+                        <button onclick="sendCommand('spray')" class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-lg transition-all shadow-md">
+                            💦 Spray
+                        </button>
+                        <button onclick="sendCommand('harvest')" class="bg-orange-600 hover:bg-orange-700 text-white font-bold py-3 rounded-lg transition-all shadow-md">
+                            ✂️ Harvest
+                        </button>
+                        <button onclick="sendCommand('water')" class="bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-3 rounded-lg transition-all shadow-md">
+                            🚿 Water
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB: LIVE SIMULATION -->
+        <div id="simulation" class="tab-content hidden">
+            <div class="bg-white rounded-xl p-6 shadow-lg border border-gray-200 mb-6">
+                <div class="flex flex-col md:flex-row justify-between items-center mb-4">
+                    <div>
+                        <h2 class="text-xl font-bold text-gray-800">Comprehensive Farm Operations</h2>
+                        <p class="text-sm text-gray-500">Multi-modal agricultural intelligence with simultaneous monitoring and autonomous interventions.</p>
+                    </div>
+                    <div class="flex flex-wrap gap-2 mt-4 md:mt-0">
+                        <button onclick="startHarvest()" class="px-3 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded shadow text-xs font-bold">🚜 Deploy Rovers</button>
+                        <button onclick="sprayFertilizer()" class="px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded shadow text-xs font-bold">🌱 Fertilizer Spray</button>
+                        <button onclick="applyPesticide()" class="px-3 py-2 bg-red-600 hover:bg-red-700 text-white rounded shadow text-xs font-bold">🐛 Pesticide</button>
+                        <button onclick="runCNNAnalysis()" class="px-3 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded shadow text-xs font-bold">📷 CNN Analysis</button>
+                        <button onclick="triggerWeather()" class="px-3 py-2 bg-gray-700 hover:bg-gray-800 text-white rounded shadow text-xs font-bold">⛈️ Weather Events</button>
+                        <button onclick="resetSim()" class="px-3 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded shadow text-xs font-bold">↺ Reset</button>
+                    </div>
+                </div>
+
+                <canvas id="harvestCanvas" width="1200" height="400"></canvas>
+
+                <!-- Harvest Stats -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
+                    <div class="bg-white p-3 rounded-lg border border-gray-200 text-center">
+                        <div class="text-xs text-gray-500 uppercase tracking-wider">Total Crops</div>
+                        <div id="total-crops" class="text-xl font-bold text-gray-800">20</div>
+                    </div>
+                    <div class="bg-white p-3 rounded-lg border border-gray-200 text-center">
+                        <div class="text-xs text-gray-500 uppercase tracking-wider">Harvested</div>
+                        <div id="harvested-crops" class="text-xl font-bold text-emerald-600">0</div>
+                    </div>
+                    <div class="bg-white p-3 rounded-lg border border-gray-200 text-center">
+                        <div class="text-xs text-gray-500 uppercase tracking-wider">Active Rovers</div>
+                        <div id="active-rovers" class="text-xl font-bold text-blue-600">3</div>
+                    </div>
+                    <div class="bg-white p-3 rounded-lg border border-gray-200 text-center">
+                        <div class="text-xs text-gray-500 uppercase tracking-wider">Efficiency</div>
+                        <div id="harvest-efficiency" class="text-xl font-bold text-purple-600">0%</div>
+                    </div>
+                </div>
+
+                <div class="flex flex-wrap gap-4 mt-4 justify-center text-xs font-mono text-gray-500">
+                    <span class="flex items-center gap-1"><div class="w-3 h-3 bg-green-500 rounded-full"></div> Cotton</span>
+                    <span class="flex items-center gap-1"><div class="w-3 h-3 bg-yellow-500 rounded-full"></div> Sugarcane</span>
+                    <span class="flex items-center gap-1"><div class="w-3 h-3 bg-orange-500 rounded-full"></div> Millets</span>
+                    <span class="flex items-center gap-1"><div class="w-3 h-3 bg-gray-800 border border-gray-600"></div> Rovers</span>
+                    <span class="flex items-center gap-1"><div class="w-3 h-3 bg-blue-500"></div> Fertilizer Spray</span>
+                    <span class="flex items-center gap-1"><div class="w-3 h-3 bg-red-500"></div> Pesticide</span>
+                    <span class="flex items-center gap-1"><div class="w-4 h-3 bg-gray-600"></div> Storage</span>
+                    <span class="flex items-center gap-1"><div class="w-3 h-3 bg-blue-400 opacity-50"></div> Rain</span>
+                    <span class="flex items-center gap-1"><div class="w-3 h-3 bg-gray-400"></div> Clouds</span>
+                    <span class="flex items-center gap-1"><div class="w-3 h-3 bg-gray-500 border-2 border-white"></div> Harvested</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB: COMMAND MODULES -->
+        <div id="modules" class="tab-content hidden">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="bg-white rounded-xl p-6 shadow-lg border border-gray-200">
+                    <div class="text-center mb-4">
+                        <span class="text-4xl">🌐</span>
+                        <h3 class="text-lg font-bold text-gray-800 mt-2">SENSE Module</h3>
+                    </div>
+                    <p class="text-sm text-gray-600 mb-4">Multi-modal data acquisition from satellites, drones, and IoT sensors.</p>
+                    <div class="space-y-2 text-xs">
+                        <div class="flex justify-between"><span>Sentinel-2 Integration</span><span class="text-green-600">✅</span></div>
+                        <div class="flex justify-between"><span>Drone Fusion</span><span class="text-green-600">✅</span></div>
+                        <div class="flex justify-between"><span>IoT Sensors</span><span class="text-green-600">✅</span></div>
+                        <div class="flex justify-between"><span>Weather API</span><span class="text-yellow-600">🚧</span></div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl p-6 shadow-lg border border-gray-200">
+                    <div class="text-center mb-4">
+                        <span class="text-4xl">🧠</span>
+                        <h3 class="text-lg font-bold text-gray-800 mt-2">THINK Module</h3>
+                    </div>
+                    <p class="text-sm text-gray-600 mb-4">AI-driven decision making with CNN analysis and market intelligence.</p>
+                    <div class="space-y-2 text-xs">
+                        <div class="flex justify-between"><span>CNN Disease Detection</span><span class="text-green-600">✅</span></div>
+                        <div class="flex justify-between"><span>Decision Engine</span><span class="text-green-600">✅</span></div>
+                        <div class="flex justify-between"><span>Market Analysis</span><span class="text-yellow-600">🚧</span></div>
+                        <div class="flex justify-between"><span>Predictive Models</span><span class="text-yellow-600">🚧</span></div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl p-6 shadow-lg border border-gray-200">
+                    <div class="text-center mb-4">
+                        <span class="text-4xl">🤖</span>
+                        <h3 class="text-lg font-bold text-gray-800 mt-2">ACT Module</h3>
+                    </div>
+                    <p class="text-sm text-gray-600 mb-4">Autonomous robotics for precision agriculture operations.</p>
+                    <div class="space-y-2 text-xs">
+                        <div class="flex justify-between"><span>ROS2 Integration</span><span class="text-green-600">✅</span></div>
+                        <div class="flex justify-between"><span>UGV Control</span><span class="text-yellow-600">🚧</span></div>
+                        <div class="flex justify-between"><span>Precision Spraying</span><span class="text-yellow-600">🚧</span></div>
+                        <div class="flex justify-between"><span>Harvesting Bots</span><span class="text-red-600">❌</span></div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl p-6 shadow-lg border border-gray-200">
+                    <div class="text-center mb-4">
+                        <span class="text-4xl">👁️</span>
+                        <h3 class="text-lg font-bold text-gray-800 mt-2">SEE Module</h3>
+                    </div>
+                    <p class="text-sm text-gray-600 mb-4">Real-time visualization and human-AI collaboration interface.</p>
+                    <div class="space-y-2 text-xs">
+                        <div class="flex justify-between"><span>Live Dashboard</span><span class="text-green-600">✅</span></div>
+                        <div class="flex justify-between"><span>System Logs</span><span class="text-green-600">✅</span></div>
+                        <div class="flex justify-between"><span>Alert System</span><span class="text-yellow-600">🚧</span></div>
+                        <div class="flex justify-between"><span>Mobile App</span><span class="text-red-600">❌</span></div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl p-6 shadow-lg border border-gray-200">
+                    <div class="text-center mb-4">
+                        <span class="text-4xl">🔗</span>
+                        <h3 class="text-lg font-bold text-gray-800 mt-2">CONNECT Module</h3>
+                    </div>
+                    <p class="text-sm text-gray-600 mb-4">Interoperability with existing farm management systems.</p>
+                    <div class="space-y-2 text-xs">
+                        <div class="flex justify-between"><span>API Gateway</span><span class="text-green-600">✅</span></div>
+                        <div class="flex justify-between"><span>FPO Integration</span><span class="text-yellow-600">🚧</span></div>
+                        <div class="flex justify-between"><span>Govt. Portals</span><span class="text-red-600">❌</span></div>
+                        <div class="flex justify-between"><span>Market Linkage</span><span class="text-red-600">❌</span></div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl p-6 shadow-lg border border-gray-200">
+                    <div class="text-center mb-4">
+                        <span class="text-4xl">📚</span>
+                        <h3 class="text-lg font-bold text-gray-800 mt-2">LEARN Module</h3>
+                    </div>
+                    <p class="text-sm text-gray-600 mb-4">Continuous learning and knowledge base expansion.</p>
+                    <div class="space-y-2 text-xs">
+                        <div class="flex justify-between"><span>RAG System</span><span class="text-green-600">✅</span></div>
+                        <div class="flex justify-between"><span>Knowledge Graph</span><span class="text-yellow-600">🚧</span></div>
+                        <div class="flex justify-between"><span>Model Training</span><span class="text-yellow-600">🚧</span></div>
+                        <div class="flex justify-between"><span>Feedback Loop</span><span class="text-red-600">❌</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB: TEAM -->
+        <div id="team" class="tab-content hidden">
+            <div class="bg-white rounded-xl p-6 shadow-lg border border-gray-200 mb-6">
+                <h2 class="text-xl font-bold text-gray-800 mb-6 border-b pb-4">DIPEX 2026 Participation Details</h2>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                    <div>
+                        <h3 class="text-sm font-bold text-gray-400 uppercase tracking-wider mb-2">Institute</h3>
+                        <p class="text-lg font-bold text-gray-800">Shri Siddheshwar Women's Polytechnic, Solapur</p>
+                        <p class="text-gray-600">Department of Information Technology</p>
+                        <p class="text-gray-600">Diploma 3rd Year</p>
+
+                        <h3 class="text-sm font-bold text-gray-400 uppercase tracking-wider mb-2 mt-6">Project Guide</h3>
+                        <p class="text-lg font-bold text-indigo-700">Mr. Akash Shivadas Chatake</p>
+                        <p class="text-sm text-gray-500">Lecturer, IT Dept.</p>
+
+                        <h3 class="text-sm font-bold text-gray-400 uppercase tracking-wider mb-2 mt-6">Project Approvers</h3>
+                         <ul class="space-y-1 text-gray-700">
+                            <li><span class="font-semibold">HOD:</span> Dr. Neeta S. Alange</li>
+                            <li><span class="font-semibold">Principal:</span> Mr. Gajanan R. Dharane</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-gray-50 p-6 rounded-lg border border-gray-200">
+                        <h3 class="text-lg font-bold text-gray-800 mb-4">Project Team</h3>
+                        <div class="space-y-4">
+                            <!-- Members -->
+                            <div class="flex items-center gap-3">
+                                <div class="w-8 h-8 rounded-full bg-gray-300 text-gray-600 flex items-center justify-center font-bold text-xs">M</div>
+                                <div>
+                                    <p class="font-medium text-gray-700">Ms. Vaishnavi Dhuttarge</p>
+                                    <p class="text-xs text-gray-500">IoT & Sensors</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <div class="w-8 h-8 rounded-full bg-gray-300 text-gray-600 flex items-center justify-center font-bold text-xs">M</div>
+                                <div>
+                                    <p class="font-medium text-gray-700">Ms. Anuja Gurav</p>
+                                    <p class="text-xs text-gray-500">Robotics (ROS)</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <div class="w-8 h-8 rounded-full bg-gray-300 text-gray-600 flex items-center justify-center font-bold text-xs">M</div>
+                                <div>
+                                    <p class="font-medium text-gray-700">Ms. Siddheshari Degaonkar</p>
+                                    <p class="text-xs text-gray-500">Frontend</p>
+                                </div>
+                            </div>
+                             <div class="flex items-center gap-3">
+                                <div class="w-8 h-8 rounded-full bg-gray-300 text-gray-600 flex items-center justify-center font-bold text-xs">M</div>
+                                <div>
+                                    <p class="font-medium text-gray-700">Ms. Sharvari Garad</p>
+                                    <p class="text-xs text-gray-500">Research & DB</p>
+                                </div>
+                            </div>
+                             <div class="flex items-center gap-3">
+                                <div class="w-8 h-8 rounded-full bg-gray-300 text-gray-600 flex items-center justify-center font-bold text-xs">M</div>
+                                <div>
+                                    <p class="font-medium text-gray-700">Ms. Ojausvi Bhave</p>
+                                    <p class="text-xs text-gray-500">Database Management</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <div class="w-8 h-8 rounded-full bg-emerald-600 text-white flex items-center justify-center font-bold text-xs">GL</div>
+                                <div>
+                                    <p class="font-bold text-gray-800">Ms. Aarthika Anil Birajdar</p>
+                                    <p class="text-xs text-gray-500">Group Leader | Architecture & AI</p>
+                                </div>
+                            </div>
+                    </div>
+                </div>
+
+                <!-- Company Information -->
+                <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6 border-2 border-blue-200">
+                    <h3 class="text-xl font-bold text-blue-900 mb-4 flex items-center gap-2">
+                        <span class="text-2xl">🏢</span> Project Affiliation
+                    </h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <h4 class="text-lg font-bold text-blue-800 mb-2">Chatake Innoworks Pvt. Ltd.</h4>
+                            <p class="text-blue-700 mb-3">Technology Partner & Development Company</p>
+                            <div class="space-y-2 text-sm">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-blue-600">🌐</span>
+                                    <a href="https://www.chatakeinnoworks.com" target="_blank" class="text-blue-600 hover:text-blue-800 underline">www.chatakeinnoworks.com</a>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <span class="text-blue-600">💼</span>
+                                    <a href="https://www.linkedin.com/company/chatake-innoworks-pvt-ltd" target="_blank" class="text-blue-600 hover:text-blue-800 underline">LinkedIn Company Page</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="text-sm font-bold text-blue-700 uppercase tracking-wider mb-2">Registered Address</h4>
+                            <p class="text-blue-800 font-medium">Chatake Innoworks Pvt. Ltd.</p>
+                            <p class="text-blue-700">Nehru Industrial Estate,</p>
+                            <p class="text-blue-700">Solapur, Maharashtra, India</p>
+                            <p class="text-xs text-blue-600 mt-2">PIN: 413001</p>
+                        </div>
+                    </div>
+                    <div class="mt-4 p-3 bg-blue-100 rounded-lg">
+                        <p class="text-sm text-blue-800">
+                            <strong>Project Status:</strong> Apollo AgriGuard is a flagship product developed by Chatake Innoworks Pvt. Ltd.
+                            in collaboration with Shri Siddheshwar Women's Polytechnic for DIPEX 2026 competition.
+                        </p>
+            </div>
+        </div>
+
+        <!-- TAB: VIDEO -->
+        <div id="video" class="tab-content hidden">
+            <div class="bg-white rounded-xl p-6 shadow-lg border border-gray-200 mb-6">
+                <h2 class="text-xl font-bold text-gray-800 mb-4">🎬 Apollo AgriGuard Video Presentation</h2>
+                <p class="text-gray-600 mb-6">Watch our comprehensive demonstration of Apollo AgriGuard - AI-Powered Precision Agriculture for DIPEX 2026.</p>
+
+                <!-- YouTube Embed (if enabled) -->
+                <div class="aspect-video mb-6">
+                    <iframe width="100%" height="100%" src="https://www.youtube.com/embed/os06aEhzVL0" title="Apollo AgriGuard Video" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                </div>
+
+                <!-- Fallback: Direct YouTube Link -->
+                <div class="text-center mb-6">
+                    <a href="https://youtu.be/os06aEhzVL0" target="_blank" class="inline-flex items-center gap-3 bg-red-600 hover:bg-red-700 text-white font-bold py-4 px-8 rounded-xl transition-all transform hover:scale-105 shadow-lg">
+                        <span class="text-2xl">▶️</span>
+                        Watch on YouTube
+                        <span class="text-sm opacity-90">(Opens in new tab)</span>
+                    </a>
+                </div>
+
+                <!-- Video Description -->
+                <div class="bg-gray-50 rounded-lg p-6 border-l-4 border-red-500">
+                    <h3 class="text-lg font-bold text-gray-800 mb-3">📹 Apollo – The Agri-Guardian | AI-Powered Precision Agriculture | DIPEX 2026</h3>
+                    <div class="text-gray-700 space-y-3">
+                        <p><strong>🌾 Apollo: Revolutionizing Agriculture through AI, Robotics & IoT</strong></p>
+                        <p>Discover <strong>Apollo</strong>, an advanced AI-driven precision agriculture platform developed by <strong>Shri Siddheshwar Women's Polytechnic</strong> in collaboration with <strong>Chatake Innoworks Pvt. Ltd.</strong>, showcased for <strong>DIPEX 2026</strong>.</p>
+                        <p>Apollo is designed as an intelligent agricultural guardian — continuously sensing, analyzing, learning, and acting to support sustainable, data-driven farming.</p>
+
+                        <h4 class="font-semibold text-gray-800 mt-4">🎯 What is Apollo?</h4>
+                        <p>Apollo is a <strong>6-module intelligent agricultural monitoring and automation system</strong> built to transform modern farming:</p>
+                        <ul class="list-disc list-inside space-y-1 ml-4">
+                            <li>🌐 <strong>SENSE</strong> – Multi-source data collection from satellites, drones, and IoT sensors</li>
+                            <li>🧠 <strong>THINK</strong> – AI-based decision making using CNN-powered crop health analysis and market intelligence</li>
+                            <li>🤖 <strong>ACT</strong> – Autonomous robotic systems for precision farming operations</li>
+                            <li>👁️ <strong>SEE</strong> – Real-time visualization dashboard for live monitoring and insights</li>
+                            <li>🔗 <strong>CONNECT</strong> – Seamless integration with existing farm and management systems</li>
+                            <li>📚 <strong>LEARN</strong> – Continuous learning and adaptive intelligence for evolving agricultural conditions</li>
+                        </ul>
+
+                        <h4 class="font-semibold text-gray-800 mt-4">🚀 Key Features Demonstrated</h4>
+                        <ul class="list-disc list-inside space-y-1 ml-4">
+                            <li>Autonomous rover-based agricultural robotics</li>
+                            <li>Real-time farm simulation with live harvesting workflows</li>
+                            <li>AI-powered crop disease detection using Convolutional Neural Networks</li>
+                            <li>Market intelligence and commodity price analysis</li>
+                            <li>Professional web dashboard showing complete system architecture</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        // --- Global State ---
+        let activeTab = 'overview';
+        let isAutoMode = false;
+        let roverInterval;
+        let charts = {};
+        let crops = [];
+        let simulationRunning = false;
+        let entities = [];
+        let weatherActive = false;
+
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            initCharts();
+            generateFieldMap();
+            generateCrops();
+            startLiveSimulation();
+            initSimulation();
+            drawSimulation(); // Draw initial state
+            loadMarketData();
+            logSystem('System initialized. Connection established with Lander 01, 02, 03.');
+        });
+
+        // --- Tab Switching Logic ---
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+                btn.classList.add('hover:bg-gray-100');
+            });
+
+            document.getElementById(tabId).classList.remove('hidden');
+
+            const activeBtn = document.querySelector(`button[onclick="switchTab('${tabId}')"]`);
+            if(activeBtn) {
+                activeBtn.classList.add('active');
+                activeBtn.classList.remove('hover:bg-gray-100');
+            }
+            activeTab = tabId;
+
+            // Reinitialize simulation if switching to simulation tab
+            if (tabId === 'simulation') {
+                setTimeout(() => {
+                    initSimulation();
+                    drawSimulation();
+                    updateHarvestStats();
+                    // Auto-start the simulation
+                    simulationRunning = true;
+                    animate();
+                    logSystem('Live operations simulation started automatically.');
+                }, 100);
+            } else if (activeTab === 'simulation') {
+                // Stop animation when leaving simulation tab
+                simulationRunning = false;
+                stopAnimation();
+            }
+        }
+
+        // --- Chart.js Initialization ---
+        function initCharts() {
+            const commonOptions = {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: { x: { display: false }, y: { display: true } }
+            };
+
+            charts.temp = new Chart(document.getElementById('tempChart'), {
+                type: 'line',
+                data: {
+                    labels: Array(10).fill(''),
+                    datasets: [{
+                        label: 'Temp (°C)',
+                        data: [24, 25, 24, 26, 27, 28, 28.5, 29, 28, 28.5],
+                        borderColor: '#f97316',
+                        backgroundColor: 'rgba(249, 115, 22, 0.1)',
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: commonOptions
+            });
+
+            charts.moisture = new Chart(document.getElementById('moistureChart'), {
+                type: 'bar',
+                data: {
+                    labels: Array(10).fill(''),
+                    datasets: [{
+                        label: 'Moisture (%)',
+                        data: [30, 32, 31, 33, 32, 34, 32, 31, 33, 32],
+                        backgroundColor: '#06b6d4',
+                        borderRadius: 4
+                    }]
+                },
+                options: commonOptions
+            });
+
+            charts.npk = new Chart(document.getElementById('npkChart'), {
+                type: 'radar',
+                data: {
+                    labels: ['Nitrogen', 'Phosphorus', 'Potassium', 'pH', 'EC'],
+                    datasets: [{
+                        label: 'Current Levels',
+                        data: [80, 70, 60, 7.2, 1.5],
+                        borderColor: '#10b981',
+                        backgroundColor: 'rgba(16, 185, 129, 0.2)',
+                    }]
+                },
+                options: { ...commonOptions, scales: { r: { suggestMin: 0, suggestMax: 100 } } }
+            });
+
+            charts.cnn = new Chart(document.getElementById('cnnChart'), {
+                type: 'doughnut',
+                data: {
+                    labels: ['Healthy', 'Rust', 'Blight', 'Pest'],
+                    datasets: [{
+                        data: [0, 0, 0, 0],
+                        backgroundColor: ['#22c55e', '#eab308', '#ef4444', '#a855f7']
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false }
+            });
+
+            charts.market = new Chart(document.getElementById('marketChart'), {
+                type: 'bar',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Price (₹/kg)',
+                        data: [],
+                        backgroundColor: [],
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return '₹' + value;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // --- Field Map Generation ---
+        function generateFieldMap() {
+            const grid = document.getElementById('field-map');
+            grid.innerHTML = '';
+            let stats = { healthy: 0, stressed: 0, critical: 0 };
+
+            for (let i = 0; i < 100; i++) {
+                const cell = document.createElement('div');
+                cell.className = 'plot-cell';
+
+                const rand = Math.random();
+                if (rand > 0.9) {
+                    cell.classList.add('bg-red-500');
+                    stats.critical++;
+                } else if (rand > 0.75) {
+                    cell.classList.add('bg-yellow-500');
+                    stats.stressed++;
+                } else {
+                    cell.classList.add('bg-green-500');
+                    stats.healthy++;
+                }
+
+                cell.title = `Plot #${i+1}`;
+                grid.appendChild(cell);
+            }
+
+            document.getElementById('healthy-count').innerText = stats.healthy;
+            document.getElementById('stressed-count').innerText = stats.stressed;
+            document.getElementById('critical-count').innerText = stats.critical;
+
+            const score = Math.floor((stats.healthy / 100) * 100);
+            document.getElementById('health-score').innerText = score;
+        }
+
+        function refreshFieldMap() {
+            generateFieldMap();
+            logSystem('Field map refreshed via satellite imaging.');
+        }
+
+        // --- Simulation Logic ---
+        function startLiveSimulation() {
+            setInterval(() => {
+                const temp = (28 + (Math.random() * 2 - 1)).toFixed(1);
+                const moisture = Math.floor(30 + Math.random() * 5);
+                const humidity = Math.floor(60 + Math.random() * 5);
+
+                document.getElementById('avg-temp').innerText = temp;
+                document.getElementById('avg-moisture').innerText = moisture;
+
+                document.getElementById('lander1-temp').innerText = temp + '°';
+                document.getElementById('lander2-moisture').innerText = moisture + '%';
+                document.getElementById('lander3-humidity').innerText = humidity + '%';
+
+                const liveContainer = document.getElementById('live-sensors');
+                liveContainer.innerHTML = `
+                    <div class="flex justify-between text-sm border-b pb-2"><span>Ambient Temp</span><span class="font-mono font-bold">${temp}°C</span></div>
+                    <div class="flex justify-between text-sm border-b pb-2"><span>Soil VWC</span><span class="font-mono font-bold">${moisture}%</span></div>
+                    <div class="flex justify-between text-sm border-b pb-2"><span>Leaf Wetness</span><span class="font-mono font-bold">${(Math.random()*10).toFixed(1)}</span></div>
+                `;
+
+                updateChartData(charts.temp, temp);
+                updateChartData(charts.moisture, moisture);
+
+            }, 3000);
+        }
+
+        function updateChartData(chart, newData) {
+            chart.data.datasets[0].data.shift();
+            chart.data.datasets[0].data.push(newData);
+            chart.update();
+        }
+
+        // --- CNN Inference Simulation ---
+        const cropEmojis = ['🌾', '🌽', '🍅', '🥔', '🍇'];
+        let currentEmojiIndex = 0;
+
+        function changeCropImage() {
+            currentEmojiIndex = (currentEmojiIndex + 1) % cropEmojis.length;
+            document.getElementById('crop-emoji').innerText = cropEmojis[currentEmojiIndex];
+            resetCNNUI();
+        }
+
+        function runCNNInference() {
+            const btn = document.getElementById('cnn-run-btn');
+            const status = document.getElementById('cnn-status');
+            const progressBar = document.getElementById('cnn-progress');
+            const fill = document.getElementById('cnn-progress-bar');
+            const imgContainer = document.getElementById('cnn-image');
+
+            btn.disabled = true;
+            btn.classList.add('opacity-50');
+            status.innerText = "Scanning...";
+            status.className = "font-bold text-blue-600";
+            progressBar.classList.remove('hidden');
+            fill.style.width = '0%';
+
+            const scanLine = document.createElement('div');
+            scanLine.className = 'scan-line cnn-scanning';
+            imgContainer.appendChild(scanLine);
+
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += 5;
+                fill.style.width = `${progress}%`;
+
+                if (progress >= 100) {
+                    clearInterval(interval);
+                    finalizeInference(scanLine);
+                }
+            }, 100);
+        }
+
+        function finalizeInference(scanElement) {
+            scanElement.remove();
+
+            const scenarios = [
+                { label: 'Healthy', color: 'text-green-600', probs: [92, 3, 2, 3] },
+                { label: 'Leaf Rust', color: 'text-yellow-600', probs: [5, 88, 4, 3] },
+                { label: 'Early Blight', color: 'text-red-600', probs: [8, 4, 85, 3] },
+                { label: 'Aphid Infestation', color: 'text-purple-600', probs: [2, 3, 5, 90] }
+            ];
+
+            const result = scenarios[Math.floor(Math.random() * scenarios.length)];
+            const confidence = (85 + Math.random() * 14).toFixed(1);
+
+            document.getElementById('cnn-status').innerText = "Complete";
+            document.getElementById('cnn-status').className = "font-bold text-green-600";
+            document.getElementById('cnn-prediction').innerText = result.label;
+            document.getElementById('cnn-prediction').className = `text-xl font-bold ${result.color}`;
+            document.getElementById('cnn-confidence').innerText = `${confidence}%`;
+
+            document.getElementById('cnn-run-btn').disabled = false;
+            document.getElementById('cnn-run-btn').classList.remove('opacity-50');
+
+            charts.cnn.data.datasets[0].data = result.probs;
+            charts.cnn.update();
+
+            const list = document.getElementById('class-probs');
+            list.innerHTML = `
+                <div class="flex justify-between text-sm"><span>Healthy</span><span class="font-mono">${result.probs[0]}%</span></div>
+                <div class="flex justify-between text-sm"><span>Rust</span><span class="font-mono">${result.probs[1]}%</span></div>
+                <div class="flex justify-between text-sm"><span>Blight</span><span class="font-mono">${result.probs[2]}%</span></div>
+                <div class="flex justify-between text-sm"><span>Pest</span><span class="font-mono">${result.probs[3]}%</span></div>
+            `;
+
+            logSystem(`Inference run: Detected ${result.label} with ${confidence}% confidence.`);
+
+            const bbox = document.createElement('div');
+            bbox.className = 'bbox';
+            bbox.style.top = '30%';
+            bbox.style.left = '30%';
+            bbox.style.width = '40%';
+            bbox.style.height = '40%';
+            document.getElementById('cnn-image').appendChild(bbox);
+
+            setTimeout(() => bbox.remove(), 3000);
+        }
+
+        function resetCNNUI() {
+            document.getElementById('cnn-prediction').innerText = '--';
+            document.getElementById('cnn-confidence').innerText = '--';
+            document.getElementById('cnn-progress').classList.add('hidden');
+            const existingBBox = document.querySelector('.bbox');
+            if(existingBBox) existingBBox.remove();
+            charts.cnn.data.datasets[0].data = [0,0,0,0];
+            charts.cnn.update();
+        }
+
+        // --- Robotics Control ---
+        let roverX = 50;
+        let roverY = 50;
+
+        // Generate crops in the field
+        function generateCrops() {
+            const field = document.getElementById('rover-field');
+            crops = [];
+
+            for (let i = 0; i < 15; i++) {
+                const crop = document.createElement('div');
+                crop.className = 'crop';
+
+                // Random position
+                const x = Math.random() * 80 + 10; // 10% to 90%
+                const y = Math.random() * 80 + 10;
+
+                // Random health state
+                const healthRand = Math.random();
+                if (healthRand > 0.8) {
+                    crop.classList.add('diseased');
+                } else if (healthRand > 0.6) {
+                    crop.classList.add('stressed');
+                } else {
+                    crop.classList.add('healthy');
+                }
+
+                crop.style.left = `${x}%`;
+                crop.style.top = `${y}%`;
+                crop.dataset.id = i;
+
+                field.appendChild(crop);
+                crops.push({ element: crop, x, y, harvested: false });
+            }
+        }
+
+        function moveRoverTo(x, y) {
+            const field = document.getElementById('rover-field');
+            roverX = x;
+            roverY = y;
+
+            const rover = document.getElementById('rover');
+            rover.style.left = `${x}%`;
+            rover.style.top = `${y}%`;
+
+            document.getElementById('rover-x').innerText = x.toFixed(0);
+            document.getElementById('rover-y').innerText = y.toFixed(0);
+
+            const trail = document.createElement('div');
+            trail.className = 'rover-trail';
+            trail.style.left = `${x}%`;
+            trail.style.top = `${y}%`;
+            field.appendChild(trail);
+
+            setTimeout(() => trail.remove(), 2500);
+        }
+
+        function sendCommand(cmd) {
+            logSystem(`Sending command to Rover: ${cmd.toUpperCase()}`);
+            document.getElementById('rover-task').innerText = cmd.toUpperCase();
+            document.getElementById('rover-status').innerText = "BUSY";
+            document.getElementById('rover-speed').innerText = "0.5";
+
+            const field = document.getElementById('rover-field');
+
+            if (cmd === 'navigate') {
+                 let steps = 0;
+                 const moveInterval = setInterval(() => {
+                     const newX = Math.max(0, Math.min(95, roverX + (Math.random() * 20 - 10)));
+                     const newY = Math.max(0, Math.min(95, roverY + (Math.random() * 20 - 10)));
+                     moveRoverTo(newX, newY);
+                     steps++;
+                     if(steps > 10) {
+                         clearInterval(moveInterval);
+                         stopRover();
+                     }
+                 }, 500);
+            } else if (cmd === 'spray') {
+                // Create spray effect at rover position
+                const sprayEffect = document.createElement('div');
+                sprayEffect.className = 'spray-effect';
+                sprayEffect.style.left = `${roverX}%`;
+                sprayEffect.style.top = `${roverY}%`;
+                field.appendChild(sprayEffect);
+
+                // Improve nearby crops
+                crops.forEach(crop => {
+                    const distance = Math.sqrt((crop.x - roverX) ** 2 + (crop.y - roverY) ** 2);
+                    if (distance < 15 && !crop.harvested) { // Within 15% distance
+                        if (crop.element.classList.contains('diseased')) {
+                            crop.element.classList.remove('diseased');
+                            crop.element.classList.add('stressed');
+                        } else if (crop.element.classList.contains('stressed')) {
+                            crop.element.classList.remove('stressed');
+                            crop.element.classList.add('healthy');
+                        }
+                    }
+                });
+
+                setTimeout(() => sprayEffect.remove(), 800);
+                setTimeout(stopRover, 2000);
+                logSystem('Pesticide spraying completed. Nearby crops treated.');
+
+            } else if (cmd === 'harvest') {
+                // Harvest nearby crops
+                let harvestedCount = 0;
+                crops.forEach(crop => {
+                    const distance = Math.sqrt((crop.x - roverX) ** 2 + (crop.y - roverY) ** 2);
+                    if (distance < 12 && !crop.harvested) { // Within 12% distance
+                        crop.harvested = true;
+                        crop.element.classList.add('harvested');
+                        harvestedCount++;
+                        setTimeout(() => crop.element.remove(), 500);
+                    }
+                });
+
+                logSystem(`Harvesting completed. ${harvestedCount} crops collected.`);
+                setTimeout(stopRover, 2500);
+
+            } else if (cmd === 'water') {
+                // Create water effect at rover position
+                const waterEffect = document.createElement('div');
+                waterEffect.className = 'water-effect';
+                waterEffect.style.left = `${roverX}%`;
+                waterEffect.style.top = `${roverY}%`;
+                field.appendChild(waterEffect);
+
+                // Improve stressed crops
+                crops.forEach(crop => {
+                    const distance = Math.sqrt((crop.x - roverX) ** 2 + (crop.y - roverY) ** 2);
+                    if (distance < 10 && !crop.harvested) { // Within 10% distance
+                        if (crop.element.classList.contains('stressed')) {
+                            crop.element.classList.remove('stressed');
+                            crop.element.classList.add('healthy');
+                        }
+                    }
+                });
+
+                setTimeout(() => waterEffect.remove(), 1000);
+                setTimeout(stopRover, 1500);
+                logSystem('Irrigation completed. Soil moisture levels optimized.');
+
+            } else {
+                setTimeout(stopRover, 3000);
+            }
+        }
+
+        function stopRover() {
+            document.getElementById('rover-status').innerText = "IDLE";
+            document.getElementById('rover-task').innerText = "None";
+            document.getElementById('rover-speed').innerText = "0";
+            logSystem("Rover task completed. Returning to idle.");
+        }
+
+        function toggleAutoMode() {
+            isAutoMode = !isAutoMode;
+            const btn = document.getElementById('auto-btn');
+            if (isAutoMode) {
+                btn.classList.replace('bg-green-100', 'bg-red-100');
+                btn.classList.replace('text-green-700', 'text-red-700');
+                btn.innerText = "🛑 Stop Auto";
+                sendCommand('navigate');
+            } else {
+                btn.classList.replace('bg-red-100', 'bg-green-100');
+                btn.classList.replace('text-red-700', 'text-green-700');
+                btn.innerText = "🤖 Auto Mode";
+                stopRover();
+            }
+        }
+
+        function resetRover() {
+            moveRoverTo(50, 50);
+            // Clear existing crops and regenerate
+            const field = document.getElementById('rover-field');
+            crops.forEach(crop => crop.element.remove());
+            generateCrops();
+            logSystem("Rover position reset to base (50, 50). Field regenerated.");
+        }
+
+        // --- Live Simulation (Canvas Animation) ---
+        function initSimulation() {
+            const canvas = document.getElementById('harvestCanvas');
+            if (!canvas) {
+                console.error('Canvas element not found');
+                return;
+            }
+
+            const ctx = canvas.getContext('2d');
+            if (!ctx) {
+                console.error('Canvas context not available');
+                return;
+            }
+
+            // Set canvas size - use fixed size
+            canvas.width = 1200;
+            canvas.height = 400;
+
+            // Initialize entities
+            entities = [];
+
+            // Add some crops
+            for (let i = 0; i < 20; i++) {
+                entities.push({
+                    type: 'crop',
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height * 0.7 + canvas.height * 0.2,
+                    color: ['#22c55e', '#eab308', '#ef4444'][Math.floor(Math.random() * 3)],
+                    size: 8 + Math.random() * 4,
+                    harvested: false
+                });
+            }
+
+            // Add rovers
+            for (let i = 0; i < 3; i++) {
+                entities.push({
+                    type: 'rover',
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    vx: (Math.random() - 0.5) * 2,
+                    vy: (Math.random() - 0.5) * 2,
+                    color: '#374151',
+                    task: 'idle',
+                    targetCrop: null,
+                    harvested: 0
+                });
+            }
+
+            // Add storage facility
+            entities.push({
+                type: 'storage',
+                x: canvas.width - 60,
+                y: canvas.height - 60,
+                color: '#6b7280'
+            });
+        }
+
+        function drawSimulation() {
+            const canvas = document.getElementById('harvestCanvas');
+            if (!canvas) {
+                return;
+            }
+
+            const ctx = canvas.getContext('2d');
+            if (!ctx) {
+                return;
+            }
+
+            // Clear canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw sky gradient
+            const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+            gradient.addColorStop(0, '#bae6fd');
+            gradient.addColorStop(1, '#e7e5e4');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Draw entities
+            entities.forEach(entity => {
+                ctx.fillStyle = entity.color;
+
+                if (entity.type === 'crop') {
+                    if (entity.harvested) {
+                        // Draw harvested crop as a square with X
+                        ctx.fillRect(entity.x - entity.size/2, entity.y - entity.size/2, entity.size, entity.size);
+                        ctx.strokeStyle = '#ffffff';
+                        ctx.lineWidth = 2;
+                        ctx.beginPath();
+                        ctx.moveTo(entity.x - entity.size/2, entity.y - entity.size/2);
+                        ctx.lineTo(entity.x + entity.size/2, entity.y + entity.size/2);
+                        ctx.moveTo(entity.x + entity.size/2, entity.y - entity.size/2);
+                        ctx.lineTo(entity.x - entity.size/2, entity.y + entity.size/2);
+                        ctx.stroke();
+                    } else {
+                        ctx.beginPath();
+                        ctx.arc(entity.x, entity.y, entity.size, 0, Math.PI * 2);
+                        ctx.fill();
+                    }
+                } else if (entity.type === 'rover') {
+                    ctx.fillRect(entity.x - 8, entity.y - 8, 16, 16);
+                } else if (entity.type === 'storage') {
+                    ctx.fillRect(entity.x - 20, entity.y - 20, 40, 40);
+                } else if (entity.type === 'spray') {
+                    ctx.beginPath();
+                    ctx.arc(entity.x, entity.y, entity.size, 0, Math.PI * 2);
+                    ctx.fill();
+                } else if (entity.type === 'rain') {
+                    ctx.strokeStyle = entity.color;
+                    ctx.lineWidth = 2;
+                    ctx.beginPath();
+                    ctx.moveTo(entity.x, entity.y);
+                    ctx.lineTo(entity.x + 5, entity.y + 10);
+                    ctx.stroke();
+                }
+            });
+        }
+
+        function updateSimulation() {
+            if (!simulationRunning) return;
+
+            const canvas = document.getElementById('harvestCanvas');
+            if (!canvas) return;
+
+            entities.forEach(entity => {
+                if (entity.type === 'rover') {
+                    if (entity.task === 'harvest' && entity.targetCrop) {
+                        // Move towards target crop
+                        const dx = entity.targetCrop.x - entity.x;
+                        const dy = entity.targetCrop.y - entity.y;
+                        const distance = Math.sqrt(dx * dx + dy * dy);
+
+                        if (distance > 10) {
+                            // Move towards crop
+                            entity.vx = (dx / distance) * 1.5;
+                            entity.vy = (dy / distance) * 1.5;
+                            entity.x += entity.vx;
+                            entity.y += entity.vy;
+                        } else {
+                            // Reached crop - harvest it
+                            entity.targetCrop.harvested = true;
+                            entity.targetCrop.color = '#6b7280'; // Gray out harvested crop
+                            entity.harvested++;
+                            entity.task = 'return';
+                            entity.targetCrop = null;
+
+                            // Find storage to return to
+                            const storage = entities.find(e => e.type === 'storage');
+                            if (storage) {
+                                entity.targetX = storage.x;
+                                entity.targetY = storage.y;
+                            }
+                        }
+                    } else if (entity.task === 'return' && entity.targetX !== undefined) {
+                        // Return to storage
+                        const dx = entity.targetX - entity.x;
+                        const dy = entity.targetY - entity.y;
+                        const distance = Math.sqrt(dx * dx + dy * dy);
+
+                        if (distance > 15) {
+                            entity.vx = (dx / distance) * 1.5;
+                            entity.vy = (dy / distance) * 1.5;
+                            entity.x += entity.vx;
+                            entity.y += entity.vy;
+                        } else {
+                            // Reached storage - unload and find new crop
+                            entity.task = 'idle';
+                            entity.targetX = undefined;
+                            entity.targetY = undefined;
+                            // Find next crop to harvest
+                            assignHarvestTask(entity);
+                        }
+                    } else if (entity.task === 'idle') {
+                        // Random movement when idle
+                        entity.x += entity.vx;
+                        entity.y += entity.vy;
+
+                        // Bounce off walls
+                        if (entity.x < 0 || entity.x > canvas.width) entity.vx *= -1;
+                        if (entity.y < 0 || entity.y > canvas.height) entity.vy *= -1;
+
+                        // Occasionally assign harvest task
+                        if (Math.random() < 0.005) { // 0.5% chance per frame
+                            assignHarvestTask(entity);
+                        }
+                    } else {
+                        // Default random movement
+                        entity.x += entity.vx;
+                        entity.y += entity.vy;
+
+                        // Bounce off walls
+                        if (entity.x < 0 || entity.x > canvas.width) entity.vx *= -1;
+                        if (entity.y < 0 || entity.y > canvas.height) entity.vy *= -1;
+                    }
+                } else if (entity.type === 'spray' || entity.type === 'rain') {
+                    entity.size *= 0.95;
+                    if (entity.size < 1) {
+                        entities.splice(entities.indexOf(entity), 1);
+                    }
+                }
+            });
+        }
+
+        function assignHarvestTask(rover) {
+            // Find an unharvested crop
+            const availableCrops = entities.filter(e => e.type === 'crop' && !e.harvested);
+            if (availableCrops.length > 0) {
+                const targetCrop = availableCrops[Math.floor(Math.random() * availableCrops.length)];
+                rover.task = 'harvest';
+                rover.targetCrop = targetCrop;
+                logSystem(`Rover assigned to harvest crop at (${Math.round(targetCrop.x)}, ${Math.round(targetCrop.y)})`);
+            }
+        }
+
+        function startHarvest() {
+            simulationRunning = true;
+            animate();
+
+            // Assign harvest tasks to all rovers
+            const rovers = entities.filter(e => e.type === 'rover');
+            rovers.forEach(rover => {
+                assignHarvestTask(rover);
+            });
+
+            logSystem('Rover deployment initiated. Autonomous harvesting sequence started.');
+        }
+
+        function sprayFertilizer() {
+            const canvas = document.getElementById('harvestCanvas');
+            if (!canvas) return;
+
+            for (let i = 0; i < 10; i++) {
+                entities.push({
+                    type: 'spray',
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    size: 15,
+                    color: '#3b82f6'
+                });
+            }
+            logSystem('Fertilizer spray deployed across field.');
+        }
+
+        function applyPesticide() {
+            const canvas = document.getElementById('harvestCanvas');
+            if (!canvas) return;
+
+            for (let i = 0; i < 8; i++) {
+                entities.push({
+                    type: 'spray',
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    size: 12,
+                    color: '#ef4444'
+                });
+            }
+            logSystem('Pesticide application completed.');
+        }
+
+        function runCNNAnalysis() {
+            logSystem('CNN analysis initiated. Scanning field for crop health...');
+            setTimeout(() => {
+                const results = ['85% healthy', '12% stressed', '3% diseased'];
+                logSystem(`Analysis complete: ${results.join(', ')}`);
+            }, 3000);
+        }
+
+        function triggerWeather() {
+            const canvas = document.getElementById('harvestCanvas');
+            if (!canvas) return;
+
+            weatherActive = !weatherActive;
+            if (weatherActive) {
+                logSystem('Weather simulation activated. Rain event triggered.');
+                for (let i = 0; i < 20; i++) {
+                    entities.push({
+                        type: 'rain',
+                        x: Math.random() * canvas.width,
+                        y: 0,
+                        color: '#60a5fa'
+                    });
+                }
+            } else {
+                logSystem('Weather simulation deactivated.');
+            }
+        }
+
+        function resetSim() {
+            stopAnimation();
+            entities = entities.filter(entity => entity.type === 'storage');
+            initSimulation();
+            drawSimulation(); // Draw the reset state immediately
+            simulationRunning = true;
+            weatherActive = false;
+            animate();
+            logSystem('Simulation reset. All entities cleared.');
+        }
+
+        let animationId = null;
+
+        function updateHarvestStats() {
+            const crops = entities.filter(e => e.type === 'crop');
+            const harvested = crops.filter(c => c.harvested).length;
+            const total = crops.length;
+            const rovers = entities.filter(e => e.type === 'rover');
+            const activeRovers = rovers.filter(r => r.task !== 'idle').length;
+            const efficiency = total > 0 ? Math.round((harvested / total) * 100) : 0;
+
+            document.getElementById('total-crops').textContent = total;
+            document.getElementById('harvested-crops').textContent = harvested;
+            document.getElementById('active-rovers').textContent = activeRovers;
+            document.getElementById('harvest-efficiency').textContent = efficiency + '%';
+        }
+
+        function animate() {
+            if (simulationRunning && !animationId) {
+                animationId = requestAnimationFrame(function loop() {
+                    if (simulationRunning) {
+                        updateSimulation();
+                        drawSimulation();
+                        updateHarvestStats();
+                        animationId = requestAnimationFrame(loop);
+                    } else {
+                        animationId = null;
+                    }
+                });
+            }
+        }
+
+        function stopAnimation() {
+            if (animationId) {
+                cancelAnimationFrame(animationId);
+                animationId = null;
+            }
+        }
+
+        // --- System Utils ---
+        function logSystem(msg) {
+            const logPanel = document.getElementById('system-logs');
+            const entry = document.createElement('div');
+            entry.className = 'log-entry text-xs text-green-400 font-mono';
+            const time = new Date().toLocaleTimeString();
+            entry.innerText = `[${time}] > ${msg}`;
+            logPanel.insertBefore(entry, logPanel.firstChild);
+            if (logPanel.children.length > 20) logPanel.lastChild.remove();
+        }
+
+        function clearLogs() {
+            document.getElementById('system-logs').innerHTML = '';
+        }
+
+        function quickAction(action) {
+            alert(`Initiating ${action.toUpperCase()} protocol...`);
+            logSystem(`User triggered quick action: ${action}`);
+        }
+
+        // --- Market Data Loading ---
+        async function loadMarketData() {
+            try {
+                const response = await fetch('/think/market');
+                const data = await response.json();
+                const marketData = data.market_data;
+
+                // Update timestamp
+                const timestamp = new Date(data.timestamp).toLocaleString();
+                document.getElementById('market-timestamp').innerText = timestamp;
+
+                // Update chart
+                const labels = marketData.map(item => item.crop.charAt(0).toUpperCase() + item.crop.slice(1));
+                const prices = marketData.map(item => item.price);
+                const colors = marketData.map(item => {
+                    if (item.trend === 'rising') return '#10b981';
+                    if (item.trend === 'falling') return '#ef4444';
+                    return '#6b7280';
+                });
+
+                charts.market.data.labels = labels;
+                charts.market.data.datasets[0].data = prices;
+                charts.market.data.datasets[0].backgroundColor = colors;
+                charts.market.update();
+
+                // Update table
+                const tableEl = document.getElementById('market-table');
+                tableEl.innerHTML = marketData.map(item => `
+                    <div class="flex justify-between items-center p-2 bg-white rounded border">
+                        <div>
+                            <div class="font-medium text-gray-800">${item.crop.charAt(0).toUpperCase() + item.crop.slice(1)}</div>
+                            <div class="text-xs text-gray-500">${item.advice}</div>
+                        </div>
+                        <div class="text-right">
+                            <div class="font-bold text-gray-900">₹${item.price.toFixed(2)}</div>
+                            <div class="text-xs ${item.trend === 'rising' ? 'text-green-600' : item.trend === 'falling' ? 'text-red-600' : 'text-gray-600'}">
+                                ${item.trend === 'rising' ? '↗' : item.trend === 'falling' ? '↘' : '→'} ${item.momentum > 0 ? '+' : ''}${item.momentum.toFixed(2)}
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+
+                logSystem(`Market data updated: ${marketData.length} crops analyzed`);
+            } catch (error) {
+                console.warn('Backend not available, using demo market data');
+                logSystem('Using demo market data (backend offline)');
+
+                // Mock market data for demo
+                const mockData = [
+                    {crop: 'cotton', price: 285.50, trend: 'rising', momentum: 2.3, advice: 'Consider planting'},
+                    {crop: 'sugarcane', price: 198.75, trend: 'steady', momentum: -1.2, advice: 'Hold'},
+                    {crop: 'millets', price: 165.20, trend: 'rising', momentum: 3.1, advice: 'Consider planting'},
+                    {crop: 'pulses', price: 182.90, trend: 'falling', momentum: -2.5, advice: 'Monitor closely'},
+                    {crop: 'tomato', price: 172.45, trend: 'steady', momentum: 0.8, advice: 'Hold'}
+                ];
+
+                // Update timestamp
+                document.getElementById('market-timestamp').innerText = new Date().toLocaleString();
+
+                // Update chart
+                const labels = mockData.map(item => item.crop.charAt(0).toUpperCase() + item.crop.slice(1));
+                const prices = mockData.map(item => item.price);
+                const colors = mockData.map(item => {
+                    if (item.trend === 'rising') return '#10b981';
+                    if (item.trend === 'falling') return '#ef4444';
+                    return '#6b7280';
+                });
+
+                charts.market.data.labels = labels;
+                charts.market.data.datasets[0].data = prices;
+                charts.market.data.datasets[0].backgroundColor = colors;
+                charts.market.update();
+
+                // Update table
+                const tableEl = document.getElementById('market-table');
+                tableEl.innerHTML = mockData.map(item => `
+                    <div class="flex justify-between items-center p-2 bg-white rounded border">
+                        <div>
+                            <div class="font-medium text-gray-800">${item.crop.charAt(0).toUpperCase() + item.crop.slice(1)}</div>
+                            <div class="text-xs text-gray-500">${item.advice}</div>
+                        </div>
+                        <div class="text-right">
+                            <div class="font-bold text-gray-900">₹${item.price.toFixed(2)}</div>
+                            <div class="text-xs ${item.trend === 'rising' ? 'text-green-600' : item.trend === 'falling' ? 'text-red-600' : 'text-gray-600'}">
+                                ${item.trend === 'rising' ? '↗' : item.trend === 'falling' ? '↘' : '→'} ${item.momentum > 0 ? '+' : ''}${item.momentum.toFixed(2)}
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+    </script>
+
+    <footer class="bg-gray-900 text-gray-400 py-6 mt-8">
+        <div class="container mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center md:text-left">
+                <div>
+                    <p class="text-sm font-mono mb-2">PROJECT CODE: APOLLO-AGRIVERSE</p>
+                    <p class="text-xs">© 2026 Chatake Innoworks Pvt. Ltd.</p>
+                </div>
+                <div>
+                    <p class="text-xs text-gray-500 mb-1">Technology Partner</p>
+                    <p class="text-sm font-medium">Chatake Innoworks Pvt. Ltd.</p>
+                    <p class="text-xs text-gray-500">Solapur, Maharashtra</p>
+                </div>
+                <div>
+                    <p class="text-xs text-gray-500 mb-1">Academic Collaboration</p>
+                    <p class="text-sm font-medium">Shri Siddheshwar Women's Polytechnic</p>
+                    <p class="text-xs text-gray-500">Dept. of Information Technology</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>
