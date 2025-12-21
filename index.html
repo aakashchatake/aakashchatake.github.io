@@ -902,40 +902,41 @@
                 <!-- Main YouTube Video -->
                 <div class="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
                     <div class="bg-gray-900 p-6 text-center">
-                        <div class="aspect-video bg-gray-800 rounded-lg flex items-center justify-center mb-4">
-                            <a href="https://youtu.be/os06aEhzVL0" target="_blank" class="group relative w-full h-full flex items-center justify-center hover:bg-gray-700 transition">
-                                <img src="https://img.youtube.com/vi/os06aEhzVL0/maxresdefault.jpg" alt="Video Thumbnail" class="w-full h-full object-cover absolute inset-0" onerror="this.style.display='none'">
-                                <div class="absolute inset-0 bg-black bg-opacity-30 group-hover:bg-opacity-50 transition flex items-center justify-center">
-                                    <div class="bg-red-600 rounded-full p-4 group-hover:scale-110 transition transform">
-                                        <span class="text-4xl">▶️</span>
-                                    </div>
-                                </div>
-                            </a>
+                        <!-- Local Video Player -->
+                        <div class="aspect-video bg-gray-800 rounded-lg flex items-center justify-center mb-4 overflow-hidden">
+                            <video width="100%" height="100%" controls class="w-full h-full">
+                                <source src="assets/videos/Apollo__The_Agri-Guardian.mp4" type="video/mp4">
+                                <p>Your browser doesn't support HTML5 video. <a href="https://youtu.be/os06aEhzVL0" target="_blank" class="text-blue-400 underline">Watch on YouTube instead</a></p>
+                            </video>
                         </div>
                         <h3 class="text-white text-lg font-bold mb-2">Full Presentation</h3>
-                        <p class="text-gray-300 text-sm mb-4">Complete Apollo AgriGuard demonstration</p>
-                        <a href="https://youtu.be/os06aEhzVL0" target="_blank" class="inline-block bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-6 rounded-lg transition">
-                            Watch on YouTube →
-                        </a>
+                        <p class="text-gray-300 text-sm mb-4">Complete Apollo AgriGuard demonstration (4 min)</p>
+                        <div class="flex gap-2 justify-center">
+                            <a href="assets/videos/Apollo__The_Agri-Guardian.mp4" download class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition text-sm">
+                                ⬇️ Download
+                            </a>
+                            <a href="https://youtu.be/os06aEhzVL0" target="_blank" class="inline-block bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg transition text-sm">
+                                ▶️ YouTube
+                            </a>
+                        </div>
                     </div>
                 </div>
 
                 <!-- Quick Demo Video -->
                 <div class="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
                     <div class="bg-gray-900 p-6 text-center">
-                        <div class="aspect-video bg-gray-800 rounded-lg flex items-center justify-center mb-4">
-                            <div class="w-full h-full bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center">
-                                <div class="text-center">
-                                    <div class="text-6xl mb-2">⚡</div>
-                                    <p class="text-white font-bold">10-Second Quick Demo</p>
-                                </div>
-                            </div>
+                        <!-- Local Video Player -->
+                        <div class="aspect-video bg-gray-800 rounded-lg flex items-center justify-center mb-4 overflow-hidden">
+                            <video width="100%" height="100%" controls class="w-full h-full">
+                                <source src="assets/videos/demo_10sec.mp4" type="video/mp4">
+                                <p>Your browser doesn't support HTML5 video.</p>
+                            </video>
                         </div>
                         <h3 class="text-white text-lg font-bold mb-2">Quick Overview</h3>
-                        <p class="text-gray-300 text-sm mb-4">Fast-track Apollo system highlights</p>
-                        <button class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg transition" onclick="alert('10-sec demo video link coming soon!')">
-                            Coming Soon
-                        </button>
+                        <p class="text-gray-300 text-sm mb-4">Fast-track Apollo system highlights (10 sec)</p>
+                        <a href="assets/videos/demo_10sec.mp4" download class="inline-block bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-6 rounded-lg transition">
+                            ⬇️ Download
+                        </a>
                     </div>
                 </div>
             </div>
@@ -944,33 +945,40 @@
             <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-6 mb-8">
                 <h3 class="text-2xl font-bold text-gray-800 mb-6">📸 Media Gallery</h3>
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <!-- Placeholder Images -->
-                    <div class="bg-gradient-to-br from-green-400 to-green-600 rounded-lg aspect-square flex items-center justify-center text-white text-center p-4 hover:shadow-lg transition">
-                        <div>
-                            <div class="text-4xl mb-2">🚜</div>
-                            <p class="text-sm font-semibold">Field Operations</p>
-                        </div>
+                    <!-- Image 1 -->
+                    <div class="bg-gray-200 rounded-lg aspect-square overflow-hidden hover:shadow-lg transition cursor-pointer" onclick="this.classList.toggle('ring-4'); this.classList.toggle('ring-blue-500')">
+                        <img src="assets/images/WhatsApp Image 2025-12-21 at 15.20.14.jpeg" alt="Apollo Project" class="w-full h-full object-cover">
                     </div>
-                    <div class="bg-gradient-to-br from-blue-400 to-blue-600 rounded-lg aspect-square flex items-center justify-center text-white text-center p-4 hover:shadow-lg transition">
-                        <div>
-                            <div class="text-4xl mb-2">🤖</div>
-                            <p class="text-sm font-semibold">Robotics</p>
-                        </div>
+                    <!-- Image 2 -->
+                    <div class="bg-gray-200 rounded-lg aspect-square overflow-hidden hover:shadow-lg transition cursor-pointer" onclick="this.classList.toggle('ring-4'); this.classList.toggle('ring-blue-500')">
+                        <img src="assets/images/WhatsApp Image 2025-12-21 at 18.25.54 (1).jpeg" alt="Apollo Project" class="w-full h-full object-cover">
                     </div>
-                    <div class="bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-lg aspect-square flex items-center justify-center text-white text-center p-4 hover:shadow-lg transition">
-                        <div>
-                            <div class="text-4xl mb-2">🌾</div>
-                            <p class="text-sm font-semibold">Crops</p>
-                        </div>
+                    <!-- Image 3 -->
+                    <div class="bg-gray-200 rounded-lg aspect-square overflow-hidden hover:shadow-lg transition cursor-pointer" onclick="this.classList.toggle('ring-4'); this.classList.toggle('ring-blue-500')">
+                        <img src="assets/images/WhatsApp Image 2025-12-21 at 18.25.54.jpeg" alt="Apollo Project" class="w-full h-full object-cover">
                     </div>
-                    <div class="bg-gradient-to-br from-purple-400 to-purple-600 rounded-lg aspect-square flex items-center justify-center text-white text-center p-4 hover:shadow-lg transition">
-                        <div>
-                            <div class="text-4xl mb-2">📊</div>
-                            <p class="text-sm font-semibold">Analytics</p>
-                        </div>
+                    <!-- Image 4 -->
+                    <div class="bg-gray-200 rounded-lg aspect-square overflow-hidden hover:shadow-lg transition cursor-pointer" onclick="this.classList.toggle('ring-4'); this.classList.toggle('ring-blue-500')">
+                        <img src="assets/images/WhatsApp Image 2025-12-21 at 18.25.55 (1).jpeg" alt="Apollo Project" class="w-full h-full object-cover">
+                    </div>
+                    <!-- Image 5 -->
+                    <div class="bg-gray-200 rounded-lg aspect-square overflow-hidden hover:shadow-lg transition cursor-pointer" onclick="this.classList.toggle('ring-4'); this.classList.toggle('ring-blue-500')">
+                        <img src="assets/images/WhatsApp Image 2025-12-21 at 18.25.55.jpeg" alt="Apollo Project" class="w-full h-full object-cover">
+                    </div>
+                    <!-- Image 6 -->
+                    <div class="bg-gray-200 rounded-lg aspect-square overflow-hidden hover:shadow-lg transition cursor-pointer" onclick="this.classList.toggle('ring-4'); this.classList.toggle('ring-blue-500')">
+                        <img src="assets/images/WhatsApp Image 2025-12-21 at 18.25.56.jpeg" alt="Apollo Project" class="w-full h-full object-cover">
+                    </div>
+                    <!-- Image 7 -->
+                    <div class="bg-gray-200 rounded-lg aspect-square overflow-hidden hover:shadow-lg transition cursor-pointer" onclick="this.classList.toggle('ring-4'); this.classList.toggle('ring-blue-500')">
+                        <img src="assets/images/WhatsApp Image 2025-12-21 at 18.25.57 (1).jpeg" alt="Apollo Project" class="w-full h-full object-cover">
+                    </div>
+                    <!-- Image 8 -->
+                    <div class="bg-gray-200 rounded-lg aspect-square overflow-hidden hover:shadow-lg transition cursor-pointer" onclick="this.classList.toggle('ring-4'); this.classList.toggle('ring-blue-500')">
+                        <img src="assets/images/WhatsApp Image 2025-12-21 at 18.25.57.jpeg" alt="Apollo Project" class="w-full h-full object-cover">
                     </div>
                 </div>
-                <p class="text-gray-500 text-sm mt-4 text-center">🖼️ Your warehouse photos can be added here</p>
+                <p class="text-gray-500 text-sm mt-4 text-center">📸 Click images to highlight | 13 photos from warehouse integrated</p>
             </div>
 
             <!-- Video Description -->
