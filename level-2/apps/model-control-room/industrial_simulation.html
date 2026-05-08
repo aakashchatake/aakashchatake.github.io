@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GFIS | BITS Pilani Dissertation Prototype</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Chosen Palette: Premium industrial graphite with restrained orange alarm/action accents -->
+    <!-- Application Structure Plan: 
+         This SPA is elevated to an academic/industrial standard suitable for an M.Tech AIML Viva defense at BITS Pilani.
+         - Header: Official academic context (BITS Pilani, GFIS, Candidate/Supervisor details).
+         - Core Concept: Explains the mathematical bottleneck (ADM1/CFD) vs. the GFIS PIML solution.
+         - Executive Speed Control: The primary interactive feature demonstrating decoupling of physical/computational time.
+         - Cyber-Physical Simulation (CSS Visuals): 3-stage plant (Feedstock -> Gasifier -> AD Reactor) rendered purely in CSS/HTML to meet the NO SVG constraint, dynamically bound to JS state.
+         - Live Telemetry & Chemical Terminal: Real-time readouts and kinetic reaction logs.
+         - Architecture (AIML): Visualizes the specific XGBoost + LSTM + PIML loss function architecture defined in the abstract.
+         - Diagnostics: High-speed Chart.js forecasting of the 48h catalyst decay and VFA/ALK biological collapse.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. Visuals achieved via advanced CSS styling, gradients, and Unicode. -->
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap');
+
+        body { background-color: #090807; color: #f6f1ea; font-family: 'Inter', system-ui, sans-serif; }
+        .font-mono { font-family: 'JetBrains Mono', monospace; }
+        
+        .chart-container { position: relative; width: 100%; max-width: 100%; height: 280px; margin: 0 auto; }
+
+        /* Terminal & Scrollbars */
+        .terminal-scroll::-webkit-scrollbar { width: 4px; }
+        .terminal-scroll::-webkit-scrollbar-track { background: #11100f; }
+        .terminal-scroll::-webkit-scrollbar-thumb { background: #a1a1aa; border-radius: 2px; }
+
+        /* Custom Speed Slider */
+        .range-slider { -webkit-appearance: none; width: 100%; height: 4px; background: #3a332b; border-radius: 2px; outline: none; }
+        .range-slider::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 16px; height: 16px; border-radius: 50%; background: #a1a1aa; cursor: pointer; box-shadow: 0 0 15px rgba(249, 115, 22, 0.45); transition: transform 0.1s; border: 2px solid #fff; }
+        .range-slider::-webkit-slider-thumb:hover { transform: scale(1.3); }
+
+        /* SCADA / CSS Plant Visualizations */
+        .scada-container { background: radial-gradient(circle at center, #1b1a18 0%, #11100f 100%); border: 1px solid #3a332b; box-shadow: inset 0 0 30px rgba(0,0,0,0.8); }
+        
+        .css-tank { position: relative; border-radius: 8px 8px 4px 4px; border: 2px solid #8b8175; background: rgba(15, 23, 42, 0.8); overflow: hidden; box-shadow: inset 0 0 15px rgba(0,0,0,0.9), 0 5px 15px rgba(0,0,0,0.5); backdrop-filter: blur(4px); }
+        .css-tank::after { content: ''; position: absolute; top: 0; left: 10%; width: 20%; height: 100%; background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0) 100%); pointer-events: none; } /* Glass reflection */
+        
+        .tank-level { position: absolute; bottom: 0; left: 0; width: 100%; transition: height 0.1s linear, filter 0.5s ease; border-top: 1px solid rgba(255,255,255,0.3); }
+        .level-msw { background: repeating-linear-gradient( 45deg, #451a03, #451a03 5px, #78350f 5px, #78350f 10px ); }
+        .level-bio { background: linear-gradient(to top, #164e38, #5f6f64); opacity: 0.85; }
+        
+        /* Gasifier Assembly */
+        .css-gasifier { position: relative; border-radius: 50% 50% 10px 10px; border: 3px solid #94a3b8; background: #1b1a18; overflow: hidden; transition: box-shadow 0.3s ease; }
+        .gas-core { position: absolute; bottom: 5%; left: 15%; right: 15%; height: 60%; border-radius: 50% 50% 10% 10%; background: radial-gradient(circle, #ea580c 0%, #7c2d12 60%, transparent 100%); opacity: 0; transition: opacity 0.5s ease; filter: blur(5px); }
+        .gas-grid { position: absolute; top:0; left:0; right:0; bottom:0; background-image: linear-gradient(#ffffff11 1px, transparent 1px), linear-gradient(90deg, #ffffff11 1px, transparent 1px); background-size: 10px 10px; pointer-events: none; }
+
+        /* Animated Pipes */
+        .pipe-h { height: 6px; background: #3a332b; position: relative; overflow: hidden; border-top: 1px solid #8b8175; border-bottom: 1px solid #1b1a18; }
+        .pipe-v { width: 6px; background: #3a332b; position: relative; overflow: hidden; border-left: 1px solid #8b8175; border-right: 1px solid #1b1a18; }
+        .flow-particle { position: absolute; background: #fff; box-shadow: 0 0 8px currentColor; }
+        .flow-h { top: 1px; bottom: 1px; width: 20px; left: -20px; animation: flowRight 1.5s infinite linear; }
+        .flow-v { left: 1px; right: 1px; height: 20px; top: -20px; animation: flowDown 1.5s infinite linear; }
+        @keyframes flowRight { 100% { left: 100%; } }
+        @keyframes flowDown { 100% { top: 100%; } }
+
+        /* Data Card styling */
+        .data-card { background: rgba(30, 41, 59, 0.6); border: 1px solid #3a332b; border-radius: 0.5rem; padding: 1rem; position: relative; overflow: hidden; }
+        .data-card::before { content: ''; position: absolute; top: 0; left: 0; width: 2px; height: 100%; background: #a1a1aa; }
+        .data-card.alert-card::before { background: #ef4444; }
+
+        .pulse-text { animation: pulseTxt 1.5s infinite; }
+        @keyframes pulseTxt { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <!-- BITS Pilani / Academic Header -->
+    <header class="bg-[#11100f] border-b border-zinc-800 sticky top-0 z-50">
+        <div class="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 bg-gradient-to-br from-zinc-900 to-stone-900 border border-zinc-500 rounded flex items-center justify-center text-zinc-100 font-bold text-2xl shadow-[0_0_20px_rgba(255,255,255,0.16)]">
+                    &#9883;
+                </div>
+                <div>
+                    <h1 class="text-2xl font-extrabold tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-zinc-100 to-stone-400">
+                        GFIS <span class="font-light text-orange-500 text-lg">| Green Fuel Intelligence System</span>
+                    </h1>
+                    <div class="flex items-center gap-3 text-[11px] uppercase tracking-widest font-mono text-slate-400 mt-1">
+                        <span>BITS Pilani WILP</span>
+                        <span class="w-1 h-1 rounded-full bg-slate-600"></span>
+                        <span>M.Tech AIML Dissertation</span>
+                        <span class="w-1 h-1 rounded-full bg-slate-600"></span>
+                        <span class="text-zinc-300 flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-orange-500 animate-pulse"></span> PIML Engine Active</span>
+                    </div>
+                </div>
+            </div>
+            <nav class="hidden lg:flex items-center gap-2 text-xs font-bold uppercase tracking-wide">
+                <a class="px-3 py-2 rounded border border-zinc-700 text-zinc-200 hover:bg-zinc-900" href="../../../">GFIS Home</a>
+                <a class="px-3 py-2 rounded border border-zinc-700 text-zinc-200 hover:bg-zinc-900" href="../../">Level 2</a>
+                <a class="px-3 py-2 rounded border border-zinc-700 text-zinc-200 hover:bg-zinc-900" href="index.html">Control Room</a>
+            </nav>
+            <div class="hidden xl:flex flex-col text-right text-xs text-slate-400 border-l border-slate-700 pl-4 py-1">
+                <span class="font-bold text-slate-200">Candidate: <span class="text-zinc-100 font-mono">Akash Shivadas Chatake</span></span>
+                <span>ID: 2024AB05226</span>
+                <span class="mt-1">Supervisor: Dr. Dipti Jadhav</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6 w-full">
+
+        <!-- Executive Summary & Speed Control Grid -->
+        <section class="grid grid-cols-1 xl:grid-cols-12 gap-6">
+            
+            <!-- Context Pane -->
+            <div class="xl:col-span-4 bg-slate-900/50 border border-slate-700/50 rounded-xl p-5 backdrop-blur-sm">
+                <h2 class="text-sm font-mono text-orange-500 mb-2 uppercase tracking-widest">Research Context</h2>
+                <p class="text-slate-300 text-sm leading-relaxed text-justify">
+                    Mechanistic models like <strong class="text-slate-100">ADM1</strong> or <strong class="text-slate-100">CFD-DEM</strong> accurately simulate anaerobic digestion and gasification, but require massive computational resources (days of computing for seconds of simulation). 
+                    <strong class="text-orange-400">GFIS solves this via a Digital Twin.</strong> By utilizing a hybrid <span class="border-b border-dashed border-slate-500">XGBoost + LSTM</span> architecture bounded by Physics-Informed loss functions, the digital twin decouples physical time from computational time, granting operators the ability to instantaneously forecast a complex 48-hour operational window.
+                </p>
+            </div>
+
+            <!-- The Speed Control Pane (Core Interactive Element) -->
+            <div class="xl:col-span-8 bg-gradient-to-br from-slate-800 to-slate-900 border border-zinc-700/80 rounded-xl p-5 shadow-[0_0_30px_rgba(0,0,0,0.5)] relative overflow-hidden">
+                <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-zinc-600 to-orange-600"></div>
+                
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-4">
+                    <div>
+                        <h3 class="text-xl font-bold text-slate-100 flex items-center gap-2 mb-1">
+                            &#9201; Temporal Stride / Accelerated Horizon Control
+                        </h3>
+                        <p class="text-xs text-slate-400">
+                            Adjust the simulation clock. High speeds bypass physical constraints by utilizing the auto-regressive PIML inference engine.
+                        </p>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-sm text-slate-400 font-mono mb-1" id="speedReadout">Speed: 1.0x (Real-time)</div>
+                        <div class="text-4xl font-extrabold text-zinc-100 font-mono drop-shadow-[0_0_12px_rgba(255,255,255,0.16)]" id="simTimerDisplay">T+00:00:00</div>
+                    </div>
+                </div>
+
+                <div class="flex flex-col sm:flex-row gap-6 items-center bg-slate-950/50 p-4 rounded-lg border border-slate-800">
+                    <div class="flex gap-2 w-full sm:w-auto">
+                        <button id="btnToggleSim" class="w-full sm:w-44 bg-zinc-900 hover:bg-zinc-800 border border-orange-600/70 text-white font-mono text-sm py-3 px-4 rounded transition-colors flex justify-center items-center gap-2 shadow-[0_0_15px_rgba(249,115,22,0.22)]">
+                            &#9654; RUN SIMULATION
+                        </button>
+                        <button id="btnResetSim" class="bg-slate-700 hover:bg-slate-600 text-slate-200 py-3 px-4 rounded transition-colors">
+                            &#8635;
+                        </button>
+                    </div>
+                    
+                    <div class="w-full flex-grow space-y-3">
+                        <div class="flex justify-between text-[10px] text-slate-500 uppercase tracking-widest font-mono">
+                            <span>1x (SCADA Sync)</span>
+                            <span>100x</span>
+                            <span>1,000x</span>
+                            <span class="text-orange-500">10,000x (Full Forecast)</span>
+                        </div>
+                        <input type="range" id="speedSlider" min="0" max="1000" value="0" class="range-slider">
+                    </div>
+                </div>
+                <!-- Progress Line -->
+                <div class="w-full bg-slate-900 h-1 mt-4 rounded overflow-hidden">
+                    <div id="simProgressBar" class="bg-gradient-to-r from-zinc-600 to-orange-600 h-full w-0 transition-all duration-75"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Cyber-Physical Visualizer & AI Diagnostics Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            
+            <!-- LEFT COLUMN: Physical Plant (SCADA View) (Span 4) -->
+            <div class="lg:col-span-4 scada-container rounded-xl p-6 flex flex-col justify-between">
+                <h3 class="text-sm font-mono text-slate-300 uppercase tracking-widest border-b border-slate-700 pb-2 mb-6 flex justify-between">
+                    <span>Virtual Plant State</span>
+                    <span class="text-orange-500 pulse-text">LIVE</span>
+                </h3>
+
+                <!-- 1. Feedstock -->
+                <div class="flex items-end gap-4 mb-2">
+                    <div class="w-24 text-right">
+                        <div class="text-xs font-bold text-slate-200">MSW Buffer</div>
+                        <div class="text-[10px] text-slate-500">48h Inventory Limit</div>
+                    </div>
+                    <div class="css-tank w-20 h-24">
+                        <div id="uiFeedLevel" class="tank-level level-msw" style="height: 100%;"></div>
+                    </div>
+                    <div class="flex-grow flex items-center">
+                        <div class="w-full pipe-h"><div class="flow-particle flow-h text-orange-500"></div></div>
+                    </div>
+                </div>
+
+                <!-- 2. Gasifier -->
+                <div class="flex items-center gap-4 mb-2">
+                    <div class="w-24 text-right">
+                        <div class="text-xs font-bold text-slate-200">Gasifier</div>
+                        <div class="text-[10px] text-slate-500 font-mono" id="uiGasTemp">Ambient</div>
+                    </div>
+                    <div class="css-gasifier w-28 h-28 flex flex-col items-center justify-center" id="uiGasContainer">
+                        <div class="gas-grid"></div>
+                        <div id="uiGasCore" class="gas-core"></div>
+                        <span class="z-10 font-mono text-[10px] text-slate-300">NiFeCa Cat.</span>
+                        <span id="uiCatEff" class="z-10 font-mono text-sm font-bold text-zinc-100 mt-1">99.7%</span>
+                    </div>
+                    <div class="flex-grow flex items-center">
+                        <div class="w-full pipe-h"><div class="flow-particle flow-h text-zinc-100"></div></div>
+                    </div>
+                </div>
+
+                <!-- 3. AD Reactor -->
+                <div class="flex items-start gap-4">
+                    <div class="w-24 text-right pt-4">
+                        <div class="text-xs font-bold text-slate-200">AD Reactor</div>
+                        <div class="text-[10px] text-zinc-300 font-mono mt-1" id="uiVfaStatus">Bio-Stable</div>
+                    </div>
+                    <div class="css-tank w-28 h-32 rounded-full border-[3px]">
+                        <div id="uiAdLevel" class="tank-level level-bio" style="height: 65%;"></div>
+                        <div class="absolute inset-0 flex flex-col items-center justify-center z-10 pointer-events-none">
+                            <span class="text-[10px] font-mono text-white/80 drop-shadow">CH4 Yield</span>
+                            <span id="uiCh4Yield" class="text-lg font-bold font-mono text-white drop-shadow-[0_0_5px_rgba(0,0,0,0.8)]">0.00</span>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+
+            <!-- CENTER COLUMN: AI Models & Telemetry (Span 8) -->
+            <div class="lg:col-span-8 flex flex-col gap-6">
+                
+                <!-- AI Engine Pipeline Graphic -->
+                <div class="bg-slate-900 border border-slate-700 rounded-xl p-4 shadow-md overflow-hidden">
+                    <h3 class="text-xs font-mono text-slate-400 uppercase tracking-widest mb-3">Hybrid Inference Architecture</h3>
+                    <div class="flex flex-col md:flex-row gap-2 items-stretch text-center font-mono text-[10px]">
+                        
+                        <div class="flex-1 bg-slate-800/50 border border-slate-700 rounded p-2 relative">
+                            <div class="font-bold text-slate-300 mb-1">ADM1 Data Generation</div>
+                            <div class="text-slate-500">Synthetic bounding of edge cases.</div>
+                            <div class="hidden md:block absolute -right-2 top-1/2 -mt-1.5 text-slate-600">&#8594;</div>
+                        </div>
+
+                        <div class="flex-[1.5] bg-gradient-to-b from-slate-800 to-slate-900 border border-zinc-700 rounded p-2 relative shadow-[0_0_10px_rgba(255,255,255,0.08)]">
+                            <div class="font-bold text-zinc-100 mb-1">XGBoost + LSTM Stack</div>
+                            <div class="text-slate-400 flex justify-around mt-1">
+                                <span>[Non-Linear Features]</span> <span>[Temporal Inertia]</span>
+                            </div>
+                            <div class="hidden md:block absolute -right-2 top-1/2 -mt-1.5 text-orange-800">&#8594;</div>
+                        </div>
+
+                        <div class="flex-[1.5] bg-slate-800/80 border border-zinc-700 rounded p-2">
+                            <div class="font-bold text-zinc-100 mb-1">Physics Constraints (PIML)</div>
+                            <div class="bg-black/50 p-1.5 rounded text-orange-300 text-left overflow-hidden mt-1 tracking-wider text-[9px]">
+                                L<sub>tot</sub> = L<sub>MSE</sub> + &lambda;&middot;max(0, Y&#770; - Y<sub>max</sub>)<sup>2</sup>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Live Data & Terminal -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 flex-grow">
+                    
+                    <!-- Real-time Telemetry Grid -->
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="data-card">
+                            <div class="text-[10px] text-slate-400 font-mono uppercase">Syngas Ratio</div>
+                            <div class="mt-1 flex items-end gap-1">
+                                <span id="metH2CO" class="text-2xl font-mono font-bold text-slate-100">0.00</span>
+                                <span class="text-zinc-100 text-xs mb-1">H<sub>2</sub>/CO</span>
+                            </div>
+                            <div class="text-[9px] text-slate-500 mt-1">Optimal: 1.32</div>
+                        </div>
+                        <div class="data-card" id="cardVFA">
+                            <div class="text-[10px] text-slate-400 font-mono uppercase">VFA/ALK (Soft Sensor)</div>
+                            <div class="mt-1 flex items-end gap-1">
+                                <span id="metVFA" class="text-2xl font-mono font-bold text-slate-100">0.12</span>
+                                <span class="text-zinc-100 text-xs mb-1" id="metVfaIcon">&#10003;</span>
+                            </div>
+                            <div class="text-[9px] text-slate-500 mt-1">Predicts Acidogenesis</div>
+                        </div>
+                        <div class="data-card">
+                            <div class="text-[10px] text-slate-400 font-mono uppercase">Equivalence Ratio</div>
+                            <div class="mt-1 flex items-end gap-1">
+                                <span class="text-2xl font-mono font-bold text-slate-100">0.35</span>
+                                <span class="text-slate-400 text-xs mb-1">ER</span>
+                            </div>
+                            <div class="text-[9px] text-slate-500 mt-1">Air/MSW Base</div>
+                        </div>
+                        <div class="data-card">
+                            <div class="text-[10px] text-slate-400 font-mono uppercase">Methane Quality</div>
+                            <div class="mt-1 flex items-end gap-1">
+                                <span id="metBiogas" class="text-2xl font-mono font-bold text-slate-100">0.0</span>
+                                <span class="text-zinc-100 text-xs mb-1">% CH<sub>4</sub></span>
+                            </div>
+                            <div class="text-[9px] text-slate-500 mt-1">LSTM Projection</div>
+                        </div>
+                    </div>
+
+                    <!-- Chemical/AI Log Terminal -->
+                    <div class="bg-black border border-slate-700 rounded-xl overflow-hidden flex flex-col shadow-[inset_0_0_20px_rgba(0,0,0,1)]">
+                        <div class="bg-slate-900 border-b border-slate-800 px-3 py-1.5 flex justify-between items-center">
+                            <span class="text-[10px] font-mono text-slate-400">~/GFIS/inference.log</span>
+                            <span class="w-2 h-2 rounded-full bg-orange-500 pulse-text"></span>
+                        </div>
+                        <div id="terminal" class="p-3 font-mono text-[10px] text-slate-400 space-y-2 overflow-y-auto terminal-scroll h-48 md:h-full">
+                            <div class="text-slate-500 italic">GFIS Engine standing by...</div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Grid (PIML Outputs) -->
+        <section class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            
+            <div class="bg-slate-900 border border-slate-700 rounded-xl p-5 shadow-lg">
+                <div class="mb-3">
+                    <h3 class="text-sm font-bold text-slate-100 font-mono">1. Gasification: Catalyst Coking Curve</h3>
+                    <p class="text-[10px] text-slate-400 mt-0.5">Tracking non-linear degradation of Ni45Fe15Ca40 to empirical 83% limit over 48h.</p>
+                </div>
+                <div class="chart-container">
+                    <canvas id="chartCat"></canvas>
+                </div>
+            </div>
+
+            <div class="bg-slate-900 border border-slate-700 rounded-xl p-5 shadow-lg relative overflow-hidden">
+                <div class="mb-3 relative z-10">
+                    <h3 class="text-sm font-bold text-slate-100 font-mono">2. AD: Methane Yield & Soft Sensor Warning</h3>
+                    <p class="text-[10px] text-slate-400 mt-0.5">AI prediction of CH4 output mapping against VFA/ALK accumulation (collapse boundary > 0.4).</p>
+                </div>
+                <div class="chart-container relative z-10">
+                    <canvas id="chartBio"></canvas>
+                </div>
+                <!-- Warning overlay -->
+                <div id="chartWarnBg" class="absolute inset-0 bg-rose-900/10 opacity-0 pointer-events-none transition-opacity duration-1000"></div>
+            </div>
+
+        </section>
+    </main>
+
+    <!-- Simulation & Dashboard Logic -->
+    <script>
+        /**
+         * GFIS Simulation Engine - Javascript Implementation
+         * Simulates mathematical bounding of Physical processes alongside AI predictions.
+         */
+        
+        const SIM_MAX_HOURS = 48;
+        const TARGET_TEMP = 800;
+        
+        let engine = {
+            active: false,
+            time: 0,       // in hours
+            speedMult: 1,
+            
+            // Physical State Variables
+            temp: 25,
+            catEff: 99.7,
+            h2co: 0.0,
+            vfa: 0.12,
+            ch4Yield: 0.0,
+            ch4Qual: 0.0,
+            
+            // Flags to prevent spamming terminal
+            flags: { tempStart: false, tempTarget: false, catWarn: false, vfaWarn: false, vfaCrit: false },
+
+            // Arrays for Chart.js
+            hist: { labels: [], eff: [], h2co: [], vfa: [], ch4: [] }
+        };
+
+        // --- DOM Elements ---
+        const ui = {
+            btnMain: document.getElementById('btnToggleSim'),
+            btnRes: document.getElementById('btnResetSim'),
+            slider: document.getElementById('speedSlider'),
+            txtSpeed: document.getElementById('speedReadout'),
+            txtTime: document.getElementById('simTimerDisplay'),
+            progBar: document.getElementById('simProgressBar'),
+            
+            // SCADA
+            feedLvl: document.getElementById('uiFeedLevel'),
+            gasTemp: document.getElementById('uiGasTemp'),
+            gasCore: document.getElementById('uiGasCore'),
+            gasBox: document.getElementById('uiGasContainer'),
+            catEffTxt: document.getElementById('uiCatEff'),
+            vfaTxt: document.getElementById('uiVfaStatus'),
+            adLvl: document.getElementById('uiAdLevel'),
+            ch4Txt: document.getElementById('uiCh4Yield'),
+            
+            // Telemetry & Logs
+            term: document.getElementById('terminal'),
+            cardVFA: document.getElementById('cardVFA'),
+            metVFA: document.getElementById('metVFA'),
+            metVfaIcon: document.getElementById('metVfaIcon'),
+            metH2CO: document.getElementById('metH2CO'),
+            metBiogas: document.getElementById('metBiogas'),
+            
+            chartWarn: document.getElementById('chartWarnBg')
+        };
+
+        // --- Chart.js Configuration ---
+        let chartCatObj, chartBioObj;
+
+        function initCharts() {
+            Chart.defaults.color = '#8b8175';
+            Chart.defaults.font.family = "'JetBrains Mono', monospace";
+            Chart.defaults.font.size = 10;
+
+            const configCat = {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [
+                        { label: 'NiFeCa Eff (%)', data: [], borderColor: '#d97706', backgroundColor: 'rgba(255, 255, 255, 0.05)', fill: true, borderWidth: 2, pointRadius: 0, tension: 0.2, yAxisID: 'y' },
+                        { label: 'H2/CO Ratio', data: [], borderColor: '#d97706', borderDash: [4, 4], borderWidth: 2, pointRadius: 0, tension: 0.4, yAxisID: 'y1' }
+                    ]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false, animation: false, interaction: { mode: 'index', intersect: false },
+                    scales: {
+                        x: { title: { display: true, text: 'Sim Time (h)' }, max: 48, grid: { color: '#1b1a18' } },
+                        y: { min: 75, max: 100, grid: { color: '#1b1a18' } },
+                        y1: { position: 'right', min: 0, max: 1.5, grid: { drawOnChartArea: false } }
+                    },
+                    plugins: { legend: { position: 'top', labels: { boxWidth: 10 } } }
+                }
+            };
+            chartCatObj = new Chart(document.getElementById('chartCat').getContext('2d'), configCat);
+
+            const configBio = {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [
+                        { label: 'CH4 (L/gVS) [LSTM]', data: [], borderColor: '#e5e7eb', backgroundColor: 'rgba(255, 255, 255, 0.05)', fill: true, borderWidth: 2, pointRadius: 0, tension: 0.2, yAxisID: 'y' },
+                        { label: 'VFA/ALK [Soft Sensor]', data: [], borderColor: '#ef4444', borderWidth: 2, pointRadius: 0, tension: 0.4, yAxisID: 'y1' }
+                    ]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false, animation: false, interaction: { mode: 'index', intersect: false },
+                    scales: {
+                        x: { title: { display: true, text: 'Sim Time (h)' }, max: 48, grid: { color: '#1b1a18' } },
+                        y: { min: 0, max: 4, grid: { color: '#1b1a18' } },
+                        y1: { position: 'right', min: 0, max: 0.8, grid: { drawOnChartArea: false } }
+                    },
+                    plugins: { legend: { position: 'top', labels: { boxWidth: 10 } } }
+                }
+            };
+            chartBioObj = new Chart(document.getElementById('chartBio').getContext('2d'), configBio);
+        }
+
+        // --- Core Math & Physics Simulation ---
+        function calculateState(t) {
+            // 1. Thermal Ramp (Gasifier Cold Start takes ~5 hours)
+            let temp = 25;
+            if (t < 5) temp = 25 + (TARGET_TEMP - 25) * (t / 5);
+            else temp = TARGET_TEMP + (Math.sin(t * 10) * 15); // Operating fluctuation
+
+            // 2. Catalyst Degradation (Starts after temp reaches target)
+            let eff = 99.7;
+            if (t > 5) {
+                const fraction = (t - 5) / 43; // Remaining 43h
+                eff = 99.7 - (16.7 * Math.pow(fraction, 2.5)); // Non-linear drop to ~83%
+            }
+
+            // 3. Syngas Production
+            let h2co = 0;
+            if (temp > 600) {
+                h2co = 1.32 * (eff / 99.7); // Linked to catalyst efficiency
+                h2co += (Math.random() * 0.04 - 0.02);
+            }
+
+            // 4. Biological VFA/ALK (Anomaly generator)
+            // Introduce a biological stress event around hour 24
+            let vfa = 0.12 + (Math.random() * 0.01 - 0.005);
+            if (t > 24) {
+                // Logistic growth of VFA mimicking acid accumulation
+                vfa = 0.12 + (0.5 / (1 + Math.exp(-0.35 * (t - 32))));
+            }
+
+            // 5. Methane Yield (LSTM output bounded by physics)
+            let ch4 = 0;
+            let qual = 0;
+            if (t > 8) { // Latency from gasifier to AD
+                ch4 = 2.85 + (Math.sin(t * 0.5) * 0.1); 
+                qual = 68.5 + (Math.random() * 2 - 1);
+                
+                // Physics/Biological Constraint Check
+                if (vfa > 0.38) { // Acidogenic collapse
+                    const penalty = (vfa - 0.38) * 6;
+                    ch4 = Math.max(0.1, ch4 - penalty); // Yield plummets
+                    qual = Math.max(0, qual - (penalty * 15));
+                }
+            }
+
+            return { temp, eff, h2co, vfa, ch4, qual };
+        }
+
+        // --- Terminal Subsystem ---
+        function logMsg(msg, type = 'info') {
+            const timeStr = `[${Math.floor(engine.time).toString().padStart(2,'0')}:${Math.floor((engine.time%1)*60).toString().padStart(2,'0')}]`;
+            const el = document.createElement('div');
+            
+            let css = 'text-slate-400';
+            if (type === 'rxn') css = 'text-stone-300';
+            if (type === 'ml') css = 'text-zinc-100';
+            if (type === 'warn') css = 'text-amber-400';
+            if (type === 'crit') css = 'text-rose-400 bg-rose-900/20 px-1 rounded';
+            
+            el.className = css;
+            el.innerHTML = `<span class="opacity-50">${timeStr}</span> ${msg}`;
+            ui.term.appendChild(el);
+            
+            if (ui.term.childElementCount > 30) ui.term.removeChild(ui.term.firstChild);
+            ui.term.scrollTop = ui.term.scrollHeight;
+        }
+
+        function evaluateTriggers(s, t) {
+            if (s.temp > 200 && !engine.flags.tempStart) {
+                engine.flags.tempStart = true;
+                logMsg('Pyrolysis phase initiated. H2O evaporation.', 'rxn');
+                logMsg('[XGBoost] Tabular features updated.', 'ml');
+            }
+            if (s.temp > 750 && !engine.flags.tempTarget) {
+                engine.flags.tempTarget = true;
+                logMsg('Thermal equilibrium. Steam Reforming Active.', 'rxn');
+                logMsg('C + H2O &rarr; CO + H2', 'rxn');
+            }
+            if (s.eff < 90 && !engine.flags.catWarn) {
+                engine.flags.catWarn = true;
+                logMsg('Catalyst coking detected. Efficiency < 90%.', 'warn');
+            }
+            if (s.vfa > 0.3 && !engine.flags.vfaWarn) {
+                engine.flags.vfaWarn = true;
+                logMsg('[LSTM Soft Sensor] Detecting VFA/ALK upward trend.', 'ml');
+                logMsg('Warning: Methanogenesis inhibition risk.', 'warn');
+            }
+            if (s.vfa > 0.4 && !engine.flags.vfaCrit) {
+                engine.flags.vfaCrit = true;
+                logMsg('CRITICAL: Acidogenic Collapse. pH plummeting.', 'crit');
+                logMsg('[PIML] Loss constraint activated: Yield bounded to stoichiometric minimum.', 'ml');
+            }
+        }
+
+        // --- Visual Updaters ---
+        function updateUI(s, t) {
+            // SCADA Plant Visuals
+            ui.feedLvl.style.height = `${(1 - (t / SIM_MAX_HOURS)) * 100}%`;
+            
+            ui.gasTemp.innerText = `${s.temp.toFixed(0)}°C`;
+            if (s.temp > 200) {
+                const glow = Math.min(1, (s.temp - 200) / 600);
+                ui.gasCore.style.opacity = glow;
+                // Fixed syntax error: moved px inside the template literal evaluation string
+                ui.gasBox.style.boxShadow = `0 0 ${glow * 20}px rgba(234, 88, 12, 0.4)`;
+            }
+
+            ui.catEffTxt.innerText = `${s.eff.toFixed(1)}%`;
+            if (s.eff < 85) ui.catEffTxt.className = "z-10 font-mono text-sm font-bold text-rose-500 mt-1";
+            else if (s.eff < 92) ui.catEffTxt.className = "z-10 font-mono text-sm font-bold text-amber-400 mt-1";
+
+            ui.ch4Txt.innerText = s.ch4.toFixed(2);
+            
+            // Telemetry Cards
+            ui.metH2CO.innerText = s.h2co.toFixed(2);
+            ui.metBiogas.innerText = s.qual.toFixed(1);
+            ui.metVFA.innerText = s.vfa.toFixed(2);
+
+            if (s.vfa > 0.4) {
+                ui.vfaTxt.innerText = "CRITICAL";
+                ui.vfaTxt.className = "text-[10px] text-rose-500 font-mono mt-1 font-bold animate-pulse";
+                ui.cardVFA.className = "data-card alert-card bg-rose-900/20";
+                ui.metVfaIcon.innerHTML = "&#9888;";
+                ui.metVfaIcon.className = "text-rose-500 text-xs mb-1";
+                ui.chartWarn.style.opacity = "1";
+            } else if (s.vfa > 0.3) {
+                ui.vfaTxt.innerText = "WARNING";
+                ui.vfaTxt.className = "text-[10px] text-amber-400 font-mono mt-1";
+                ui.cardVFA.className = "data-card bg-amber-900/10";
+                ui.chartWarn.style.opacity = "0";
+            } else {
+                ui.vfaTxt.innerText = "Bio-Stable";
+                ui.vfaTxt.className = "text-[10px] text-zinc-100 font-mono mt-1";
+                ui.cardVFA.className = "data-card";
+                ui.chartWarn.style.opacity = "0";
+            }
+
+            // Top Displays
+            const h = Math.floor(t);
+            const m = Math.floor((t - h) * 60);
+            const sec = Math.floor((((t - h) * 60) - m) * 60);
+            ui.txtTime.innerText = `T+${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${sec.toString().padStart(2,'0')}`;
+            ui.progBar.style.width = `${(t / SIM_MAX_HOURS) * 100}%`;
+        }
+
+        // --- Main Simulation Loop ---
+        let lastTimestamp = 0;
+        function updateLoop(timestamp) {
+            if (!lastTimestamp) lastTimestamp = timestamp;
+            const deltaMs = timestamp - lastTimestamp;
+            lastTimestamp = timestamp;
+
+            if (engine.active && engine.time < SIM_MAX_HOURS) {
+                // Time Step calculation: (delta_ms / 1000) = real seconds passed.
+                // 1 hour sim time = 3600 real seconds.
+                let dtHours = (deltaMs / 1000) * engine.speedMult / 3600;
+                engine.time += dtHours;
+
+                if (engine.time >= SIM_MAX_HOURS) {
+                    engine.time = SIM_MAX_HOURS;
+                    engine.active = false;
+                    ui.btnMain.innerHTML = '&#8634; FORECAST COMPLETE';
+                    ui.btnMain.className = 'w-full sm:w-48 bg-slate-600 text-white font-mono text-sm py-3 px-4 rounded';
+                    logMsg('48h Evaluation Horizon reached. Halting PIML Engine.', 'info');
+                }
+
+                const state = calculateState(engine.time);
+                evaluateTriggers(state, engine.time);
+                updateUI(state, engine.time);
+
+                // Update Charts (Throttled data push for performance)
+                if (engine.hist.labels.length === 0 || engine.time - parseFloat(engine.hist.labels[engine.hist.labels.length-1]) > 0.1 || engine.time === SIM_MAX_HOURS) {
+                    engine.hist.labels.push(engine.time.toFixed(1));
+                    engine.hist.eff.push(state.eff);
+                    engine.hist.h2co.push(state.h2co);
+                    engine.hist.vfa.push(state.vfa);
+                    engine.hist.ch4.push(state.ch4);
+
+                    chartCatObj.data.labels = engine.hist.labels;
+                    chartCatObj.data.datasets[0].data = engine.hist.eff;
+                    chartCatObj.data.datasets[1].data = engine.hist.h2co;
+                    chartCatObj.update();
+
+                    chartBioObj.data.labels = engine.hist.labels;
+                    chartBioObj.data.datasets[0].data = engine.hist.ch4;
+                    chartBioObj.data.datasets[1].data = engine.hist.vfa;
+                    chartBioObj.update();
+                }
+            }
+            requestAnimationFrame(updateLoop);
+        }
+
+        // --- Event Listeners ---
+        ui.btnMain.addEventListener('click', () => {
+            if (engine.time >= SIM_MAX_HOURS) return;
+            engine.active = !engine.active;
+            
+            if (engine.active) {
+                ui.btnMain.innerHTML = '&#9208; PAUSE INFERENCE';
+                ui.btnMain.className = 'w-full sm:w-48 bg-amber-600 hover:bg-amber-500 text-white font-mono text-sm py-3 px-4 rounded transition-colors flex justify-center items-center gap-2 shadow-[0_0_15px_rgba(217,119,6,0.3)]';
+                logMsg(`AI Engine Running. Stride: ${engine.speedMult.toLocaleString()}x`, 'ml');
+            } else {
+                ui.btnMain.innerHTML = '&#9654; RESUME';
+                ui.btnMain.className = 'w-full sm:w-44 bg-zinc-900 hover:bg-zinc-800 border border-orange-600/70 text-white font-mono text-sm py-3 px-4 rounded transition-colors flex justify-center items-center gap-2 shadow-[0_0_15px_rgba(249,115,22,0.22)]';
+                logMsg(`Execution halted by operator.`, 'warn');
+            }
+        });
+
+        ui.btnRes.addEventListener('click', () => {
+            engine.active = false;
+            engine.time = 0;
+            engine.flags = { tempStart: false, tempTarget: false, catWarn: false, vfaWarn: false, vfaCrit: false };
+            engine.hist = { labels: [], eff: [], h2co: [], vfa: [], ch4: [] };
+            
+            ui.btnMain.innerHTML = '&#9654; RUN SIMULATION';
+            ui.btnMain.className = 'w-full sm:w-44 bg-zinc-900 hover:bg-zinc-800 border border-orange-600/70 text-white font-mono text-sm py-3 px-4 rounded transition-colors flex justify-center items-center gap-2 shadow-[0_0_15px_rgba(249,115,22,0.22)]';
+            
+            chartCatObj.data.labels = []; chartCatObj.data.datasets.forEach(d => d.data = []); chartCatObj.update();
+            chartBioObj.data.labels = []; chartBioObj.data.datasets.forEach(d => d.data = []); chartBioObj.update();
+            
+            ui.term.innerHTML = '<div class="text-slate-500 italic">Memory cleared. Environment reset.</div>';
+            ui.cardVFA.className = "data-card";
+            ui.chartWarn.style.opacity = "0";
+            ui.catEffTxt.className = "z-10 font-mono text-sm font-bold text-zinc-100 mt-1";
+            ui.vfaTxt.innerText = "Bio-Stable";
+            ui.vfaTxt.className = "text-[10px] text-zinc-100 font-mono mt-1";
+            
+            updateUI(calculateState(0), 0);
+        });
+
+        // Speed Slider mapping (0-1000 slider maps to 1x - 10000x speed non-linearly)
+        ui.slider.addEventListener('input', (e) => {
+            const val = parseInt(e.target.value);
+            if (val === 0) engine.speedMult = 1;
+            else if (val <= 333) engine.speedMult = Math.floor(1 + (val/333)*99); 
+            else if (val <= 666) engine.speedMult = Math.floor(100 + ((val-333)/333)*900);
+            else engine.speedMult = Math.floor(1000 + ((val-666)/334)*9000);
+
+            let label = engine.speedMult.toLocaleString() + 'x';
+            if (engine.speedMult === 1) label += " (Real-time)";
+            ui.txtSpeed.innerText = `Speed: ${label}`;
+            
+            if (engine.active) logMsg(`Stride updated to ${label}`, 'info');
+        });
+
+        // Initialize on load
+        window.addEventListener('DOMContentLoaded', () => {
+            if (!ui.btnMain || !ui.btnRes || !ui.slider) {
+                console.error('GFIS industrial simulation controls failed to mount.');
+                return;
+            }
+            initCharts();
+            updateUI(calculateState(0), 0);
+            requestAnimationFrame(updateLoop);
+        });
+    </script>
+</body>
+</html>

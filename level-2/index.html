@@ -1,0 +1,376 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GFIS Level 2 | Research Workbench</title>
+  <link rel="stylesheet" href="assets/level2.css">
+
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/assets/favicon.svg">
+  <meta name="theme-color" content="#10100f">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="GFIS by Chatake Innoworks">
+  <meta property="og:title" content="GFIS Level 2 | Research Workbench">
+  <meta property="og:description" content="GFIS Level 2 research workbench for methane prediction, industrial simulation, dissertation documents, diary, and deployment evidence.">
+  <meta property="og:url" content="https://gfis.chatakeinnoworks.com/level-2/">
+  <meta property="og:image" content="https://gfis.chatakeinnoworks.com/assets/gfis-dipex.jpeg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="GFIS Level 2 | Research Workbench">
+  <meta name="twitter:description" content="Physics-guided AI digital twin for biogas methane prediction, industrial simulation, and dissertation-grade research execution.">
+  <meta name="twitter:image" content="https://gfis.chatakeinnoworks.com/assets/gfis-dipex.jpeg">
+</head>
+<body>
+  <header class="topbar">
+    <div>
+      <p class="eyebrow">GFIS Level 2</p>
+      <h1>Research Workbench</h1>
+    </div>
+    <nav aria-label="Primary">
+      <a href="../">GFIS Home</a>
+      <a href="#engines">Engines</a>
+      <a href="#live-apps">Live Apps</a>
+      <a href="#workspace" data-protected-link>Documentation</a>
+      <a href="#readings">Readings</a>
+      <a href="#workspace" data-protected-link>Workspace</a>
+      <a href="#workspace" data-protected-link>Diary</a>
+      <a href="#deployment">Deployment</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">Physics-Guided AI Digital Twin for Biogas Methane Production</p>
+        <h2>One protected layer for simulations, research evidence, live readings, documents, notes, and dissertation execution.</h2>
+        <p>
+          Level 2 keeps the existing GFIS website intact and adds a serious working layer for BITS Pilani dissertation evidence.
+          It is designed to connect the ML engine, industrial simulation, reports, diary, and deployment pipeline in one place.
+        </p>
+        <div class="hero-actions">
+          <a href="../">Back To GFIS Home</a>
+          <a href="apps/model-control-room/" target="_blank" rel="noopener">Open Model Control Room</a>
+          <a href="apps/model-control-room/industrial_simulation.html" target="_blank" rel="noopener">Open Industrial Simulation</a>
+        </div>
+      </div>
+      <div class="plant-panel" aria-label="Biogas plant process animation">
+        <div class="digester">
+          <span class="bubble bubble-a"></span>
+          <span class="bubble bubble-b"></span>
+          <span class="bubble bubble-c"></span>
+          <div class="gas-line"></div>
+        </div>
+        <div class="flare"></div>
+        <div class="metric-strip">
+          <span>CH4 63.8%</span>
+          <span>pH 7.1</span>
+          <span>Stable</span>
+        </div>
+      </div>
+    </section>
+
+    <section id="live-apps" class="band subtle">
+      <div class="section-head">
+        <p class="eyebrow">Live GFIS Workbench</p>
+        <h2>Running Dissertation Interfaces</h2>
+      </div>
+      <div class="live-grid">
+        <article class="launch-panel">
+          <span class="status-dot"></span>
+          <h3>GFIS Model Control Room</h3>
+          <p>Main Level 2 interactive interface for methane prediction, soft sensor output, stability state, optimization, evaluation, and research evidence.</p>
+          <a href="apps/model-control-room/" target="_blank" rel="noopener">Launch model control room</a>
+        </article>
+        <article class="launch-panel">
+          <span class="status-dot"></span>
+          <h3>Industrial Simulation Engine</h3>
+          <p>Plant-style simulation surface for process behavior, methane production, operating drift, and industrial demonstration scenarios.</p>
+          <a href="apps/model-control-room/industrial_simulation.html" target="_blank" rel="noopener">Launch industrial simulation</a>
+        </article>
+        <article class="launch-panel">
+          <span class="status-dot muted"></span>
+          <h3>Streamlit Research Dashboard</h3>
+          <p>Rapid dissertation dashboard for dataset viewing, model checks, metrics, and supervisor demos. The production target is deployed on AWS App Runner instead of localhost.</p>
+          <a class="streamlit-link" href="https://gfis-streamlit.chatakeinnoworks.com/" target="_blank" rel="noopener">Open AWS Streamlit dashboard</a>
+        </article>
+        <article class="launch-panel">
+          <span class="status-dot neutral"></span>
+          <h3>M.Tech Industrial AI Dashboard</h3>
+          <p>Earlier M.Tech dashboard upgraded into the Level 2 workspace for live monitoring, anomaly controls, research paper context, and industrial AI storytelling.</p>
+          <a href="apps/mtech-dashboards/GFIS_AI_Dashboard.html" target="_blank" rel="noopener">Open industrial AI dashboard</a>
+        </article>
+        <article class="launch-panel">
+          <span class="status-dot neutral"></span>
+          <h3>M.Tech Core Dashboard</h3>
+          <p>Compact live monitoring dashboard from the original M.Tech work, retained as a reference implementation and dashboard lineage artifact.</p>
+          <a href="apps/mtech-dashboards/GFIS_Dashboard.html" target="_blank" rel="noopener">Open core dashboard</a>
+        </article>
+      </div>
+    </section>
+
+    <section id="engines" class="band">
+      <div class="section-head">
+        <p class="eyebrow">Engine Console</p>
+        <h2>Working GFIS Modules</h2>
+      </div>
+      <div class="grid cards">
+        <article>
+          <h3>Methane Prediction</h3>
+          <p>Runs XGBoost, LSTM, ensemble, and physics-guided yield checks.</p>
+          <code>/predict</code>
+        </article>
+        <article>
+          <h3>What-If Simulation</h3>
+          <p>Changes temperature, pH, OLR, HRT, TS, and VS to study methane response.</p>
+          <code>/simulate</code>
+        </article>
+        <article>
+          <h3>Industrial Plant Run</h3>
+          <p>Plays a 48 hour plant scenario with process drift and stability transitions.</p>
+          <code>/plant-run</code>
+        </article>
+        <article>
+          <h3>Soft Sensor</h3>
+          <p>Estimates VFA/ALK ratio and maps process state into stable, warning, or critical.</p>
+          <code>/soft-sensor</code>
+        </article>
+      </div>
+    </section>
+
+    <section id="readings" class="band">
+      <div class="section-head">
+        <p class="eyebrow">Live Readings</p>
+        <h2>Telemetry Surface</h2>
+      </div>
+      <div class="reading-layout">
+        <div class="reading-meter">
+          <span class="meter-label">Methane Yield</span>
+          <strong>0.42</strong>
+          <span>m3 CH4 / kg VS</span>
+        </div>
+        <div class="reading-list">
+          <p><span>Temperature</span><strong>36.4 C</strong></p>
+          <p><span>pH</span><strong>7.08</strong></p>
+          <p><span>OLR</span><strong>2.9 kg VS/m3/day</strong></p>
+          <p><span>VFA/ALK</span><strong>0.24</strong></p>
+          <p><span>Physics Violations</span><strong>0</strong></p>
+        </div>
+      </div>
+    </section>
+
+    <section id="notes" class="band subtle access-teaser">
+      <div class="section-head">
+        <p class="eyebrow">Private Research Log</p>
+        <h2>Notes And Diary Are Inside Login</h2>
+      </div>
+      <div class="split">
+        <article>
+          <h3>Notes</h3>
+          <p>Supervisor points, literature notes, assumptions, model decisions, and implementation blockers are available after GFIS team login.</p>
+          <a href="#workspace" data-protected-link>Open secure notes</a>
+        </article>
+        <article>
+          <h3>Diary</h3>
+          <p>Daily record of implementation, evidence produced, research value, and next action is kept in the authenticated workspace.</p>
+          <a href="#workspace" data-protected-link>Open secure diary</a>
+        </article>
+      </div>
+    </section>
+
+    <section id="workspace" class="band">
+      <div class="section-head">
+        <p class="eyebrow">Secure Prototype Workspace</p>
+        <h2>Login, Notes, Diary, Documents, Sheets, And Team Control</h2>
+      </div>
+
+      <div id="loginPanel" class="workspace-card login-card professional-login">
+        <div class="login-brand">
+          <p class="eyebrow">Restricted Sections</p>
+          <h3>GFIS Team Login</h3>
+          <p>Documentation, Library, Diary, Notes, and user administration are gated here. Public Level 2 simulations remain open for review and demonstration.</p>
+          <div class="login-signal">
+            <span></span>
+            <strong>Section-gated access</strong>
+          </div>
+        </div>
+        <form id="loginForm" class="form-grid">
+          <label>
+            Username
+            <input id="loginUser" type="email" autocomplete="username" placeholder="GFIS team email">
+          </label>
+          <label>
+            Password
+            <input id="loginPass" type="password" autocomplete="current-password" placeholder="Password">
+          </label>
+          <button type="submit">Login</button>
+          <p id="loginMessage" class="form-message"></p>
+        </form>
+      </div>
+
+      <div id="workbenchPanel" class="hidden">
+        <div class="workspace-card profile-row">
+          <div>
+            <p class="eyebrow">Profile</p>
+            <h3 id="profileName">GFIS User</h3>
+            <p id="profileRole">Role</p>
+          </div>
+          <button id="logoutButton" type="button">Logout</button>
+        </div>
+
+        <section id="library" class="workspace-card documentation-vault gated-section" data-gated-section="library">
+          <div class="section-head compact">
+            <div>
+              <p class="eyebrow">Secure Documentation Vault</p>
+              <h2>Documents, Resources, Journal Paper, Project Outline And Uploads</h2>
+            </div>
+          </div>
+          <div class="quote-inline">
+            "A research system is strongest when every claim has a working artifact behind it."
+          </div>
+          <div class="upload-panel">
+            <label>
+              Upload document to this browser
+              <input id="docUpload" type="file" multiple accept=".pdf,.doc,.docx,.xlsx,.xls,.csv,.txt,.md,.zip">
+            </label>
+            <div class="button-row">
+              <button id="clearUploadedDocs" type="button">Clear Uploaded Files</button>
+            </div>
+          </div>
+          <div class="document-layout">
+            <aside>
+              <h3>Portal Folders</h3>
+              <div class="doc-list" id="docList"></div>
+              <h3>Uploaded Here</h3>
+              <div class="doc-list uploaded-list" id="uploadedDocList"></div>
+            </aside>
+            <div class="document-frame">
+              <iframe id="docFrame" title="GFIS document preview" src="library/project-outline/GFIS_Consolidated_Abstract_Project_Layout_Final.pdf"></iframe>
+            </div>
+          </div>
+          <div class="table-wrap vault-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Folder</th>
+                  <th>Document</th>
+                  <th>Type</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="libraryRows">
+                <tr><td colspan="4">Login complete. Loading secure manifest...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <div class="workspace-grid">
+          <section class="workspace-card">
+            <h3>Notes</h3>
+            <label>Title <input id="noteTitle" type="text" placeholder="Supervisor meeting / model decision"></label>
+            <label>Note <textarea id="noteBody" rows="8" placeholder="Write GFIS research notes here..."></textarea></label>
+            <div class="button-row">
+              <button id="saveNote" type="button">Save Note</button>
+              <button id="exportNotes" type="button">Export Notes</button>
+            </div>
+            <div id="notesList" class="record-list"></div>
+          </section>
+
+          <section class="workspace-card">
+            <h3>Diary</h3>
+            <label>Date <input id="diaryDate" type="date"></label>
+            <label>Entry <textarea id="diaryBody" rows="8" placeholder="Work completed, evidence, blocker, next action..."></textarea></label>
+            <div class="button-row">
+              <button id="saveDiary" type="button">Save Diary</button>
+              <button id="exportDiary" type="button">Export Diary</button>
+            </div>
+            <div id="diaryList" class="record-list"></div>
+          </section>
+
+          <section class="workspace-card">
+            <h3>Word-Style Draft</h3>
+            <label>Document Title <input id="docTitle" type="text" placeholder="GFIS research section"></label>
+            <label>Content <textarea id="docBody" rows="9" placeholder="Draft report, abstract, meeting note, or explanation..."></textarea></label>
+            <div class="button-row">
+              <button id="downloadDoc" type="button">Download Word HTML</button>
+              <button id="clearDoc" type="button">Clear</button>
+            </div>
+          </section>
+
+          <section class="workspace-card">
+            <h3>Excel-Style Readings</h3>
+            <label>CSV Rows <textarea id="sheetBody" rows="9">date,temperature,pH,OLR,HRT,VS,methane_yield,stability
+2026-05-06,36.4,7.08,2.9,24,72,0.42,Stable</textarea></label>
+            <div class="button-row">
+              <button id="downloadCsv" type="button">Download CSV</button>
+              <button id="addSampleRow" type="button">Add Sample Row</button>
+            </div>
+          </section>
+        </div>
+
+        <section id="adminPanel" class="workspace-card hidden">
+          <div class="section-head compact">
+            <p class="eyebrow">Admin</p>
+            <h2>GFIS Team Users And Credentials</h2>
+          </div>
+          <form id="createUserForm" class="form-grid user-form">
+            <label>Email <input id="newUserEmail" type="email" placeholder="member@chatakeinnoworks.com"></label>
+            <label>Password <input id="newUserPassword" type="text" placeholder="Temporary password"></label>
+            <label>Role
+              <select id="newUserRole">
+                <option value="user">user</option>
+                <option value="admin">admin</option>
+              </select>
+            </label>
+            <button type="submit">Create User</button>
+          </form>
+          <div id="userList" class="record-list"></div>
+        </section>
+      </div>
+    </section>
+
+    <section class="band subtle">
+      <div class="section-head">
+        <p class="eyebrow">Collaboration And Support</p>
+        <h2>Small Support Desk</h2>
+      </div>
+      <div class="support-strip">
+        <a href="mailto:gfis@chatakeinnoworks.com">gfis@chatakeinnoworks.com</a>
+        <a href="mailto:greenworks@chatakeinnoworks.com">greenworks@chatakeinnoworks.com</a>
+        <a href="mailto:research@chatakeinnoworks.com">research@chatakeinnoworks.com</a>
+        <a href="mailto:support@chatakeinnoworks.com">support@chatakeinnoworks.com</a>
+      </div>
+    </section>
+
+    <section id="deployment" class="band">
+      <div class="section-head">
+        <p class="eyebrow">Deployment</p>
+        <h2>Level 2 Delivery Path</h2>
+      </div>
+      <ol class="timeline">
+        <li><span>Local</span>Static portal beside old GFIS V2, linked to dissertation workspace.</li>
+        <li><span>Section Login</span>Public Level 2 shell with custom GFIS login for documentation, library, diary, notes, and user controls.</li>
+        <li><span>API</span>Reverse proxy `/api` to the running FastAPI service.</li>
+        <li><span>Streamlit</span>Deploy dashboard to AWS App Runner and update links away from localhost.</li>
+        <li><span>Workbench</span>Add database-backed notes, diary, readings, and report generation.</li>
+      </ol>
+    </section>
+  </main>
+
+  <footer class="corporate-footer">
+    <div>
+      <strong>Chatake Innoworks Pvt. Ltd.</strong>
+      <span>GreenWorks Division / GFIS Level 2 Research Workbench</span>
+    </div>
+    <div class="footer-links">
+      <a href="mailto:gfis@chatakeinnoworks.com">gfis@chatakeinnoworks.com</a>
+      <a href="mailto:greenworks@chatakeinnoworks.com">greenworks@chatakeinnoworks.com</a>
+      <a href="mailto:research@chatakeinnoworks.com">research@chatakeinnoworks.com</a>
+      <a href="mailto:support@chatakeinnoworks.com">support@chatakeinnoworks.com</a>
+    </div>
+  </footer>
+
+  <script src="assets/runtime-config.js"></script>
+  <script src="assets/level2.js"></script>
+</body>
+</html>

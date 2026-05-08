@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>GFIS Digital Twin Control Room</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">Green Fuel Intelligence System</p>
+        <h1>Physics-Guided AI Digital Twin for Biogas Methane Production</h1>
+      </div>
+      <div class="status-pill" id="apiStatus">Checking API</div>
+    </header>
+
+    <nav class="demo-nav" aria-label="GFIS demo views">
+      <a href="../../../">GFIS Home</a>
+      <a href="../../">Level 2 Home</a>
+      <a href="index.html" aria-current="page">Model Control Room</a>
+      <a href="industrial_simulation.html">Industrial 48h Simulation</a>
+      <a id="apiDocsLink" href="#">API Docs</a>
+    </nav>
+
+    <main class="layout">
+      <section class="plant-panel">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Live Digital Twin</p>
+            <h2>Anaerobic Digestion Plant</h2>
+          </div>
+          <button id="runSimulation">Run Simulation</button>
+        </div>
+
+        <div class="plant-scene" aria-label="Animated biogas plant simulation">
+          <div class="feedstock">
+            <span>Feedstock</span>
+            <div class="flow flow-a"></div>
+          </div>
+          <div class="digester">
+            <div class="liquid"></div>
+            <div class="bubble b1"></div>
+            <div class="bubble b2"></div>
+            <div class="bubble b3"></div>
+            <span>AD Reactor</span>
+          </div>
+          <div class="pipe"></div>
+          <div class="gas-dome">
+            <div class="flame"></div>
+            <span>CH4</span>
+          </div>
+          <div class="control-node">
+            <span>AI Twin</span>
+            <strong id="stabilityBadge">Stable</strong>
+          </div>
+        </div>
+
+        <div class="metrics">
+          <article>
+            <span>Methane Yield</span>
+            <strong id="methaneMetric">--</strong>
+          </article>
+          <article>
+            <span>Physics Bound</span>
+            <strong id="boundMetric">--</strong>
+          </article>
+          <article>
+            <span>VFA/ALK</span>
+            <strong id="vfaMetric">--</strong>
+          </article>
+          <article>
+            <span>Violation</span>
+            <strong id="violationMetric">--</strong>
+          </article>
+        </div>
+      </section>
+
+      <aside class="control-panel">
+        <div class="section-head compact">
+          <div>
+            <p class="eyebrow">Process Variables</p>
+            <h2>Controls</h2>
+          </div>
+        </div>
+        <div id="controls" class="controls"></div>
+        <button id="optimize">Optimize Operating Point</button>
+      </aside>
+
+      <section class="wide-panel">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Scenario Simulation</p>
+            <h2>What-if OLR Sweep</h2>
+          </div>
+          <button id="runPlantTrace">Run 48h Plant Trace</button>
+        </div>
+        <div class="chart" id="chart"></div>
+      </section>
+
+      <section class="wide-panel two-col">
+        <div>
+          <p class="eyebrow">Model Evaluation</p>
+          <h2>Current Trained System</h2>
+          <pre id="evaluationBox">Loading evaluation...</pre>
+        </div>
+        <div>
+          <p class="eyebrow">Industrial Extension</p>
+          <h2>Deployment Vision</h2>
+          <ul class="vision-list">
+            <li>FastAPI service for prediction and simulation</li>
+            <li>SQLite now, PostgreSQL-ready persistence</li>
+            <li>Ubuntu VM and Docker deployment path</li>
+            <li>ROS2/Gazebo adapter planned for physical plant telemetry</li>
+            <li>Extensible to gasification as a future thermochemical module</li>
+          </ul>
+        </div>
+      </section>
+    </main>
+
+    <script src="config.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>

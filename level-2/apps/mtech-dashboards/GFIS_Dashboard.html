@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GFIS M.Tech Dashboard | Chatake Innoworks</title>
+    
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js for real-time graphs -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        gray: { 850: '#1f2937', 900: '#111827', 950: '#030712' },
+                        primary: '#d6d3d1', // Premium neutral
+                        accent: '#d97706',  // Industrial amber
+                        danger: '#ef4444'   // Red
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #030712; color: #e5e7eb; margin: 0; overflow-x: hidden; }
+        .glass-panel { background: rgba(31, 41, 55, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #111827; }
+        ::-webkit-scrollbar-thumb { background: #374151; border-radius: 3px; }
+        
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeIn 0.3s ease-in-out; }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+    <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+    <meta name="theme-color" content="#10100f">
+</head>
+<body class="h-screen flex flex-col md:flex-row">
+
+    <!-- Sidebar -->
+    <aside class="w-full md:w-64 glass-panel border-r border-gray-800 flex flex-col p-4 m-2">
+        <div class="mb-8">
+            <p class="text-xs text-stone-200 font-bold tracking-widest uppercase mb-1">Chatake Innoworks</p>
+            <h1 class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-stone-100 to-amber-600">GFIS Core</h1>
+            <p class="text-xs text-gray-400 mt-1">Physics-Guided Hybrid AI</p>
+        </div>
+
+        <nav class="flex-1 space-y-2" id="sidebar-nav">
+            <button onclick="switchTab('view-monitoring', this)" class="nav-btn w-full text-left py-2.5 px-4 rounded bg-stone-700/50 text-stone-200 font-semibold border-l-4 border-amber-600 transition">Live Monitoring</button>
+            <button onclick="switchTab('view-diagnostics', this)" class="nav-btn w-full text-left py-2.5 px-4 rounded hover:bg-gray-800 transition text-gray-300 border-l-4 border-transparent">LSTM Diagnostics</button>
+            <button onclick="switchTab('view-analytics', this)" class="nav-btn w-full text-left py-2.5 px-4 rounded hover:bg-gray-800 transition text-gray-300 border-l-4 border-transparent">Historical Analytics</button>
+            <button onclick="switchTab('view-config', this)" class="nav-btn w-full text-left py-2.5 px-4 rounded hover:bg-gray-800 transition text-gray-300 border-l-4 border-transparent">System Config</button>
+        </nav>
+
+        <div class="mt-auto glass-panel p-4 bg-gray-900/50">
+            <h3 class="text-sm text-gray-400 font-semibold mb-2">Simulate Anomalies</h3>
+            <button onclick="triggerOLRShock()" class="w-full py-2 mb-2 bg-yellow-600/20 text-yellow-500 border border-yellow-600/50 rounded hover:bg-yellow-600/40 transition text-sm">⚠️ Inject OLR Shock</button>
+            <button onclick="triggerTempDrop()" class="w-full py-2 bg-zinc-800/60 text-zinc-300 border border-zinc-600 rounded hover:bg-zinc-700/60 transition text-sm">❄️ Drop Temperature</button>
+            <button onclick="resetSystem()" class="w-full py-2 mt-2 bg-gray-600/20 text-gray-300 border border-gray-600/50 rounded hover:bg-gray-600/40 transition text-sm">🔄 Reset System</button>
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 p-2 md:p-6 overflow-y-auto">
+        
+        <!-- View 1: Live Monitoring (Default) -->
+        <div id="view-monitoring" class="tab-content active">
+            <header class="flex justify-between items-end mb-6 pl-2">
+                <div>
+                    <h2 class="text-2xl font-bold text-white">Digester Unit Alpha</h2>
+                    <p class="text-sm text-gray-400">Dry Anaerobic Digestion | Full-Scale Integration</p>
+                </div>
+                <div id="system-status" class="px-4 py-2 rounded-full bg-amber-700/15 border border-amber-600 text-amber-500 font-semibold flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
+                    System Stable
+                </div>
+            </header>
+
+            <!-- KPI Cards -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                <div class="glass-panel p-4">
+                    <p class="text-gray-400 text-sm">Predicted Methane (CH₄)</p>
+                    <div class="text-3xl font-bold text-white mt-1"><span id="kpi-ch4">0.00</span> <span class="text-sm font-normal text-gray-500">m³/d</span></div>
+                </div>
+                <div class="glass-panel p-4">
+                    <p class="text-gray-400 text-sm">VFA/ALK Ratio (Soft Sensor)</p>
+                    <div class="text-3xl font-bold mt-1" id="kpi-vfa">0.25</div>
+                </div>
+                <div class="glass-panel p-4">
+                    <p class="text-gray-400 text-sm">Process pH</p>
+                    <div class="text-3xl font-bold text-white mt-1" id="kpi-ph">7.30</div>
+                </div>
+                <div class="glass-panel p-4">
+                    <p class="text-gray-400 text-sm">AI Confidence (R²)</p>
+                    <div class="text-3xl font-bold text-stone-200 mt-1">0.92</div>
+                </div>
+            </div>
+
+            <!-- Charts Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Main Prediction Chart -->
+                <div class="glass-panel p-4 lg:col-span-2 relative">
+                    <h3 class="text-lg font-semibold mb-1">Physics-Guided LSTM: Methane Yield Prediction</h3>
+                    <p class="text-xs text-gray-400 mb-4">Real-time mapping of thermodynamic constraints vs. actual output.</p>
+                    <div class="h-64 w-full relative">
+                        <canvas id="methaneChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- SHAP Explainability -->
+                <div class="glass-panel p-4">
+                    <h3 class="text-lg font-semibold mb-1">XAI (SHAP Values)</h3>
+                    <p class="text-xs text-gray-400 mb-4">Real-time feature importance driving the Soft Sensor.</p>
+                    <div class="h-64 w-full">
+                        <canvas id="shapChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Soft Sensor Chart -->
+                <div class="glass-panel p-4 lg:col-span-3">
+                    <h3 class="text-lg font-semibold mb-1">XGBoost Virtual Soft Sensor: VFA/ALK Tracking</h3>
+                    <p class="text-xs text-gray-400 mb-4">Predicting acidification risk. Threshold > 0.40 triggers alarm.</p>
+                    <div class="h-48 w-full">
+                        <canvas id="vfaChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- View 2: LSTM Diagnostics -->
+        <div id="view-diagnostics" class="tab-content">
+            <header class="mb-6 pl-2">
+                <h2 class="text-2xl font-bold text-white">Spatio-Temporal LSTM Diagnostics</h2>
+                <p class="text-sm text-gray-400">Deep Learning Engine Performance Metrics</p>
+            </header>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="glass-panel p-6">
+                    <h3 class="text-lg font-semibold text-stone-200 mb-4">Attention Weights Map</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <div class="flex justify-between text-sm mb-1"><span class="text-gray-300">Time t-1</span><span class="text-stone-200">85%</span></div>
+                            <div class="w-full bg-gray-800 rounded-full h-2"><div class="bg-primary h-2 rounded-full" style="width: 85%"></div></div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-sm mb-1"><span class="text-gray-300">Time t-2</span><span class="text-stone-200">60%</span></div>
+                            <div class="w-full bg-gray-800 rounded-full h-2"><div class="bg-primary h-2 rounded-full" style="width: 60%"></div></div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-sm mb-1"><span class="text-gray-300">Time t-3</span><span class="text-stone-200">30%</span></div>
+                            <div class="w-full bg-gray-800 rounded-full h-2"><div class="bg-primary h-2 rounded-full" style="width: 30%"></div></div>
+                        </div>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-4">Model heavily weights recent events (t-1) due to immediate biological responses.</p>
+                </div>
+                <div class="glass-panel p-6">
+                    <h3 class="text-lg font-semibold text-amber-500 mb-4">Physics-Informed Loss ($L_{PG}$)</h3>
+                    <div class="text-center py-6">
+                        <p class="text-4xl font-bold text-white">0.024</p>
+                        <p class="text-sm text-gray-400 mt-2">Current Combined MSE + Physics Penalty</p>
+                        <p class="text-xs text-amber-500 mt-4 bg-amber-500/10 py-2 rounded">Model is strictly adhering to ADM1 bounds</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- View 3: Historical Analytics -->
+        <div id="view-analytics" class="tab-content">
+            <header class="mb-6 pl-2">
+                <h2 class="text-2xl font-bold text-white">Historical Analytics</h2>
+                <p class="text-sm text-gray-400">Past 30 Days Digester Output vs Targets</p>
+            </header>
+            <div class="glass-panel p-10 text-center">
+                <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gray-800 mb-4">
+                    <svg class="w-10 h-10 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                </div>
+                <h3 class="text-xl font-medium text-white mb-2">Historical Database Synchronizing</h3>
+                <p class="text-gray-400 max-w-md mx-auto">Connecting to AWS TimeStream database to fetch previous month's operational records and carbon credit calculations...</p>
+            </div>
+        </div>
+
+        <!-- View 4: System Config -->
+        <div id="view-config" class="tab-content">
+            <header class="mb-6 pl-2">
+                <h2 class="text-2xl font-bold text-white">System Configuration</h2>
+                <p class="text-sm text-gray-400">Chatake Innoworks Engine Parameters</p>
+            </header>
+            <div class="glass-panel p-6 max-w-2xl">
+                <div class="space-y-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-1">Target ADM1 Baseline Node</label>
+                        <input type="text" value="node-alpha-402" class="w-full bg-gray-900 border border-gray-700 rounded p-2 text-white outline-none focus:border-amber-600" readonly>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-1">XAI Soft-Sensor Alarm Threshold</label>
+                        <input type="number" value="0.40" class="w-full bg-gray-900 border border-gray-700 rounded p-2 text-white outline-none focus:border-amber-600" readonly>
+                        <p class="text-xs text-gray-500 mt-1">Triggers emergency alerts when VFA/ALK > 0.40</p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-1">LSTM Temporal Window Size ($w$)</label>
+                        <input type="number" value="5" class="w-full bg-gray-900 border border-gray-700 rounded p-2 text-white outline-none focus:border-amber-600" readonly>
+                        <p class="text-xs text-gray-500 mt-1">Number of past time-steps evaluated by the Spatio-Temporal Attention mechanism.</p>
+                    </div>
+                    <button class="bg-primary hover:bg-primary/80 text-gray-900 font-bold py-2 px-6 rounded transition">
+                        Update Configuration
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        // --- Navigation Logic ---
+        function switchTab(tabId, btnElement) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            // Show target tab
+            document.getElementById(tabId).classList.add('active');
+
+            // Reset all button styles
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.className = "nav-btn w-full text-left py-2.5 px-4 rounded hover:bg-gray-800 transition text-gray-300 border-l-4 border-transparent";
+            });
+            // Apply active styles to clicked button
+            btnElement.className = "nav-btn w-full text-left py-2.5 px-4 rounded bg-stone-700/50 text-stone-200 font-semibold border-l-4 border-amber-600 transition";
+        }
+
+        // Global variables for simulation state
+        let time = 0;
+        let isOLRShock = false;
+        let isTempDrop = false;
+        let shockTimer = 0;
+        
+        const MAX_DATAPOINTS = 50;
+        const labels = Array.from({length: MAX_DATAPOINTS}, (_, i) => i);
+        
+        // Data arrays
+        const dataActualCH4 = Array(MAX_DATAPOINTS).fill(null);
+        const dataPredictedCH4 = Array(MAX_DATAPOINTS).fill(null);
+        const dataVFA = Array(MAX_DATAPOINTS).fill(null);
+
+        // --- Chart Configs ---
+        Chart.defaults.color = '#9ca3af';
+        Chart.defaults.font.family = "'Inter', sans-serif";
+
+        // 1. Methane Chart
+        const ctxMethane = document.getElementById('methaneChart').getContext('2d');
+        const methaneChart = new Chart(ctxMethane, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        label: 'Actual (Sensor)',
+                        data: dataActualCH4,
+                        borderColor: 'rgba(255, 255, 255, 0.5)',
+                        borderWidth: 2,
+                        pointRadius: 0,
+                        tension: 0.4
+                    },
+                    {
+                        label: 'LSTM Prediction',
+                        data: dataPredictedCH4,
+                        borderColor: '#d6d3d1',
+                        backgroundColor: 'rgba(14, 165, 233, 0.1)',
+                        borderWidth: 2,
+                        pointRadius: 0,
+                        fill: true,
+                        tension: 0.4
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                animation: { duration: 0 },
+                scales: {
+                    x: { display: false },
+                    y: { min: 0, max: 800, grid: { color: 'rgba(255,255,255,0.05)' } }
+                },
+                plugins: { legend: { position: 'top', labels: { boxWidth: 12 } } }
+            }
+        });
+
+        // 2. VFA/ALK Chart
+        const ctxVFA = document.getElementById('vfaChart').getContext('2d');
+        const vfaChart = new Chart(ctxVFA, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'VFA/ALK Ratio',
+                    data: dataVFA,
+                    borderColor: '#d97706',
+                    borderWidth: 2,
+                    pointRadius: 0,
+                    fill: false,
+                    tension: 0.3
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                animation: { duration: 0 },
+                scales: {
+                    x: { display: false },
+                    y: { min: 0, max: 0.8, grid: { color: 'rgba(255,255,255,0.05)' } }
+                },
+                plugins: {
+                    annotation: { // Conceptual line (Chart.js native drawing handled in update)
+                        annotations: []
+                    }
+                }
+            },
+            plugins: [{
+                id: 'thresholdLine',
+                beforeDraw: chart => {
+                    const ctx = chart.ctx;
+                    const yAxis = chart.scales.y;
+                    const yPos = yAxis.getPixelForValue(0.4);
+                    ctx.save();
+                    ctx.beginPath();
+                    ctx.moveTo(chart.chartArea.left, yPos);
+                    ctx.lineTo(chart.chartArea.right, yPos);
+                    ctx.lineWidth = 1;
+                    ctx.strokeStyle = 'rgba(239, 68, 68, 0.8)';
+                    ctx.setLineDash([5, 5]);
+                    ctx.stroke();
+                    ctx.restore();
+                }
+            }]
+        });
+
+        // 3. SHAP Chart (Horizontal Bar)
+        const ctxSHAP = document.getElementById('shapChart').getContext('2d');
+        const shapChart = new Chart(ctxSHAP, {
+            type: 'bar',
+            data: {
+                labels: ['OLR', 'pH', 'Temp', 'VS'],
+                datasets: [{
+                    label: 'Impact on VFA',
+                    data: [0.1, 0.4, 0.2, 0.05],
+                    backgroundColor: ['#d6d3d1', '#d6d3d1', '#d6d3d1', '#d6d3d1'],
+                    borderRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                indexAxis: 'y',
+                scales: {
+                    x: { display: false, max: 1.0 },
+                    y: { grid: { display: false } }
+                },
+                plugins: { legend: { display: false } }
+            }
+        });
+
+        // --- Data Simulation Logic (The "Backend" Physics) ---
+        function updateSystem() {
+            // Base state
+            let temp = 37.5 + Math.sin(time / 10) * 0.5 + (Math.random() - 0.5) * 0.2;
+            let olr = 3.0 + (Math.random() - 0.5) * 0.2;
+            let ph = 7.3 + (Math.random() - 0.5) * 0.05;
+            
+            // Apply Anomalies
+            if (isOLRShock && shockTimer > 0) {
+                olr += 4.5; // Huge spike
+                shockTimer--;
+            } else if (isTempDrop && shockTimer > 0) {
+                temp -= 8.0; // Sudden drop to 29C
+                shockTimer--;
+            } else {
+                isOLRShock = false;
+                isTempDrop = false;
+            }
+
+            // Soft Sensor Physics (VFA/ALK)
+            let vfa = 1000 + (olr * 400) - (temp * 20);
+            let alk = 3500;
+            let currentVFA = vfa / alk;
+            
+            // Add momentum to VFA changes so it doesn't snap instantly
+            let lastVfa = dataVFA[MAX_DATAPOINTS - 1] || 0.25;
+            let smoothVfa = lastVfa + (currentVFA - lastVfa) * 0.1;
+            
+            // pH drops if VFA > 0.4
+            if (smoothVfa > 0.4) {
+                ph -= (smoothVfa - 0.4) * 2; 
+            }
+
+            // Methane Yield Physics (CH4)
+            let vs = olr * 0.8;
+            let ch4_base = 350 * vs;
+            let ph_inhibition = Math.max(0, Math.min(1, (ph - 6.5) / 0.8));
+            let temp_eff = Math.max(0.5, Math.min(1.2, (temp - 30) / 10));
+            
+            let actualCH4 = ch4_base * ph_inhibition * temp_eff;
+            actualCH4 += (Math.random() - 0.5) * 20; // noise
+
+            // Deep Learning Prediction (Mimicking model lag and accuracy)
+            // Model struggles slightly during sudden shocks but catches up
+            let predictedCH4 = actualCH4 * (0.95 + Math.random() * 0.1);
+            if (isOLRShock || isTempDrop) predictedCH4 = actualCH4 * 1.1; // Model overpredicts initially during shock
+
+            // Shift arrays and push new data
+            dataActualCH4.shift(); dataActualCH4.push(actualCH4);
+            dataPredictedCH4.shift(); dataPredictedCH4.push(predictedCH4);
+            dataVFA.shift(); dataVFA.push(smoothVfa);
+
+            // Update DOM KPIs
+            document.getElementById('kpi-ch4').innerText = predictedCH4.toFixed(1);
+            document.getElementById('kpi-ph').innerText = ph.toFixed(2);
+            
+            const kpiVFA = document.getElementById('kpi-vfa');
+            kpiVFA.innerText = smoothVfa.toFixed(3);
+            
+            // UI Status Updates
+            const statusDiv = document.getElementById('system-status');
+            if (smoothVfa > 0.4) {
+                kpiVFA.className = "text-3xl font-bold mt-1 text-danger animate-pulse";
+                statusDiv.className = "px-4 py-2 rounded-full bg-danger/20 border border-danger text-danger font-semibold flex items-center gap-2";
+                statusDiv.innerHTML = `<span class="w-2 h-2 rounded-full bg-danger animate-pulse"></span> Critical: Acidification Risk`;
+                vfaChart.data.datasets[0].borderColor = '#ef4444'; // turn line red
+                
+                // Update SHAP chart to show what caused it
+                if(isOLRShock) {
+                    shapChart.data.datasets[0].data = [0.85, 0.5, 0.1, 0.7]; // OLR dominates
+                    shapChart.data.datasets[0].backgroundColor = ['#ef4444', '#d6d3d1', '#d6d3d1', '#ef4444'];
+                } else if (isTempDrop) {
+                    shapChart.data.datasets[0].data = [0.1, 0.3, 0.9, 0.2]; // Temp dominates
+                    shapChart.data.datasets[0].backgroundColor = ['#d6d3d1', '#d6d3d1', '#ef4444', '#d6d3d1'];
+                }
+            } else {
+                kpiVFA.className = "text-3xl font-bold mt-1 text-amber-500";
+                statusDiv.className = "px-4 py-2 rounded-full bg-amber-700/15 border border-amber-600 text-amber-500 font-semibold flex items-center gap-2";
+                statusDiv.innerHTML = `<span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span> System Stable`;
+                vfaChart.data.datasets[0].borderColor = '#d97706'; // normal green
+                
+                // Normal SHAP
+                shapChart.data.datasets[0].data = [0.3, 0.4, 0.2, 0.1];
+                shapChart.data.datasets[0].backgroundColor = ['#d6d3d1', '#d6d3d1', '#d6d3d1', '#d6d3d1'];
+            }
+
+            // Update Charts
+            methaneChart.update();
+            vfaChart.update();
+            shapChart.update();
+
+            time++;
+        }
+
+        // --- Controls ---
+        function triggerOLRShock() {
+            isOLRShock = true;
+            isTempDrop = false;
+            shockTimer = 30; // Last for 30 ticks
+        }
+
+        function triggerTempDrop() {
+            isTempDrop = true;
+            isOLRShock = false;
+            shockTimer = 30;
+        }
+
+        function resetSystem() {
+            isOLRShock = false;
+            isTempDrop = false;
+            shockTimer = 0;
+            // Clear arrays
+            dataActualCH4.fill(null);
+            dataPredictedCH4.fill(null);
+            dataVFA.fill(null);
+        }
+
+        // Pre-fill initial data so charts aren't empty
+        for(let i=0; i<MAX_DATAPOINTS; i++) {
+            updateSystem();
+        }
+
+        // Start real-time loop
+        setInterval(updateSystem, 1000);
+
+    </script>
+</body>
+</html>

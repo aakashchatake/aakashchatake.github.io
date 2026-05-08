@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+  <!-- ── Primary Branding ── -->
+  <title>GFIS — Green Fuel Intelligence System | Chatake Innoworks Pvt. Ltd.</title>
+  <meta name="description" content="AI-powered biogas production optimization platform. Real-time IoT monitoring, ML predictions, carbon credits &amp; ESG intelligence. DIPEX 2026 — Chatake Greenworks, a division of Chatake Innoworks Pvt. Ltd."/>
+  <meta name="author" content="Chatake Innoworks Pvt. Ltd."/>
+  <meta name="keywords" content="GFIS, Green Fuel Intelligence System, biogas, AI, IoT, Chatake Innoworks, Chatake Greenworks, SATAT, GOBARdhan, DIPEX 2026"/>
+
+  <!-- ── Open Graph / Social Preview ── -->
+  <meta property="og:type" content="website"/>
+  <meta property="og:url" content="https://gfis.chatakeinnoworks.com/"/>
+  <meta property="og:title" content="GFIS: AI-Powered Biogas Optimization Platform | Chatake"/>
+  <meta property="og:description" content="Chatake Innoworks Pvt. Ltd. · AI-powered biogas optimization platform. 12 modules, real-time IoT, ML predictions, carbon credits."/>
+  <meta property="og:image" content="https://raw.githubusercontent.com/aakashchatake/GFIS-v2.0/gh-pages/assets/gfis-preview-og.jpg"/>
+  <meta property="og:image:width" content="1366"/>
+  <meta property="og:image:height" content="768"/>
+  <meta property="og:site_name" content="Chatake Innoworks Pvt. Ltd."/>
+
+  <!-- ── Twitter Card ── -->
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="GFIS: AI-Powered Biogas Optimization Platform"/>
+  <meta name="twitter:description" content="12 modules, real-time IoT, ML predictions, carbon credits"/>
+  <meta name="twitter:image" content="https://raw.githubusercontent.com/aakashchatake/GFIS-v2.0/gh-pages/assets/gfis-preview-og.jpg"/>
+
+  <!-- ── Favicon ── -->
+  <link rel="icon" type="image/jpeg" href="assets/gfis-system.jpg"/>
+  <link rel="apple-touch-icon" href="assets/gfis-system.jpg"/>
+
+  <!-- ── Fonts ── -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:        #ffffff;
+      --bg2:       #f8fafc;
+      --bg3:       #f1f5f9;
+      --card:      #ffffff;
+      --border:    rgba(15,23,42,0.09);
+      --shadow:    0 1px 3px rgba(15,23,42,0.07), 0 4px 16px rgba(15,23,42,0.05);
+      --shadow-lg: 0 8px 32px rgba(15,23,42,0.10), 0 2px 8px rgba(15,23,42,0.05);
+      --green:     #059669;
+      --green-lt:  #10b981;
+      --green-dk:  #047857;
+      --green-bg:  #f0fdf4;
+      --green-bdr: #bbf7d0;
+      --text:      #0f172a;
+      --text2:     #1e293b;
+      --muted:     #64748b;
+      --dim:       #94a3b8;
+      --hero-bg:   #060d06;
+    }
+    html { scroll-behavior: smooth; }
+    body { 
+      background: var(--bg) !important;
+      color: var(--text) !important; 
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important; 
+      line-height: 1.6 !important; 
+      display: block !important;
+      width: 100% !important;
+      height: auto !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      visibility: visible !important;
+      opacity: 1 !important;
+    }
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: var(--bg2); }
+    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky; top: 0; z-index: 200; height: 64px; padding: 0 52px;
+      background: rgba(255,255,255,0.93);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      border-bottom: 1px solid var(--border);
+      display: flex !important; align-items: center; justify-content: space-between;
+      visibility: visible !important;
+      opacity: 1 !important;
+    }
+    .nav-brand { display: flex; align-items: center; gap: 10px; text-decoration: none; visibility: visible !important; opacity: 1 !important; }
+    .nav-logo { width: 34px; height: 34px; border-radius: 8px; overflow: hidden; flex-shrink: 0; }
+    .nav-logo img { width: 100%; height: 100%; object-fit: cover; }
+    .nav-names { display: flex; flex-direction: column; line-height: 1.15; }
+    .nav-company { font-size: 0.62em; color: var(--muted); font-weight: 500; letter-spacing: 0.1px; }
+    .nav-product { font-size: 0.93em; font-weight: 800; color: var(--text); letter-spacing: -0.4px; }
+    .nav-product span { color: var(--green); }
+    .nav-links { display: flex; align-items: center; gap: 28px; }
+    .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.84em; font-weight: 500; transition: color .18s; }
+    .nav-links a:hover { color: var(--text); }
+    .nav-cta { background: var(--green) !important; color: #fff !important; padding: 8px 20px; border-radius: 7px; font-weight: 700 !important; font-size: 0.82em !important; transition: background .18s !important; }
+    .nav-cta:hover { background: var(--green-dk) !important; }
+
+    /* ── HERO ── */
+    .hero { 
+      position: relative; 
+      min-height: 100vh; 
+      display: flex !important; 
+      flex-direction: column; 
+      align-items: center; 
+      justify-content: center; 
+      text-align: center; 
+      padding: 100px 24px 90px; 
+      overflow: hidden; 
+      background: var(--hero-bg);
+      visibility: visible !important;
+      opacity: 1 !important;
+    }
+    .hero-bg { position: absolute; inset: 0; z-index: 0; background-image: url('assets/hero-smart-grid.png'); background-size: cover; background-position: center; opacity: 0.22; }
+    .hero-bg::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(6,13,6,0.3) 0%, rgba(6,13,6,0.6) 60%, var(--hero-bg) 100%); }
+    .hero-content { position: relative; z-index: 2; max-width: 860px; }
+    .hero-eyebrow { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 22px; flex-wrap: wrap; }
+    .hero-company { font-size: 0.72em; font-weight: 600; color: rgba(255,255,255,0.52); letter-spacing: 0.5px; }
+    .hero-sep { color: rgba(255,255,255,0.2); }
+    .badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.18); border-radius: 100px; padding: 5px 16px; font-size: 0.68em; font-weight: 600; color: rgba(255,255,255,0.72); letter-spacing: 1.2px; text-transform: uppercase; }
+    .badge-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green-lt); animation: pulse 2s infinite; flex-shrink: 0; }
+    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(1.5)} }
+    h1 { font-size: clamp(2.8em,7.5vw,5.4em); font-weight: 900; line-height: 1.0; letter-spacing: -3px; color: #fff; margin-bottom: 8px; }
+    h1 .g { color: var(--green-lt); }
+    .hero-fullname { font-size: clamp(0.8em,1.6vw,0.96em); color: rgba(255,255,255,0.38); font-weight: 500; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 22px; }
+    .hero-sub { font-size: clamp(0.92em,1.9vw,1.05em); color: rgba(255,255,255,0.56); max-width: 560px; margin: 0 auto 40px; line-height: 1.85; }
+    .btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-bottom: 60px; }
+    .btn-p { background: var(--green-lt); color: #fff; padding: 15px 36px; border-radius: 9px; text-decoration: none; font-weight: 700; font-size: 0.92em; box-shadow: 0 4px 24px rgba(16,185,129,0.4); transition: all .2s; }
+    .btn-p:hover { background: #34d399; transform: translateY(-2px); }
+    .btn-g { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.16); color: rgba(255,255,255,0.82); padding: 15px 36px; border-radius: 9px; text-decoration: none; font-weight: 600; font-size: 0.92em; transition: background .2s; }
+    .btn-g:hover { background: rgba(255,255,255,0.14); }
+    .stats { display: inline-flex; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.11); border-radius: 14px; overflow: hidden; backdrop-filter: blur(8px); }
+    .stat { padding: 18px 28px; text-align: center; border-right: 1px solid rgba(255,255,255,0.09); }
+    .stat:last-child { border-right: none; }
+    .stat-v { font-size: 1.45em; font-weight: 800; color: var(--green-lt); line-height: 1; }
+    .stat-l { font-size: 0.61em; color: rgba(255,255,255,0.4); font-weight: 600; letter-spacing: 1.2px; text-transform: uppercase; margin-top: 4px; }
+
+    /* ── SECTIONS ── */
+    .sec { 
+      padding: 100px 52px;
+      display: block !important;
+      width: 100% !important;
+      visibility: visible !important;
+      opacity: 1 !important;
+    }
+    .sec-inner { max-width: 1180px; margin: 0 auto; width: 100% !important; display: block !important; }
+    .sec-alt  { background: var(--bg2); }
+    .sec-alt3 { background: var(--bg3); }
+    .lbl { display: inline-block; background: var(--green-bg); border: 1px solid var(--green-bdr); color: var(--green-dk); font-size: 0.67em; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; padding: 4px 13px; border-radius: 100px; margin-bottom: 14px; }
+    .sec-title { font-size: clamp(1.8em,3.6vw,2.8em); font-weight: 800; letter-spacing: -1.5px; color: var(--text); line-height: 1.1; }
+    .sec-sub { color: var(--muted); font-size: 1em; line-height: 1.85; margin-top: 14px; max-width: 520px; }
+
+    /* ── PHOTO STRIP ── */
+    .photo-strip { display: grid; grid-template-columns: repeat(5,1fr); gap: 3px; height: 200px; }
+    .photo-strip-item { overflow: hidden; }
+    .photo-strip-item img { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.75) saturate(0.8); transition: all .4s; }
+    .photo-strip-item:hover img { filter: brightness(0.9) saturate(1); transform: scale(1.05); }
+
+    /* ── DASHBOARD ── */
+    .dash-bar { background: var(--bg3); border: 1px solid var(--border); border-bottom: none; border-radius: 12px 12px 0 0; padding: 10px 14px; display: flex; align-items: center; gap: 7px; }
+    .dash-dot { width: 9px; height: 9px; border-radius: 50%; }
+    .dash-frame { height: 800px; border: 1px solid var(--border); border-radius: 0 0 14px 14px; overflow: hidden; box-shadow: var(--shadow-lg); }
+    .dash-frame iframe { width: 100%; height: 100%; border: none; }
+    .dash-url { flex: 1; background: var(--bg); border: 1px solid var(--border); border-radius: 5px; padding: 3px 10px; margin: 0 8px; font-size: 0.66em; color: var(--muted); }
+
+    /* ── MODULE GRID ── */
+    .mods-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; margin-top: 48px; }
+    .mod-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 22px; box-shadow: var(--shadow); transition: box-shadow .2s, transform .2s, border-color .2s; }
+    .mod-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-3px); border-color: var(--green-bdr); }
+    .mod-icon { width: 38px; height: 38px; border-radius: 9px; background: var(--green-bg); border: 1px solid var(--green-bdr); display: flex; align-items: center; justify-content: center; margin-bottom: 14px; }
+    .mod-icon svg { width: 18px; height: 18px; stroke: var(--green-dk); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+    .mod-name { font-weight: 700; font-size: 0.87em; color: var(--text); margin-bottom: 7px; }
+    .mod-desc { color: var(--muted); font-size: 0.76em; line-height: 1.65; }
+
+    /* ── VIS GALLERY ── */
+    .vis-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; margin-top: 48px; }
+    .vis-card { border-radius: 14px; overflow: hidden; position: relative; box-shadow: var(--shadow); }
+    .vis-card img { width: 100%; display: block; object-fit: cover; transition: transform .5s; }
+    .vis-card:hover img { transform: scale(1.04); }
+    .vis-card-label { position: absolute; bottom: 0; left: 0; right: 0; padding: 28px 16px 14px; background: linear-gradient(transparent, rgba(0,0,0,0.78)); font-size: 0.76em; font-weight: 600; color: rgba(255,255,255,0.95); }
+    .vis-card-tag { display: inline-block; background: rgba(5,150,105,0.9); color: #fff; font-size: 0.64em; font-weight: 700; padding: 2px 8px; border-radius: 100px; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 5px; }
+    .vis-tall { grid-row: span 2; }
+    .vis-tall img { height: 100%; }
+
+    /* ── ECO POINTS ── */
+    .eco-points { display: flex; flex-direction: column; gap: 16px; margin-top: 28px; }
+    .eco-point { display: flex; gap: 14px; align-items: flex-start; }
+    .eco-point-icon { width: 36px; height: 36px; border-radius: 9px; flex-shrink: 0; background: var(--green-bg); border: 1px solid var(--green-bdr); display: flex; align-items: center; justify-content: center; }
+    .eco-point-icon svg { width: 16px; height: 16px; stroke: var(--green-dk); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+    .eco-point-text strong { display: block; font-size: 0.86em; font-weight: 700; color: var(--text); margin-bottom: 3px; }
+    .eco-point-text span { font-size: 0.77em; color: var(--muted); line-height: 1.65; }
+
+    /* ── BROWSER MOCKUP ── */
+    .browser-mock { border-radius: 14px; overflow: hidden; box-shadow: var(--shadow-lg); border: 1px solid var(--border); }
+    .browser-bar { background: var(--bg3); border-bottom: 1px solid var(--border); padding: 9px 14px; display: flex; align-items: center; gap: 6px; }
+    .browser-btn { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+    .browser-url { flex: 1; background: var(--bg); border: 1px solid var(--border); border-radius: 5px; padding: 3px 10px; margin: 0 8px; font-size: 0.66em; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .browser-body { height: 460px; overflow: hidden; }
+    .browser-body iframe { width: 122%; height: 560px; border: none; transform-origin: top left; transform: scale(0.82); }
+
+    /* ── VIDEO ── */
+    .video-wrap { border-radius: 14px; overflow: hidden; box-shadow: var(--shadow-lg); border: 1px solid var(--border); aspect-ratio: 16/9; }
+    .video-wrap iframe { width: 100%; height: 100%; border: none; }
+
+    /* ── FELLOWSHIP ── */
+    .fellowship { background: var(--green-bg); border: 1px solid var(--green-bdr); border-radius: 12px; padding: 18px 22px; margin-top: 32px; display: flex; align-items: flex-start; gap: 13px; }
+    .fellowship-icon { font-size: 1.35em; flex-shrink: 0; line-height: 1.2; margin-top: 1px; }
+    .fellowship-title { font-size: 0.84em; font-weight: 700; color: var(--green-dk); margin-bottom: 4px; }
+    .fellowship-body { font-size: 0.77em; color: var(--muted); line-height: 1.7; }
+    .fellowship-body a { color: var(--green); text-decoration: none; font-weight: 600; }
+
+    /* ── TEAM ── */
+    .team-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 14px; margin-top: 44px; }
+    .team-card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 26px 20px; text-align: center; box-shadow: var(--shadow); transition: box-shadow .2s, transform .2s; }
+    .team-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-3px); }
+    .team-avatar { width: 62px; height: 62px; border-radius: 18px; margin: 0 auto 16px; background: var(--green-bg); border: 1px solid var(--green-bdr); display: flex; align-items: center; justify-content: center; }
+    .team-avatar svg { width: 26px; height: 26px; stroke: var(--green-dk); fill: none; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+    .team-name { font-weight: 700; font-size: 0.86em; color: var(--text); margin-bottom: 5px; }
+    .team-role { color: var(--green-dk); font-size: 0.74em; font-weight: 600; margin-bottom: 4px; }
+    .team-dept { color: var(--dim); font-size: 0.71em; }
+
+    /* ── ABOUT ── */
+    .about-grid { display: grid; grid-template-columns: 5fr 4fr; gap: 72px; align-items: start; }
+    .about-title { font-size: clamp(1.9em,3.2vw,2.7em); font-weight: 800; letter-spacing: -1.4px; color: var(--text); margin-bottom: 4px; }
+    .about-sub { color: var(--green); font-size: 0.84em; font-weight: 600; margin-bottom: 22px; }
+    .about-body { color: var(--muted); font-size: 0.93em; line-height: 1.88; margin-bottom: 24px; }
+    .about-info-row { display: flex; gap: 11px; margin-bottom: 9px; font-size: 0.82em; color: var(--muted); align-items: flex-start; }
+    .about-info-row a { color: var(--green); text-decoration: none; }
+    .about-info-row svg { flex-shrink: 0; margin-top: 2px; }
+    .about-links { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 22px; }
+    .about-link { background: var(--bg2); border: 1px solid var(--border); color: var(--text2); padding: 8px 15px; border-radius: 7px; text-decoration: none; font-size: 0.78em; font-weight: 600; transition: all .18s; display: flex; align-items: center; gap: 6px; }
+    .about-link:hover { background: var(--green-bg); border-color: var(--green-bdr); color: var(--green-dk); }
+    .about-link svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+    .about-img { border-radius: 18px; overflow: hidden; box-shadow: var(--shadow-lg); border: 1px solid var(--border); }
+    .about-img img { width: 100%; display: block; }
+
+    /* ── NEXORA BANNER ── */
+    .nexora-banner { background: #1e1b4b; border-radius: 18px; padding: 44px 48px; display: grid; grid-template-columns: 1fr auto; gap: 40px; align-items: center; margin-top: 48px; position: relative; overflow: hidden; }
+    .nexora-banner::before { content: ''; position: absolute; top: -80px; right: -80px; width: 280px; height: 280px; border-radius: 50%; background: radial-gradient(circle, rgba(99,102,241,0.2) 0%, transparent 70%); }
+    .nexora-banner > * { position: relative; z-index: 1; }
+    .nexora-tag { display: inline-block; background: rgba(99,102,241,0.2); border: 1px solid rgba(99,102,241,0.4); color: #a5b4fc; font-size: 0.67em; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; padding: 4px 12px; border-radius: 100px; margin-bottom: 12px; }
+    .nexora-title { font-size: 1.55em; font-weight: 800; letter-spacing: -0.8px; color: #fff; margin-bottom: 9px; }
+    .nexora-desc { color: rgba(255,255,255,0.56); font-size: 0.87em; line-height: 1.78; max-width: 520px; }
+    .nexora-desc a { color: #a5b4fc; text-decoration: none; font-weight: 600; }
+    .nexora-btns { display: flex; flex-direction: column; gap: 10px; align-items: flex-end; white-space: nowrap; }
+    .btn-nexora { display: block; text-align: center; background: #4f46e5; color: #fff; padding: 12px 28px; border-radius: 8px; text-decoration: none; font-weight: 700; font-size: 0.86em; transition: background .18s; }
+    .btn-nexora:hover { background: #6366f1; }
+    .btn-nexora-g { display: block; text-align: center; background: rgba(255,255,255,0.07); color: rgba(255,255,255,0.58); border: 1px solid rgba(255,255,255,0.12); padding: 10px 24px; border-radius: 8px; text-decoration: none; font-size: 0.8em; transition: all .18s; }
+    .btn-nexora-g:hover { color: #fff; background: rgba(255,255,255,0.12); }
+
+    /* ── FOOTER ── */
+    footer { 
+      background: var(--text); 
+      color: rgba(255,255,255,0.65); 
+      padding: 64px 52px 32px;
+      display: block !important;
+      width: 100% !important;
+      visibility: visible !important;
+      opacity: 1 !important;
+    }
+    .footer-inner { max-width: 1180px; margin: 0 auto; }
+    .footer-grid { display: grid; grid-template-columns: 2.2fr 1fr 1fr 1fr; gap: 52px; padding-bottom: 48px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .footer-brand-name { font-weight: 800; font-size: 1.1em; color: #fff; letter-spacing: -0.3px; margin-bottom: 4px; }
+    .footer-brand-sub { font-size: 0.76em; color: var(--green-lt); font-weight: 600; margin-bottom: 3px; }
+    .footer-brand-div { font-size: 0.7em; color: rgba(255,255,255,0.3); font-style: italic; margin-bottom: 18px; }
+    .footer-addr { font-size: 0.76em; line-height: 2.1; }
+    .footer-addr a { color: var(--green-lt); text-decoration: none; }
+    .footer-col h4 { font-size: 0.67em; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.4); margin-bottom: 16px; }
+    .footer-col a { display: block; font-size: 0.78em; color: rgba(255,255,255,0.56); text-decoration: none; margin-bottom: 10px; transition: color .18s; }
+    .footer-col a:hover { color: #fff; }
+    .footer-bottom { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+    .footer-copy { font-size: 0.7em; color: rgba(255,255,255,0.28); }
+    .footer-badge { font-size: 0.7em; color: var(--green-lt); font-weight: 600; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 1024px) {
+      .mods-grid { grid-template-columns: repeat(3,1fr); }
+      .about-grid { grid-template-columns: 1fr; }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+      .nexora-banner { grid-template-columns: 1fr; }
+      .nexora-btns { flex-direction: row; align-items: flex-start; }
+    }
+    @media (max-width: 768px) {
+      nav { padding: 0 20px; }
+      .nav-links { display: none; }
+      .sec { padding: 64px 20px; }
+      .mods-grid { grid-template-columns: repeat(2,1fr); }
+      .team-grid { grid-template-columns: 1fr 1fr; }
+      .vis-grid { grid-template-columns: 1fr; }
+      .vis-tall { grid-row: span 1; }
+      .photo-strip { grid-template-columns: repeat(3,1fr); height: 150px; }
+      .stats .stat:nth-child(n+4) { display: none; }
+      .dash-frame { height: 540px; }
+      .footer-grid { grid-template-columns: 1fr; gap: 32px; }
+      .about-grid { gap: 40px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ─── NAV ─── -->
+<nav>
+  <a href="#" class="nav-brand">
+    <div class="nav-logo">
+      <img src="assets/gfis-system.jpg" alt="GFIS"/>
+    </div>
+    <div class="nav-names">
+      <span class="nav-company">Chatake Innoworks Pvt. Ltd.</span>
+      <span class="nav-product">GFIS <span>v2.0</span></span>
+    </div>
+  </a>
+  <div class="nav-links">
+    <a href="../">GFIS Home</a>
+    <a href="#dashboard">Dashboard</a>
+    <a href="#platform">Platform</a>
+    <a href="#demo">Demo</a>
+    <a href="#team">Team</a>
+    <a href="#about">About</a>
+    <a href="https://green-fuel-intelligence--59klled.gamma.site/" target="_blank" class="nav-cta">View Presentation</a>
+  </div>
+</nav>
+
+<!-- ─── HERO ─── -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-content">
+
+    <div class="hero-eyebrow">
+      <span class="hero-company">Chatake Innoworks Pvt. Ltd.</span>
+      <span class="hero-sep">·</span>
+      <div class="badge">
+        <span class="badge-dot"></span>
+        DIPEX 2026 &nbsp;·&nbsp; Chatake Greenworks
+      </div>
+    </div>
+
+    <h1>Green Fuel<br><span class="g">Intelligence</span><br>System</h1>
+    <div class="hero-fullname">GFIS — Green Fuel Intelligence System</div>
+
+    <p class="hero-sub">AI-powered biogas production optimization — real-time IoT monitoring, machine learning predictions, carbon credit analytics, and ESG intelligence for India's clean energy future.</p>
+
+    <div class="btns">
+      <a href="#dashboard" class="btn-p">Open Live Dashboard</a>
+      <a href="https://green-fuel-intelligence--59klled.gamma.site/" target="_blank" class="btn-g">View Presentation</a>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><div class="stat-v">12</div><div class="stat-l">Modules</div></div>
+      <div class="stat"><div class="stat-v">IoT</div><div class="stat-l">Real-time</div></div>
+      <div class="stat"><div class="stat-v">ML</div><div class="stat-l">Predictions</div></div>
+      <div class="stat"><div class="stat-v">ESG</div><div class="stat-l">Carbon Credits</div></div>
+      <div class="stat"><div class="stat-v">SATAT</div><div class="stat-l">Compliant</div></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ─── PHOTO STRIP ─── -->
+<div class="photo-strip">
+  <div class="photo-strip-item"><img src="assets/panel-analytics.png" alt="Analytics"/></div>
+  <div class="photo-strip-item"><img src="assets/biogas-greenfield.png" alt="Biogas Field"/></div>
+  <div class="photo-strip-item"><img src="assets/panel-control-room.png" alt="Control Room"/></div>
+  <div class="photo-strip-item"><img src="assets/panel-facility-day.png" alt="Facility"/></div>
+  <div class="photo-strip-item"><img src="assets/panel-night-ops.png" alt="Night Ops"/></div>
+</div>
+
+<!-- ─── LIVE DASHBOARD ─── -->
+<section class="sec sec-alt" id="dashboard">
+  <div class="sec-inner">
+    <div style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:20px;margin-bottom:28px;">
+      <div>
+        <div class="lbl">Live Platform</div>
+        <div class="sec-title">Interactive Dashboard</div>
+        <div class="sec-sub" style="margin-bottom:0;">12 AI modules running live. Navigate using the sidebar inside the dashboard.</div>
+      </div>
+      <a href="https://gfis-v2-dashboard.streamlit.app/" target="_blank"
+         style="display:flex;align-items:center;gap:7px;color:var(--green-dk);font-size:0.82em;font-weight:600;text-decoration:none;background:var(--green-bg);border:1px solid var(--green-bdr);padding:9px 18px;border-radius:8px;transition:background .18s;">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/>
+          <polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/>
+        </svg>
+        Open full screen
+      </a>
+    </div>
+    <div class="dash-bar">
+      <div class="dash-dot" style="background:#ff5f57;"></div>
+      <div class="dash-dot" style="background:#febc2e;"></div>
+      <div class="dash-dot" style="background:#28c840;"></div>
+      <div class="dash-url">gfis-v2-dashboard.streamlit.app</div>
+    </div>
+    <div class="dash-frame">
+      <iframe src="https://gfis-v2-dashboard.streamlit.app/?embed=true" title="GFIS v2.0 Live Dashboard" loading="lazy" allow="fullscreen"></iframe>
+    </div>
+  </div>
+</section>
+
+<!-- ─── MODULES ─── -->
+<section class="sec" id="platform">
+  <div class="sec-inner">
+    <div class="lbl">Platform</div>
+    <div class="sec-title">12 AI-Powered Modules</div>
+    <div class="sec-sub">Each module is a standalone analytics engine. Select any from the sidebar inside the live dashboard.</div>
+    <div class="mods-grid">
+
+      <div class="mod-card">
+        <div class="mod-icon">
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+        </div>
+        <div class="mod-name">Overview</div>
+        <div class="mod-desc">System-wide KPIs, live plant status, and platform summary dashboard.</div>
+      </div>
+
+      <div class="mod-card">
+        <div class="mod-icon">
+          <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        </div>
+        <div class="mod-name">Real-time Monitoring</div>
+        <div class="mod-desc">Live digester telemetry — temperature, pressure, pH, methane output.</div>
+      </div>
+
+      <div class="mod-card">
+        <div class="mod-icon">
+          <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        </div>
+        <div class="mod-name">Production Analytics</div>
+        <div class="mod-desc">Biogas yield trends, feedstock efficiency analysis, and demand forecasting.</div>
+      </div>
+
+      <div class="mod-card">
+        <div class="mod-icon">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+        </div>
+        <div class="mod-name">ML Predictions</div>
+        <div class="mod-desc">XGBoost/LSTM model predictions, anomaly detection, and feedstock AI.</div>
+      </div>
+
+      <div class="mod-card">
+        <div class="mod-icon">
+          <svg viewBox="0 0 24 24"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
+        </div>
+        <div class="mod-name">Geographic Analysis</div>
+        <div class="mod-desc">Spatial mapping of 5000+ biogas plants across Maharashtra state.</div>
+      </div>
+
+      <div class="mod-card">
+        <div class="mod-icon">
+          <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+        </div>
+        <div class="mod-name">Revenue Tracking</div>
+        <div class="mod-desc">SaaS revenue pipelines, carbon credit income, and ROI analytics.</div>
+      </div>
+
+      <div class="mod-card">
+        <div class="mod-icon">
+          <svg viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>
+        </div>
+        <div class="mod-name">System Health</div>
+        <div class="mod-desc">IoT sensor diagnostics, uptime monitoring, and maintenance alerts.</div>
+      </div>
+
+      <div class="mod-card">
+        <div class="mod-icon">
+          <svg viewBox="0 0 24 24"><path d="M21.21 15.89A10 10 0 118 2.83"/><path d="M22 12A10 10 0 0012 2v10z"/></svg>
+        </div>
+        <div class="mod-name">Advanced Analytics</div>
+        <div class="mod-desc">Correlation matrices, multi-variable optimization, and statistical intelligence.</div>
+      </div>
+
+      <div class="mod-card">
+        <div class="mod-icon">
+          <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/></svg>
+        </div>
+        <div class="mod-name">Enterprise Suite</div>
+        <div class="mod-desc">Predictive maintenance, financial intelligence, and team collaboration tools.</div>
+      </div>
+
+      <div class="mod-card">
+        <div class="mod-icon">
+          <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        </div>
+        <div class="mod-name">Executive Command</div>
+        <div class="mod-desc">Strategic KPIs, market positioning, and policy compliance dashboards.</div>
+      </div>
+
+      <div class="mod-card">
+        <div class="mod-icon">
+          <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        </div>
+        <div class="mod-name">Sustainability Hub</div>
+        <div class="mod-desc">ESG metrics, carbon footprint tracking, and GOBARdhan compliance.</div>
+      </div>
+
+      <div class="mod-card">
+        <div class="mod-icon">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 010 14.14M4.93 4.93a10 10 0 000 14.14"/></svg>
+        </div>
+        <div class="mod-name">Operations Center</div>
+        <div class="mod-desc">Plant operations management, work orders, and SOP automation.</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ─── TECHNOLOGY GALLERY ─── -->
+<section class="sec sec-alt3" id="technology">
+  <div class="sec-inner">
+    <div class="lbl">Technology</div>
+    <div class="sec-title">Intelligence Infrastructure</div>
+    <div class="sec-sub">From ATEX-grade IoT sensors at biogas digesters to cloud MLOps pipelines — the complete technology stack.</div>
+    <div class="vis-grid">
+      <div class="vis-card vis-tall">
+        <img src="assets/hero-ai-lab.png" alt="AI Lab" style="height:100%;object-fit:cover;"/>
+        <div class="vis-card-label"><div class="vis-card-tag">Core</div><div>AI Research &amp; Operations Lab</div></div>
+      </div>
+      <div class="vis-card">
+        <img src="assets/feature-data-sphere.png" alt="Data" style="height:290px;object-fit:cover;"/>
+        <div class="vis-card-label"><div class="vis-card-tag">IoT</div><div>Real-time Data Processing</div></div>
+      </div>
+      <div class="vis-card">
+        <img src="assets/feature-iot-network.png" alt="Network" style="height:290px;object-fit:cover;"/>
+        <div class="vis-card-label"><div class="vis-card-tag">ML</div><div>Neural Network Architecture</div></div>
+      </div>
+      <div class="vis-card">
+        <img src="assets/panel-control-room.png" alt="Control" style="height:290px;object-fit:cover;"/>
+        <div class="vis-card-label"><div class="vis-card-tag">Monitoring</div><div>Central Control Room</div></div>
+      </div>
+      <div class="vis-card">
+        <img src="assets/panel-ml-system.png" alt="ML" style="height:290px;object-fit:cover;"/>
+        <div class="vis-card-label"><div class="vis-card-tag">MLOps</div><div>Production ML Pipeline</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── DEMO: YouTube + Gamma ─── -->
+<section class="sec" id="demo">
+  <div class="sec-inner">
+    <div class="lbl">Live Demo</div>
+    <div class="sec-title">See GFIS in Action</div>
+    <div class="sec-sub">Watch the operational control system reporting walkthrough, then explore the full project presentation.</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:28px;margin-top:48px;align-items:start;">
+
+      <div>
+        <div style="font-size:0.78em;font-weight:700;color:var(--text);margin-bottom:12px;">GFIS Operational Control System — Full Walkthrough</div>
+        <div class="video-wrap">
+          <iframe src="https://www.youtube.com/embed/rP4hwluhhkc?si=9TldcWkrhY8_ySp6"
+            title="GFIS v2.0 — Green Fuel Intelligence System Demo"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerpolicy="strict-origin-when-cross-origin"
+            allowfullscreen></iframe>
+        </div>
+        <div style="margin-top:10px;font-size:0.74em;color:var(--muted);line-height:1.65;">Real-time monitoring, ML predictions, carbon credit tracking, ESG dashboard navigation.</div>
+      </div>
+
+      <div>
+        <div style="font-size:0.78em;font-weight:700;color:var(--text);margin-bottom:12px;">Project Presentation — Chatake Greenworks × DIPEX 2026</div>
+        <div class="browser-mock">
+          <div class="browser-bar">
+            <div class="browser-btn" style="background:#ff5f57;"></div>
+            <div class="browser-btn" style="background:#febc2e;"></div>
+            <div class="browser-btn" style="background:#28c840;"></div>
+            <div class="browser-url">green-fuel-intelligence--59klled.gamma.site</div>
+          </div>
+          <div class="browser-body">
+            <iframe src="https://green-fuel-intelligence--59klled.gamma.site/" title="GFIS Presentation" loading="lazy" scrolling="no"></iframe>
+          </div>
+        </div>
+        <a href="https://green-fuel-intelligence--59klled.gamma.site/" target="_blank"
+           style="display:inline-flex;align-items:center;gap:6px;margin-top:10px;font-size:0.74em;font-weight:600;color:var(--green-dk);text-decoration:none;">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/>
+            <polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/>
+          </svg>
+          Open full presentation
+        </a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ─── BIOGAS OPPORTUNITY ─── -->
+<section class="sec sec-alt">
+  <div class="sec-inner">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;">
+      <div style="border-radius:18px;overflow:hidden;box-shadow:var(--shadow-lg);">
+        <img src="assets/biogas-greenfield.png" alt="Biogas Greenfield" style="width:100%;display:block;"/>
+      </div>
+      <div>
+        <div class="lbl">Chatake Greenworks</div>
+        <div class="sec-title">India's Biogas Opportunity</div>
+        <div class="sec-sub">India's SATAT initiative targets 5,000 compressed biogas plants generating 15 MT of CBG annually. GFIS is the intelligence layer.</div>
+        <div class="eco-points">
+          <div class="eco-point">
+            <div class="eco-point-icon">
+              <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+            <div class="eco-point-text">
+              <strong>Feedstock Intelligence</strong>
+              <span>AI-optimized biomass mix from agricultural waste, MSW, and livestock dung for maximum CH₄ yield.</span>
+            </div>
+          </div>
+          <div class="eco-point">
+            <div class="eco-point-icon">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+            </div>
+            <div class="eco-point-text">
+              <strong>Carbon Credit Monetization</strong>
+              <span>Automated ESG reporting and verified carbon offset calculations aligned with VCS/Gold Standard protocols.</span>
+            </div>
+          </div>
+          <div class="eco-point">
+            <div class="eco-point-icon">
+              <svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+            </div>
+            <div class="eco-point-text">
+              <strong>ATEX-Grade IoT Sensors</strong>
+              <span>Explosion-proof sensors for hazardous environments — real-time CH₄, CO₂, H₂S telemetry.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── INNOVATION ECOSYSTEM ─── -->
+<section class="sec sec-alt3">
+  <div class="sec-inner">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;">
+      <div>
+        <div class="lbl">Research &amp; Training</div>
+        <div class="sec-title">Innovation Ecosystem</div>
+        <div class="sec-sub">Full technical architecture — from IoT edge nodes at biogas digesters to cloud MLOps pipelines and ESG reporting APIs.</div>
+        <div class="eco-points">
+          <div class="eco-point">
+            <div class="eco-point-icon">
+              <svg viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+            </div>
+            <div class="eco-point-text">
+              <strong>XGBoost + LSTM Ensemble</strong>
+              <span>Hybrid model combining gradient boosting for tabular sensor data with LSTM for time-series biogas yield forecasting.</span>
+            </div>
+          </div>
+          <div class="eco-point">
+            <div class="eco-point-icon">
+              <svg viewBox="0 0 24 24"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
+            </div>
+            <div class="eco-point-text">
+              <strong>Maharashtra Spatial Database</strong>
+              <span>GIS-indexed database of 5000+ plant locations, feedstock zones, and grid connectivity for route optimization.</span>
+            </div>
+          </div>
+          <div class="eco-point">
+            <div class="eco-point-icon">
+              <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/></svg>
+            </div>
+            <div class="eco-point-text">
+              <strong>DIPEX 2026 — District Exhibition</strong>
+              <span>Presented at district-level project exhibition, funded and mentored by Chatake Greenworks R&amp;D.</span>
+            </div>
+          </div>
+        </div>
+        <div class="fellowship">
+          <div class="fellowship-icon">🎓</div>
+          <div>
+            <div class="fellowship-title">MindforgeAI Research Fellowship</div>
+            <div class="fellowship-body">GFIS students are part of Chatake Innoworks' structured research programme pairing engineering students with live industry problems. <a href="https://internship.chatakeinnoworks.com" target="_blank">Learn about the internship programme →</a></div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div style="font-size:0.78em;font-weight:700;color:var(--text);margin-bottom:12px;">Chatake Innoworks — Internship Portal</div>
+        <div class="browser-mock">
+          <div class="browser-bar">
+            <div class="browser-btn" style="background:#ff5f57;"></div>
+            <div class="browser-btn" style="background:#febc2e;"></div>
+            <div class="browser-btn" style="background:#28c840;"></div>
+            <div class="browser-url">internship.chatakeinnoworks.com</div>
+          </div>
+          <div class="browser-body">
+            <iframe src="https://internship.chatakeinnoworks.com" title="Chatake Innoworks Internship Portal" loading="lazy" scrolling="no"></iframe>
+          </div>
+        </div>
+        <a href="https://internship.chatakeinnoworks.com" target="_blank"
+           style="display:inline-flex;align-items:center;gap:6px;margin-top:10px;font-size:0.74em;font-weight:600;color:var(--green-dk);text-decoration:none;">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/>
+            <polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/>
+          </svg>
+          Visit internship portal
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── FACILITY STRIP ─── -->
+<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:3px;">
+  <div style="overflow:hidden;height:280px;">
+    <img src="assets/panel-facility-day.png" alt="Facility" style="width:100%;height:100%;object-fit:cover;filter:brightness(0.78);transition:filter .3s;" onmouseover="this.style.filter='brightness(0.92)'" onmouseout="this.style.filter='brightness(0.78)'"/>
+  </div>
+  <div style="overflow:hidden;height:280px;">
+    <img src="assets/panel-digester.png" alt="Digester" style="width:100%;height:100%;object-fit:cover;filter:brightness(0.78);transition:filter .3s;" onmouseover="this.style.filter='brightness(0.92)'" onmouseout="this.style.filter='brightness(0.78)'"/>
+  </div>
+  <div style="overflow:hidden;height:280px;">
+    <img src="assets/panel-operations.png" alt="Operations" style="width:100%;height:100%;object-fit:cover;filter:brightness(0.78);transition:filter .3s;" onmouseover="this.style.filter='brightness(0.92)'" onmouseout="this.style.filter='brightness(0.78)'"/>
+  </div>
+</div>
+
+<!-- ─── TEAM ─── -->
+<section class="sec sec-alt" id="team">
+  <div class="sec-inner">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;">
+      <div>
+        <div class="lbl">DIPEX 2026</div>
+        <div class="sec-title">Project Team</div>
+        <div class="sec-sub">Engineering students from Solapur building real AI infrastructure for India's energy transition — mentored by Chatake Greenworks R&amp;D.</div>
+      </div>
+      <div style="border-radius:18px;overflow:hidden;box-shadow:var(--shadow-lg);">
+        <img src="assets/panel-lab-white.png" alt="Lab Facility" style="width:100%;display:block;"/>
+      </div>
+    </div>
+    <div class="team-grid">
+      <div class="team-card">
+        <div class="team-avatar">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+        </div>
+        <div class="team-name">Ms. Tanishka Deshpande</div>
+        <div class="team-role">AI / ML Engineering</div>
+        <div class="team-dept">Model Architecture &amp; Training</div>
+      </div>
+      <div class="team-card">
+        <div class="team-avatar">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+        </div>
+        <div class="team-name">Ms. Anushka Hitanalli</div>
+        <div class="team-role">Cloud Architecture</div>
+        <div class="team-dept">Infrastructure &amp; Deployment</div>
+      </div>
+      <div class="team-card">
+        <div class="team-avatar">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+        </div>
+        <div class="team-name">Ms. Aditi Gangji</div>
+        <div class="team-role">Data Analytics</div>
+        <div class="team-dept">Visualization &amp; Insights</div>
+      </div>
+      <div class="team-card">
+        <div class="team-avatar">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+        </div>
+        <div class="team-name">Ms. Shruti Hiremath</div>
+        <div class="team-role">Systems Integration</div>
+        <div class="team-dept">IoT &amp; Platform Engineering</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── RELATED PROJECTS ─── -->
+<section class="sec" id="projects">
+  <div class="sec-inner">
+    <div class="lbl">MindforgeAI</div>
+    <div class="sec-title">Related Projects</div>
+    <div class="sec-sub">Running alongside GFIS under the Chatake Innoworks research programme.</div>
+    
+    <!-- Nexora Project -->
+    <div class="nexora-banner">
+      <div>
+        <div class="nexora-tag">SaaS · Academic Platform</div>
+        <div class="nexora-title">Nexora Platform</div>
+        <div class="nexora-desc">Academic operations platform unifying student records, attendance, and results. A benchmark for scalable software design — live at <a href="https://nexora-be4467.webflow.io/" target="_blank">nexora-be4467.webflow.io</a>.</div>
+      </div>
+      <div class="nexora-btns">
+        <a href="https://nexora-be4467.webflow.io/" target="_blank" class="btn-nexora">Launch Live Demo</a>
+        <a href="https://internship.chatakeinnoworks.com/#projects" target="_blank" class="btn-nexora-g">All Projects</a>
+      </div>
+    </div>
+
+    <!-- Apollo AgriGuard Project -->
+    <div class="nexora-banner" style="background:#15213e;border-top:2px solid rgba(74,143,226,0.3);">
+      <div>
+        <div class="nexora-tag" style="background:rgba(74,143,226,0.2);border-color:rgba(74,143,226,0.4);color:#64b5f6;">AI/ML · Agriculture</div>
+        <div class="nexora-title">Apollo AgriGuard</div>
+        <div class="nexora-desc">AI-powered agricultural pest & disease detection using satellite imagery, computer vision, and edge computing. Real-time analytics for crop health monitoring — live at <a href="https://apollo-agriguard-ijaegxe.gamma.site/" target="_blank">apollo-agriguard-ijaegxe.gamma.site</a>.</div>
+      </div>
+      <div class="nexora-btns">
+        <a href="https://apollo-agriguard-ijaegxe.gamma.site/" target="_blank" class="btn-nexora" style="background:#4a8fe2;">Launch Platform</a>
+        <a href="https://internship.chatakeinnoworks.com/#projects" target="_blank" class="btn-nexora-g">All Projects</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── ABOUT ─── -->
+<section class="sec sec-alt" id="about">
+  <div class="sec-inner">
+    <div class="about-grid">
+      <div>
+        <div class="lbl">About</div>
+        <div class="about-title">Chatake Innoworks<br>Pvt. Ltd.</div>
+        <div class="about-sub">Sustainable Energy Innovation — Chatake Greenworks Division</div>
+        <p class="about-body">Building AI infrastructure for India's clean energy transition. The Greenworks division works at the intersection of machine learning, IoT telemetry, and environmental data to drive measurable impact across the SATAT initiative and GOBARdhan framework.</p>
+        <div>
+          <div class="about-info-row">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            <span>Nehru Industrial Estate, Damani Nagar, Solapur – 413001, Maharashtra, India</span>
+          </div>
+          <div class="about-info-row">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.61a19.79 19.79 0 01-3.07-8.68A2 2 0 012 .84h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 8.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+            <a href="tel:+918600182228">+91 8600182228</a>
+          </div>
+          <div class="about-info-row">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            <a href="mailto:gfis@chatakeinnoworks.com">gfis@chatakeinnoworks.com</a>
+          </div>
+        </div>
+        <div class="about-links">
+          <a href="https://about.chatakeinnoworks.com" target="_blank" class="about-link">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+            Corporate Profile
+          </a>
+          <a href="https://internship.chatakeinnoworks.com" target="_blank" class="about-link">
+            <svg viewBox="0 0 24 24"><path d="M22 10V6a2 2 0 00-2-2H4a2 2 0 00-2 2v14c0 1.1.9 2 2 2h8"/><circle cx="18" cy="18" r="4"/><path d="M18 16v2l1 1"/></svg>
+            Internship Portal
+          </a>
+          <a href="https://www.linkedin.com/company/chatakeinnoworks" target="_blank" class="about-link">
+            <svg viewBox="0 0 24 24"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+            LinkedIn
+          </a>
+          <a href="https://www.chatakeinnoworks.com" target="_blank" class="about-link">
+            <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+            Website
+          </a>
+        </div>
+      </div>
+      <div class="about-img">
+        <img src="assets/ci-building.png" alt="Chatake Innoworks Office, Solapur"/>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── FOOTER ─── -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div>
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+          <div style="width:32px;height:32px;border-radius:7px;overflow:hidden;flex-shrink:0;">
+            <img src="assets/gfis-system.jpg" alt="GFIS" style="width:100%;height:100%;object-fit:cover;"/>
+          </div>
+          <div>
+            <div class="footer-brand-name">Chatake Innoworks Pvt. Ltd.</div>
+          </div>
+        </div>
+        <div class="footer-brand-sub">GFIS — Green Fuel Intelligence System</div>
+        <div class="footer-brand-div">Chatake Greenworks · Sustainable Energy Division</div>
+        <div class="footer-addr">
+          Nehru Industrial Estate, Damani Nagar<br>
+          Solapur – 413001, Maharashtra, India<br>
+          <a href="tel:+918600182228">+91 8600182228</a><br>
+          <a href="mailto:gfis@chatakeinnoworks.com">gfis@chatakeinnoworks.com</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Platform</h4>
+        <a href="#dashboard">Live Dashboard</a>
+        <a href="https://green-fuel-intelligence--59klled.gamma.site/" target="_blank">Presentation</a>
+        <a href="https://gfis-v2-dashboard.streamlit.app/" target="_blank">Streamlit App</a>
+        <a href="https://github.com/aakashchatake/GFIS-v2.0" target="_blank">Source Code</a>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <a href="https://internship.chatakeinnoworks.com" target="_blank">Internship Portal</a>
+        <a href="https://about.chatakeinnoworks.com" target="_blank">Corporate Profile</a>
+        <a href="https://www.chatakeinnoworks.com" target="_blank">Main Website</a>
+        <a href="https://nexora-be4467.webflow.io/" target="_blank">Nexora Platform</a>
+      </div>
+      <div class="footer-col">
+        <h4>Connect</h4>
+        <a href="https://www.linkedin.com/company/chatakeinnoworks" target="_blank">LinkedIn</a>
+        <a href="https://www.facebook.com/chatakeinnoworks" target="_blank">Facebook</a>
+        <a href="https://open.spotify.com/show/1zeA2xxVg5kGOV9bhAGigQ" target="_blank">Podcast</a>
+        <a href="mailto:support@chatakeinnoworks.com">Support</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span class="footer-copy">© 2026 Chatake Innoworks Pvt. Ltd. All rights reserved. · MindforgeAI Research Division</span>
+      <span class="footer-badge">GFIS v2.0 · Green Fuel Intelligence System · DIPEX 2026</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GFIS M.Tech Dashboard | Chatake Innoworks</title>
+    
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js for real-time graphs -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        gray: { 850: '#1f2937', 900: '#111827', 950: '#030712' },
+                        primary: '#d6d3d1', // Premium neutral
+                        accent: '#d97706',  // Industrial amber
+                        danger: '#ef4444',  // Red
+                        brandGold: '#D4AF37' // Chatake Premium Gold
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Poppins:wght@400;600;700&display=swap');
+        
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: #030712; 
+            color: #e5e7eb; 
+            margin: 0; 
+            overflow-x: hidden; 
+        }
+        
+        h1, h2, h3, .brand-font { font-family: 'Poppins', sans-serif; }
+        
+        .glass-panel { 
+            background: rgba(31, 41, 55, 0.6); 
+            backdrop-filter: blur(16px); 
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255,255,255,0.05); 
+            border-radius: 12px; 
+        }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #111827; }
+        ::-webkit-scrollbar-thumb { background: #374151; border-radius: 3px; }
+        
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeIn 0.4s ease-out; }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .paper-section h3 { color: #d6d3d1; margin-top: 1.5rem; margin-bottom: 0.5rem; border-bottom: 1px solid rgba(14, 165, 233, 0.3); padding-bottom: 0.25rem;}
+        .paper-section p { margin-bottom: 1rem; line-height: 1.7; color: #d1d5db; }
+        .paper-section ul { list-style-type: disc; margin-left: 1.5rem; margin-bottom: 1rem; color: #d1d5db; }
+    </style>
+    <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+    <meta name="theme-color" content="#10100f">
+</head>
+<body class="h-screen flex flex-col md:flex-row">
+
+    <!-- Sidebar / Master Navigation -->
+    <aside class="w-full md:w-72 glass-panel border-r border-gray-800 flex flex-col p-5 m-2 overflow-y-auto">
+        
+        <!-- Company Branding -->
+        <div class="mb-8 text-center border-b border-gray-800 pb-6">
+            <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-gray-800 mb-3 border border-brandGold/30 text-brandGold shadow-[0_0_15px_rgba(212,175,55,0.2)]">
+                <i class="fas fa-leaf text-xl"></i>
+            </div>
+            <h1 class="text-xl font-bold text-white tracking-wide brand-font uppercase">Chatake <span class="text-brandGold">Innoworks</span></h1>
+            <p class="text-xs text-gray-400 mt-1 uppercase tracking-widest">Pvt. Ltd.</p>
+        </div>
+
+        <div class="mb-6">
+            <p class="text-xs text-stone-200 font-bold tracking-widest uppercase mb-1 ml-2">Project: GFIS Core</p>
+        </div>
+
+        <!-- Navigation -->
+        <nav class="flex-1 space-y-2" id="sidebar-nav">
+            <button onclick="switchTab('view-home', this)" class="nav-btn w-full text-left py-3 px-4 rounded bg-stone-700/50 text-stone-200 font-semibold border-l-4 border-amber-600 transition flex items-center gap-3">
+                <i class="fas fa-home w-5 text-center"></i> Overview
+            </button>
+            <button onclick="switchTab('view-monitoring', this)" class="nav-btn w-full text-left py-3 px-4 rounded hover:bg-gray-800 transition text-gray-300 border-l-4 border-transparent flex items-center gap-3">
+                <i class="fas fa-chart-network w-5 text-center"></i> Live AI Dashboard
+            </button>
+            <button onclick="switchTab('view-research', this)" class="nav-btn w-full text-left py-3 px-4 rounded hover:bg-gray-800 transition text-gray-300 border-l-4 border-transparent flex items-center gap-3">
+                <i class="fas fa-file-alt w-5 text-center"></i> Research Paper
+            </button>
+            <button onclick="switchTab('view-config', this)" class="nav-btn w-full text-left py-3 px-4 rounded hover:bg-gray-800 transition text-gray-300 border-l-4 border-transparent flex items-center gap-3">
+                <i class="fas fa-cogs w-5 text-center"></i> System Config
+            </button>
+        </nav>
+
+        <!-- Anomaly Controls -->
+        <div class="mt-8 glass-panel p-4 bg-gray-900/50 border border-gray-800">
+            <h3 class="text-sm text-gray-400 font-semibold mb-3 flex items-center gap-2"><i class="fas fa-microchip"></i> Simulate Environment</h3>
+            <button onclick="triggerOLRShock()" class="w-full py-2 mb-2 bg-yellow-600/10 text-yellow-500 border border-yellow-600/30 rounded hover:bg-yellow-600/30 transition text-sm">⚠️ Inject OLR Shock</button>
+            <button onclick="triggerTempDrop()" class="w-full py-2 bg-zinc-800/60 text-zinc-300 border border-zinc-600 rounded hover:bg-zinc-700/60 transition text-sm">❄️ Drop Temperature</button>
+            <button onclick="resetSystem()" class="w-full py-2 mt-2 bg-gray-600/20 text-gray-300 border border-gray-600/50 rounded hover:bg-gray-600/40 transition text-sm">🔄 Reset System</button>
+        </div>
+
+        <!-- Chatake Footer Info -->
+        <div class="mt-8 pt-4 border-t border-gray-800 text-xs text-gray-500">
+            <h4 class="font-semibold text-gray-400 mb-2">Contact Headquarters</h4>
+            <ul class="space-y-1">
+                <li>Nehru Industrial Estate</li>
+                <li>Damani Nagar, Solapur</li>
+                <li>Maharashtra 413001</li>
+                <li class="mt-2 text-brandGold hover:underline"><i class="fas fa-phone-alt mr-1"></i> +91 8600 182 228</li>
+            </ul>
+            <p class="mt-4 italic">Built with <span class="text-brandGold">❤</span> for a sustainable future.</p>
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 p-3 md:p-8 overflow-y-auto bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-gray-900 via-[#030712] to-[#030712]">
+        
+        <!-- ========================================== -->
+        <!-- VIEW 1: HOME / OVERVIEW                    -->
+        <!-- ========================================== -->
+        <div id="view-home" class="tab-content active">
+            <header class="mb-10">
+                <div class="inline-block px-3 py-1 rounded-full bg-brandGold/20 border border-brandGold/50 text-brandGold text-xs font-semibold tracking-widest mb-4">
+                    CHATAKE INNOWORKS R&D DIVISION
+                </div>
+                <h2 class="text-4xl md:text-5xl font-bold text-white mb-4 leading-tight">Green Fuel Intelligence System <br><span class="text-transparent bg-clip-text bg-gradient-to-r from-stone-100 to-amber-600">(GFIS)</span></h2>
+                <p class="text-lg text-gray-400 max-w-3xl">AI-based Modeling and Prediction of Methane Yield in Full-Scale Industrial Biogas Systems.</p>
+            </header>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                <div class="glass-panel p-8 relative overflow-hidden group hover:border-amber-600/50 transition">
+                    <div class="absolute -right-6 -top-6 text-stone-200/10 group-hover:text-stone-200/20 transition duration-500">
+                        <i class="fas fa-globe-americas text-9xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-3">The Global Problem</h3>
+                    <p class="text-gray-400 relative z-10 leading-relaxed">
+                        Biogas production via dry anaerobic digestion (DAD) is a highly nonlinear and dynamic process. Traditional mechanistic models (like ADM1) fail to adapt to real-time industrial fluctuations, leading to unpredictable yields and catastrophic digester acidification failures.
+                    </p>
+                </div>
+                <div class="glass-panel p-8 relative overflow-hidden group hover:border-amber-600/50 transition">
+                    <div class="absolute -right-6 -top-6 text-amber-500/10 group-hover:text-amber-500/20 transition duration-500">
+                        <i class="fas fa-brain text-9xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-3">Our AI Solution</h3>
+                    <p class="text-gray-400 relative z-10 leading-relaxed">
+                        Chatake Innoworks has developed a Physics-Guided Hybrid Deep Learning Framework. By combining Spatio-Temporal LSTMs with XGBoost Ensembles, we accurately forecast methane yields ($R^2 \ge 0.90$) and provide a Virtual Soft Sensor to track Volatile Fatty Acids (VFA/ALK) in real-time.
+                    </p>
+                </div>
+            </div>
+
+            <h3 class="text-2xl font-bold text-white mb-6 mt-12">Core System Architecture</h3>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div class="glass-panel p-6 text-center border-t-2 border-t-gray-600">
+                    <div class="w-12 h-12 mx-auto rounded-full bg-gray-800 flex items-center justify-center text-xl text-gray-300 mb-4"><i class="fas fa-database"></i></div>
+                    <h4 class="font-bold text-white mb-2">1. IoT Ingestion</h4>
+                    <p class="text-xs text-gray-400">Capturing Temp, pH, OLR, and VS data streams from the digester.</p>
+                </div>
+                <div class="glass-panel p-6 text-center border-t-2 border-t-primary">
+                    <div class="w-12 h-12 mx-auto rounded-full bg-stone-700/50 flex items-center justify-center text-xl text-stone-200 mb-4"><i class="fas fa-network-wired"></i></div>
+                    <h4 class="font-bold text-white mb-2">2. STA-LSTM Engine</h4>
+                    <p class="text-xs text-gray-400">Deep learning processes temporal delays and complex kinetics.</p>
+                </div>
+                <div class="glass-panel p-6 text-center border-t-2 border-t-accent">
+                    <div class="w-12 h-12 mx-auto rounded-full bg-amber-700/15 flex items-center justify-center text-xl text-amber-500 mb-4"><i class="fas fa-chart-line"></i></div>
+                    <h4 class="font-bold text-white mb-2">3. Virtual Soft Sensor</h4>
+                    <p class="text-xs text-gray-400">XGBoost model infers invisible chemical states (VFA/ALK).</p>
+                </div>
+                <div class="glass-panel p-6 text-center border-t-2 border-t-brandGold">
+                    <div class="w-12 h-12 mx-auto rounded-full bg-brandGold/20 flex items-center justify-center text-xl text-brandGold mb-4"><i class="fas fa-project-diagram"></i></div>
+                    <h4 class="font-bold text-white mb-2">4. SHAP Explainability</h4>
+                    <p class="text-xs text-gray-400">Translating black-box predictions into actionable industrial insights.</p>
+                </div>
+            </div>
+            
+            <div class="mt-12 text-center">
+                <button onclick="document.querySelector('button[onclick*=\'view-monitoring\']').click()" class="bg-primary hover:bg-primary/80 text-gray-900 font-bold py-3 px-8 rounded-full transition shadow-[0_0_20px_rgba(14,165,233,0.4)]">
+                    Launch Interactive AI Dashboard <i class="fas fa-arrow-right ml-2"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- VIEW 2: LIVE MONITORING DASHBOARD          -->
+        <!-- ========================================== -->
+        <div id="view-monitoring" class="tab-content">
+            <header class="flex flex-col md:flex-row justify-between items-start md:items-end mb-6">
+                <div>
+                    <h2 class="text-3xl font-bold text-white">Digester Unit Alpha</h2>
+                    <p class="text-sm text-gray-400 mt-1">Real-time Dry Anaerobic Digestion | Full-Scale Integration</p>
+                </div>
+                <div id="system-status" class="mt-4 md:mt-0 px-5 py-2 rounded-full bg-amber-700/15 border border-amber-600 text-amber-500 font-semibold flex items-center gap-2 shadow-[0_0_15px_rgba(16,185,129,0.2)]">
+                    <span class="w-2.5 h-2.5 rounded-full bg-amber-500 animate-pulse"></span>
+                    System Stable
+                </div>
+            </header>
+
+            <!-- KPI Cards -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                <div class="glass-panel p-5 border-l-4 border-amber-600">
+                    <p class="text-gray-400 text-xs font-semibold uppercase tracking-wider">Predicted Methane (CH₄)</p>
+                    <div class="text-3xl font-bold text-white mt-2"><span id="kpi-ch4">0.00</span> <span class="text-sm font-normal text-gray-500">m³/d</span></div>
+                </div>
+                <div class="glass-panel p-5 border-l-4 border-amber-600">
+                    <p class="text-gray-400 text-xs font-semibold uppercase tracking-wider">VFA/ALK Ratio (Soft Sensor)</p>
+                    <div class="text-3xl font-bold mt-2" id="kpi-vfa">0.25</div>
+                </div>
+                <div class="glass-panel p-5 border-l-4 border-gray-500">
+                    <p class="text-gray-400 text-xs font-semibold uppercase tracking-wider">Process pH</p>
+                    <div class="text-3xl font-bold text-white mt-2" id="kpi-ph">7.30</div>
+                </div>
+                <div class="glass-panel p-5 border-l-4 border-brandGold">
+                    <p class="text-gray-400 text-xs font-semibold uppercase tracking-wider">AI Confidence (R²)</p>
+                    <div class="text-3xl font-bold text-brandGold mt-2">0.92</div>
+                </div>
+            </div>
+
+            <!-- Charts Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Main Prediction Chart -->
+                <div class="glass-panel p-5 lg:col-span-2 relative">
+                    <div class="flex justify-between items-center mb-1">
+                        <h3 class="text-lg font-semibold text-white">Physics-Guided LSTM: Methane Yield Prediction</h3>
+                        <i class="fas fa-expand text-gray-500 hover:text-white cursor-pointer"></i>
+                    </div>
+                    <p class="text-xs text-gray-400 mb-4">Real-time mapping of thermodynamic constraints vs. actual output.</p>
+                    <div class="h-64 w-full relative">
+                        <canvas id="methaneChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- SHAP Explainability -->
+                <div class="glass-panel p-5">
+                    <h3 class="text-lg font-semibold text-white mb-1">XAI (SHAP Values)</h3>
+                    <p class="text-xs text-gray-400 mb-4">Real-time feature importance driving the Soft Sensor.</p>
+                    <div class="h-64 w-full">
+                        <canvas id="shapChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Soft Sensor Chart -->
+                <div class="glass-panel p-5 lg:col-span-3">
+                    <h3 class="text-lg font-semibold text-white mb-1">XGBoost Virtual Soft Sensor: VFA/ALK Tracking</h3>
+                    <p class="text-xs text-gray-400 mb-4">Predicting acidification risk. Threshold > 0.40 triggers alarm.</p>
+                    <div class="h-48 w-full">
+                        <canvas id="vfaChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- VIEW 3: RESEARCH PAPER                     -->
+        <!-- ========================================== -->
+        <div id="view-research" class="tab-content">
+            <header class="mb-8">
+                <h2 class="text-3xl font-bold text-white">Research & Publications</h2>
+                <p class="text-sm text-gray-400 mt-1">Springer-Level Theoretical Framework</p>
+            </header>
+            
+            <div class="glass-panel p-8 md:p-12 paper-section bg-gray-900/80">
+                <div class="text-center border-b border-gray-700 pb-8 mb-8">
+                    <h1 class="text-3xl font-bold text-white mb-4">A Physics-Guided Hybrid Deep Learning Framework for Biogas Yield Prediction and Soft-Sensing in Dry Anaerobic Digestion</h1>
+                    <p class="text-lg text-gray-300"><strong>Akash</strong></p>
+                    <p class="text-sm text-gray-400">M.Tech Artificial Intelligence & Machine Learning</p>
+                    <p class="text-sm text-brandGold mt-2">Chatake Innoworks Research Division</p>
+                </div>
+
+                <h3>Abstract</h3>
+                <p>The non-linear, multiphase biochemical dynamics of dry anaerobic digestion (DAD) present significant modeling challenges. While the Anaerobic Digestion Model No. 1 (ADM1) offers comprehensive mechanistic insights, its heavy parameterization limits real-time industrial deployment. Conversely, purely data-driven machine learning models often suffer from physical inconsistency and poor generalization on out-of-distribution industrial data. This paper proposes a novel full-system architecture: a <strong>Physics-Guided Hybrid Deep Learning Framework</strong>. We integrate a Long Short-Term Memory (LSTM) network featuring a Spatio-Temporal Attention mechanism with an XGBoost ensemble. Crucially, the model is regularized using a physics-informed loss function derived from simplified ADM1 kinetics, ensuring biochemical compliance.</p>
+
+                <h3>1. Introduction</h3>
+                <p>Anaerobic digestion (AD) is a critical biological process for converting municipal organic waste into renewable biomethane. The process encompasses four cascading biochemical phases: hydrolysis, acidogenesis, acetogenesis, and methanogenesis. In industrial full-scale Dry Anaerobic Digestion (DAD), process instability—primarily driven by volatile fatty acid (VFA) accumulation and subsequent acidification—frequently leads to catastrophic digester failure.</p>
+                <p>This research formulates a full-scale, production-ready AI system that bridges domain knowledge with advanced deep learning. We introduce a Physics-Guided Spatio-Temporal Attention LSTM (PG-STA-LSTM) coupled with gradient-boosted trees, serving dual purposes: high-fidelity methane yield prediction and virtual soft-sensing of critical stability indicators.</p>
+
+                <h3>2. System Architecture and Theoretical Framework</h3>
+                <p><strong>2.1 Spatio-Temporal Attention LSTM (STA-LSTM)</strong><br>
+                Standard LSTMs treat all time steps equally. However, abrupt changes in OLR or pH have delayed but severe impacts. We integrate an attention mechanism to assign dynamic weights to historical states. The context vector $\mathbf{c}_t = \sum_{i=1}^w \alpha_i \mathbf{h}_i$ represents the optimally weighted historical summary, which is then passed through dense layers to predict the methane yield.</p>
+
+                <p><strong>2.2 Physics-Informed Loss Function ($L_{PG}$)</strong><br>
+                To ensure physical consistency, we penalize the neural network if its predictions violate simplified ADM1 conservation laws. Let $\mathcal{F}_{ADM1}(\mathbf{X}_t)$ represent a simplified kinetic constraint bounding the maximum possible methane conversion based on available Volatile Solids (VS).</p>
+                <div class="bg-gray-950 p-4 rounded text-center my-4 font-mono text-sm border border-gray-800">
+                    L_{PG} = MSE(Data) + λ * max(0, ŷ_t - F_max(VS_t))^2
+                </div>
+
+                <h3>3. The VFA/ALK Virtual Soft Sensor</h3>
+                <p>Physical measurement of Volatile Fatty Acids (VFA) and Alkalinity (ALK) is costly and requires off-line laboratory titration. The ratio $\gamma_t = \text{VFA}_t / \text{ALK}_t$ is the primary indicator of process stability ($\gamma_t > 0.4$ indicates impending acidification).</p>
+                <p>By integrating SHAP (SHapley Additive exPlanations), the system provides real-time interpretability, calculating the marginal contribution of parameter $j$ (e.g., Temperature drop) to an alarming VFA/ALK spike.</p>
+                
+                <div class="mt-10 p-6 bg-brandGold/10 border border-brandGold/30 rounded-lg text-center">
+                    <i class="fas fa-download text-3xl text-brandGold mb-3"></i>
+                    <h4 class="text-lg font-bold text-white mb-2">Download Full Springer Format Paper</h4>
+                    <p class="text-sm text-gray-400 mb-4">Includes complete mathematical proofs and cross-validation methodology.</p>
+                    <button class="bg-brandGold text-gray-900 px-6 py-2 rounded font-bold hover:bg-yellow-500 transition">Download PDF</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- VIEW 4: SYSTEM CONFIG                      -->
+        <!-- ========================================== -->
+        <div id="view-config" class="tab-content">
+            <header class="mb-6">
+                <h2 class="text-3xl font-bold text-white">System Configuration</h2>
+                <p class="text-sm text-gray-400 mt-1">Chatake Innoworks Engine Parameters</p>
+            </header>
+            <div class="glass-panel p-8 max-w-2xl">
+                <div class="space-y-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-2">Target ADM1 Baseline Node</label>
+                        <input type="text" value="chatake-core-alpha-402" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-3 text-white outline-none focus:border-brandGold transition" readonly>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-2">XAI Soft-Sensor Alarm Threshold</label>
+                        <input type="number" value="0.40" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-3 text-white outline-none focus:border-brandGold transition" readonly>
+                        <p class="text-xs text-gray-500 mt-2"><i class="fas fa-info-circle text-brandGold mr-1"></i> Triggers emergency SCADA alerts when VFA/ALK > 0.40</p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-2">LSTM Temporal Window Size ($w$)</label>
+                        <input type="number" value="5" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-3 text-white outline-none focus:border-brandGold transition" readonly>
+                        <p class="text-xs text-gray-500 mt-2">Number of past time-steps evaluated by the Spatio-Temporal Attention mechanism.</p>
+                    </div>
+                    <div class="pt-4 border-t border-gray-800">
+                        <button class="bg-brandGold hover:bg-yellow-500 text-gray-900 font-bold py-3 px-8 rounded-lg transition shadow-lg w-full md:w-auto">
+                            <i class="fas fa-save mr-2"></i> Update Configuration
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        // --- Navigation Logic ---
+        function switchTab(tabId, btnElement) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            // Show target tab
+            document.getElementById(tabId).classList.add('active');
+
+            // Reset all button styles
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.className = "nav-btn w-full text-left py-3 px-4 rounded hover:bg-gray-800 transition text-gray-300 border-l-4 border-transparent flex items-center gap-3";
+            });
+            // Apply active styles to clicked button (Using Brand Gold for Active State now instead of blue)
+            btnElement.className = "nav-btn w-full text-left py-3 px-4 rounded bg-brandGold/10 text-brandGold font-semibold border-l-4 border-brandGold transition flex items-center gap-3 shadow-[inset_4px_0_0_rgba(212,175,55,1)]";
+        }
+
+        // Initialize first tab manually to apply correct styling
+        document.addEventListener("DOMContentLoaded", () => {
+            const firstNavBtn = document.querySelector('.nav-btn');
+            switchTab('view-home', firstNavBtn);
+        });
+
+        // Global variables for simulation state
+        let time = 0;
+        let isOLRShock = false;
+        let isTempDrop = false;
+        let shockTimer = 0;
+        
+        const MAX_DATAPOINTS = 50;
+        const labels = Array.from({length: MAX_DATAPOINTS}, (_, i) => i);
+        
+        // Data arrays
+        const dataActualCH4 = Array(MAX_DATAPOINTS).fill(null);
+        const dataPredictedCH4 = Array(MAX_DATAPOINTS).fill(null);
+        const dataVFA = Array(MAX_DATAPOINTS).fill(null);
+
+        // --- Chart Configs ---
+        Chart.defaults.color = '#9ca3af';
+        Chart.defaults.font.family = "'Inter', sans-serif";
+        Chart.defaults.plugins.tooltip.backgroundColor = 'rgba(17, 24, 39, 0.9)';
+        Chart.defaults.plugins.tooltip.titleColor = '#D4AF37';
+        Chart.defaults.plugins.tooltip.borderColor = 'rgba(212, 175, 55, 0.3)';
+        Chart.defaults.plugins.tooltip.borderWidth = 1;
+
+        // 1. Methane Chart
+        const ctxMethane = document.getElementById('methaneChart').getContext('2d');
+        const methaneChart = new Chart(ctxMethane, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        label: 'Actual (Sensor)',
+                        data: dataActualCH4,
+                        borderColor: 'rgba(255, 255, 255, 0.4)',
+                        borderWidth: 1.5,
+                        pointRadius: 0,
+                        borderDash: [5, 5],
+                        tension: 0.4
+                    },
+                    {
+                        label: 'LSTM Prediction',
+                        data: dataPredictedCH4,
+                        borderColor: '#d6d3d1',
+                        backgroundColor: 'rgba(14, 165, 233, 0.1)',
+                        borderWidth: 2,
+                        pointRadius: 0,
+                        fill: true,
+                        tension: 0.4
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                animation: { duration: 0 },
+                scales: {
+                    x: { display: false },
+                    y: { min: 0, max: 800, grid: { color: 'rgba(255,255,255,0.05)' } }
+                },
+                plugins: { legend: { position: 'top', labels: { boxWidth: 12 } } }
+            }
+        });
+
+        // 2. VFA/ALK Chart
+        const ctxVFA = document.getElementById('vfaChart').getContext('2d');
+        const vfaChart = new Chart(ctxVFA, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'VFA/ALK Ratio',
+                    data: dataVFA,
+                    borderColor: '#d97706',
+                    backgroundColor: 'rgba(16, 185, 129, 0.05)',
+                    borderWidth: 2,
+                    pointRadius: 0,
+                    fill: true,
+                    tension: 0.3
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                animation: { duration: 0 },
+                scales: {
+                    x: { display: false },
+                    y: { min: 0, max: 0.8, grid: { color: 'rgba(255,255,255,0.05)' } }
+                },
+                plugins: {
+                    annotation: { annotations: [] }
+                }
+            },
+            plugins: [{
+                id: 'thresholdLine',
+                beforeDraw: chart => {
+                    const ctx = chart.ctx;
+                    const yAxis = chart.scales.y;
+                    const yPos = yAxis.getPixelForValue(0.4);
+                    ctx.save();
+                    ctx.beginPath();
+                    ctx.moveTo(chart.chartArea.left, yPos);
+                    ctx.lineTo(chart.chartArea.right, yPos);
+                    ctx.lineWidth = 1;
+                    ctx.strokeStyle = 'rgba(239, 68, 68, 0.8)';
+                    ctx.setLineDash([5, 5]);
+                    ctx.stroke();
+                    ctx.restore();
+                }
+            }]
+        });
+
+        // 3. SHAP Chart (Horizontal Bar)
+        const ctxSHAP = document.getElementById('shapChart').getContext('2d');
+        const shapChart = new Chart(ctxSHAP, {
+            type: 'bar',
+            data: {
+                labels: ['OLR', 'pH', 'Temp', 'VS'],
+                datasets: [{
+                    label: 'Impact on VFA',
+                    data: [0.1, 0.4, 0.2, 0.05],
+                    backgroundColor: ['#d6d3d1', '#d6d3d1', '#d6d3d1', '#d6d3d1'],
+                    borderRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                indexAxis: 'y',
+                scales: {
+                    x: { display: false, max: 1.0 },
+                    y: { grid: { display: false }, ticks: { color: '#e5e7eb', font: {family: 'Inter', weight: 'bold'} } }
+                },
+                plugins: { legend: { display: false } }
+            }
+        });
+
+        // --- Data Simulation Logic (The "Backend" Physics) ---
+        function updateSystem() {
+            // Base state
+            let temp = 37.5 + Math.sin(time / 10) * 0.5 + (Math.random() - 0.5) * 0.2;
+            let olr = 3.0 + (Math.random() - 0.5) * 0.2;
+            let ph = 7.3 + (Math.random() - 0.5) * 0.05;
+            
+            // Apply Anomalies
+            if (isOLRShock && shockTimer > 0) {
+                olr += 4.5; // Huge spike
+                shockTimer--;
+            } else if (isTempDrop && shockTimer > 0) {
+                temp -= 8.0; // Sudden drop to 29C
+                shockTimer--;
+            } else {
+                isOLRShock = false;
+                isTempDrop = false;
+            }
+
+            // Soft Sensor Physics (VFA/ALK)
+            let vfa = 1000 + (olr * 400) - (temp * 20);
+            let alk = 3500;
+            let currentVFA = vfa / alk;
+            
+            // Add momentum to VFA changes so it doesn't snap instantly
+            let lastVfa = dataVFA[MAX_DATAPOINTS - 1] || 0.25;
+            let smoothVfa = lastVfa + (currentVFA - lastVfa) * 0.1;
+            
+            // pH drops if VFA > 0.4
+            if (smoothVfa > 0.4) {
+                ph -= (smoothVfa - 0.4) * 2; 
+            }
+
+            // Methane Yield Physics (CH4)
+            let vs = olr * 0.8;
+            let ch4_base = 350 * vs;
+            let ph_inhibition = Math.max(0, Math.min(1, (ph - 6.5) / 0.8));
+            let temp_eff = Math.max(0.5, Math.min(1.2, (temp - 30) / 10));
+            
+            let actualCH4 = ch4_base * ph_inhibition * temp_eff;
+            actualCH4 += (Math.random() - 0.5) * 20; // noise
+
+            // Deep Learning Prediction (Mimicking model lag and accuracy)
+            let predictedCH4 = actualCH4 * (0.95 + Math.random() * 0.1);
+            if (isOLRShock || isTempDrop) predictedCH4 = actualCH4 * 1.1; 
+
+            // Shift arrays and push new data
+            dataActualCH4.shift(); dataActualCH4.push(actualCH4);
+            dataPredictedCH4.shift(); dataPredictedCH4.push(predictedCH4);
+            dataVFA.shift(); dataVFA.push(smoothVfa);
+
+            // Update DOM KPIs
+            document.getElementById('kpi-ch4').innerText = predictedCH4.toFixed(1);
+            document.getElementById('kpi-ph').innerText = ph.toFixed(2);
+            
+            const kpiVFA = document.getElementById('kpi-vfa');
+            kpiVFA.innerText = smoothVfa.toFixed(3);
+            
+            // UI Status Updates
+            const statusDiv = document.getElementById('system-status');
+            if (smoothVfa > 0.4) {
+                kpiVFA.className = "text-3xl font-bold mt-2 text-danger animate-pulse";
+                statusDiv.className = "mt-4 md:mt-0 px-5 py-2 rounded-full bg-danger/20 border border-danger text-danger font-semibold flex items-center gap-2 shadow-[0_0_15px_rgba(239,68,68,0.2)]";
+                statusDiv.innerHTML = `<span class="w-2.5 h-2.5 rounded-full bg-danger animate-pulse"></span> Critical: Acidification Risk`;
+                vfaChart.data.datasets[0].borderColor = '#ef4444'; 
+                vfaChart.data.datasets[0].backgroundColor = 'rgba(239, 68, 68, 0.05)';
+                
+                // Update SHAP chart to show what caused it
+                if(isOLRShock) {
+                    shapChart.data.datasets[0].data = [0.85, 0.5, 0.1, 0.7]; // OLR dominates
+                    shapChart.data.datasets[0].backgroundColor = ['#ef4444', '#d6d3d1', '#d6d3d1', '#ef4444'];
+                } else if (isTempDrop) {
+                    shapChart.data.datasets[0].data = [0.1, 0.3, 0.9, 0.2]; // Temp dominates
+                    shapChart.data.datasets[0].backgroundColor = ['#d6d3d1', '#d6d3d1', '#ef4444', '#d6d3d1'];
+                }
+            } else {
+                kpiVFA.className = "text-3xl font-bold mt-2 text-amber-500";
+                statusDiv.className = "mt-4 md:mt-0 px-5 py-2 rounded-full bg-amber-700/15 border border-amber-600 text-amber-500 font-semibold flex items-center gap-2 shadow-[0_0_15px_rgba(16,185,129,0.2)]";
+                statusDiv.innerHTML = `<span class="w-2.5 h-2.5 rounded-full bg-amber-500 animate-pulse"></span> System Stable`;
+                vfaChart.data.datasets[0].borderColor = '#d97706'; 
+                vfaChart.data.datasets[0].backgroundColor = 'rgba(16, 185, 129, 0.05)';
+                
+                // Normal SHAP
+                shapChart.data.datasets[0].data = [0.3, 0.4, 0.2, 0.1];
+                shapChart.data.datasets[0].backgroundColor = ['#d6d3d1', '#d6d3d1', '#d6d3d1', '#d6d3d1'];
+            }
+
+            // Update Charts
+            methaneChart.update();
+            vfaChart.update();
+            shapChart.update();
+
+            time++;
+        }
+
+        // --- Controls ---
+        function triggerOLRShock() {
+            isOLRShock = true;
+            isTempDrop = false;
+            shockTimer = 30; // Last for 30 ticks
+            
+            // Automatically switch to monitoring view to see the effect
+            document.querySelector('button[onclick*="view-monitoring"]').click();
+        }
+
+        function triggerTempDrop() {
+            isTempDrop = true;
+            isOLRShock = false;
+            shockTimer = 30;
+            
+            // Automatically switch to monitoring view to see the effect
+            document.querySelector('button[onclick*="view-monitoring"]').click();
+        }
+
+        function resetSystem() {
+            isOLRShock = false;
+            isTempDrop = false;
+            shockTimer = 0;
+            // Clear arrays
+            dataActualCH4.fill(null);
+            dataPredictedCH4.fill(null);
+            dataVFA.fill(null);
+        }
+
+        // Pre-fill initial data so charts aren't empty
+        for(let i=0; i<MAX_DATAPOINTS; i++) {
+            updateSystem();
+        }
+
+        // Start real-time loop
+        setInterval(updateSystem, 1000);
+
+    </script>
+</body>
+</html>

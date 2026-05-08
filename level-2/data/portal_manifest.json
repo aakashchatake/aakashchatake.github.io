@@ -1,0 +1,163 @@
+{
+  "project": "GFIS Level 2",
+  "deployment": {
+    "recommended_public_url": "https://d2c2mw7lwtswdx.cloudfront.net/level-2/",
+    "alternate_path": "https://gfis.chatakeinnoworks.com/level-2/",
+    "status": "AWS CloudFront deployed; custom GFIS domain pending DNS cutover"
+  },
+  "api": {
+    "local_base_url": "http://127.0.0.1:8010",
+    "production_base_url": "https://y3kgjnwetp.us-east-1.awsapprunner.com",
+    "endpoints": [
+      "/health",
+      "/predict",
+      "/simulate",
+      "/plant-run",
+      "/soft-sensor",
+      "/optimize",
+      "/evaluate",
+      "/research/stress-tests"
+    ]
+  },
+  "library": [
+    {
+      "folder": "Project Outline",
+      "title": "GFIS Consolidated Abstract and Project Layout - Final",
+      "type": "BITS submission working master",
+      "status": "latest consolidated",
+      "href": "library/project-outline/GFIS_Consolidated_Abstract_Project_Layout_Final.pdf",
+      "docx": "library/project-outline/GFIS_Consolidated_Abstract_Project_Layout_Final.docx",
+      "source_path": "/Users/akashchatake/Downloads/MTech/Semester_4/Dissertation_Prepared_Files/04_Drafts_and_Working_Documents/03_Abstract/GFIS_Consolidated_Abstract_Project_Layout_Final.pdf"
+    },
+    {
+      "folder": "Project Outline",
+      "title": "GFIS BITS Abstract Outline - Upgraded Resource Draft",
+      "type": "abstract outline",
+      "status": "upgraded resource",
+      "href": "library/project-outline/GFIS_BITS_Abstract_Outline_Final_Upgraded.pdf",
+      "docx": "library/project-outline/GFIS_BITS_Abstract_Outline_Final_Upgraded.docx",
+      "source_path": "/Users/akashchatake/Downloads/MTech/Semester_4/Dissertation_Documentation/Initiall_Drafts/Resource/Gfis Bits Abstract Outline Final.pdf"
+    },
+    {
+      "folder": "Project Outline",
+      "title": "GFIS BITS Abstract and Project Outline",
+      "type": "submission",
+      "status": "prepared",
+      "href": "library/project-outline/GFIS_BITS_Abstract_Outline_Report_Final.pdf"
+    },
+    {
+      "folder": "Project Outline",
+      "title": "GFIS Final Abstract",
+      "type": "abstract",
+      "status": "prepared",
+      "href": "library/project-outline/GFIS_Final_Abstract_Powerful.pdf"
+    },
+    {
+      "folder": "Journal Paper",
+      "title": "GFIS Springer Manuscript Draft v01",
+      "type": "journal manuscript",
+      "status": "paper resource",
+      "href": "library/journal-paper/GFIS_Springer_Manuscript_Draft_v01.pdf",
+      "docx": "library/journal-paper/GFIS_Springer_Manuscript_Draft_v01.docx",
+      "source_path": "/Users/akashchatake/Downloads/MTech/Semester_4/Dissertation_Documentation/Dissertation_Paper/Resource/GFIS_Springer_Manuscript_Draft_v01.pdf"
+    },
+    {
+      "folder": "Journal Paper",
+      "title": "GFIS Springer Manuscript Package v01",
+      "type": "submission package",
+      "status": "paper resource",
+      "href": "library/journal-paper/GFIS_Springer_Manuscript_Package_v01.zip",
+      "source_path": "/Users/akashchatake/Downloads/MTech/Semester_4/Dissertation_Documentation/Dissertation_Paper/Resource/GFIS_Springer_Manuscript_Package_v01.zip"
+    },
+    {
+      "folder": "Booklet and Publication Blueprint",
+      "title": "GFIS Publication-Quality Deliverable Blueprint",
+      "type": "research blueprint",
+      "status": "upgraded resource",
+      "href": "library/booklet-blueprint/GFIS_Publication_Quality_Deliverable_Blueprint.pdf",
+      "docx": "library/booklet-blueprint/GFIS_Publication_Quality_Deliverable_Blueprint.docx",
+      "source_path": "/Users/akashchatake/Downloads/MTech/Semester_4/Dissertation_Documentation/Initiall_Drafts/Resource/GFIS Publication-Quality Deliverable Blueprint.pdf"
+    },
+    {
+      "folder": "Booklet and Publication Blueprint",
+      "title": "GFIS Dissertation Booklet",
+      "type": "booklet",
+      "status": "working draft",
+      "href": "library/booklet-blueprint/GFIS_Dissertation_Booklet_latest_from_downloads.pdf"
+    },
+    {
+      "folder": "BITS Templates",
+      "title": "BITS Sample Project Abstract Outline Report",
+      "type": "BITS sample template",
+      "status": "reference",
+      "href": "library/bits-templates/BITS_Sample_Project_Abstract_Outline_Report.pdf"
+    },
+    {
+      "folder": "Research Reports",
+      "title": "GFIS Dissertation Research Report",
+      "type": "research report",
+      "status": "prepared",
+      "href": "library/reports/GFIS_Dissertation_Research_Report.pdf"
+    },
+    {
+      "folder": "Presentations",
+      "title": "GFIS Dissertation Presentation",
+      "type": "presentation",
+      "status": "prepared",
+      "href": "library/presentations/GFIS_Dissertation_Presentation.pdf"
+    },
+    {
+      "folder": "Research Reports",
+      "title": "GFIS Demo Evidence",
+      "type": "evidence",
+      "status": "prepared",
+      "source_path": "/Users/akashchatake/Downloads/MTech/Semester_4/Dissertation_Prepared_Files/04_Drafts_and_Working_Documents/05_Implementation/GFIS_Project/reports/demo_evidence.md"
+    },
+    {
+      "folder": "Research Reports",
+      "title": "GFIS Research Scenario Experiments",
+      "type": "experiment report",
+      "status": "prepared",
+      "source_path": "/Users/akashchatake/Downloads/MTech/Semester_4/Dissertation_Prepared_Files/04_Drafts_and_Working_Documents/05_Implementation/GFIS_Project/reports/research_scenario_experiments.md"
+    },
+    {
+      "folder": "Project Outline",
+      "title": "GFIS 16 Week Execution Plan",
+      "type": "planning",
+      "status": "prepared",
+      "source_path": "/Users/akashchatake/Downloads/MTech/Semester_4/Dissertation_Prepared_Files/04_Drafts_and_Working_Documents/05_Implementation/GFIS_Project/docs/research_16_week_execution_plan.md"
+    }
+  ],
+  "folders": [
+    {
+      "id": "project-outline",
+      "title": "Project Outline",
+      "description": "BITS abstract, project layout, final abstract and outline resources."
+    },
+    {
+      "id": "journal-paper",
+      "title": "Journal Paper",
+      "description": "Springer manuscript draft and submission package resources."
+    },
+    {
+      "id": "booklet-blueprint",
+      "title": "Booklet and Publication Blueprint",
+      "description": "GFIS booklet draft and publication-quality deliverable blueprint."
+    },
+    {
+      "id": "bits-templates",
+      "title": "BITS Templates",
+      "description": "Official/sample BITS outline templates and reference formats."
+    },
+    {
+      "id": "reports",
+      "title": "Research Reports",
+      "description": "GFIS dissertation research reports and evidence outputs."
+    },
+    {
+      "id": "presentations",
+      "title": "Presentations",
+      "description": "Rendered presentation decks and viva support material."
+    }
+  ]
+}
