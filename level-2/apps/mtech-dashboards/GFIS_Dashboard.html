@@ -42,11 +42,35 @@
             from { opacity: 0; transform: translateY(5px); }
             to { opacity: 1; transform: translateY(0); }
         }
+        .gfis-return {
+            position: fixed;
+            top: 14px;
+            right: 18px;
+            z-index: 100;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            min-height: 38px;
+            padding: 8px 12px;
+            color: #f8fafc;
+            background: rgba(10, 10, 9, 0.9);
+            border: 1px solid rgba(217, 119, 6, 0.42);
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0;
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
+        }
+        .gfis-return:hover { background: rgba(24, 24, 23, 0.96); color: #fff7ed; }
+        @media (max-width: 760px) {
+            .gfis-return { position: static; margin: 10px 10px 0 auto; width: fit-content; }
+        }
     </style>
     <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
     <meta name="theme-color" content="#10100f">
 </head>
 <body class="h-screen flex flex-col md:flex-row">
+    <a class="gfis-return" href="../../../" aria-label="Return to GFIS Level 2">GFIS Level 2</a>
 
     <!-- Sidebar -->
     <aside class="w-full md:w-64 glass-panel border-r border-gray-800 flex flex-col p-4 m-2">

@@ -93,15 +93,11 @@
                     </div>
                 </div>
             </div>
-            <nav class="hidden lg:flex items-center gap-2 text-xs font-bold uppercase tracking-wide">
-                <a class="px-3 py-2 rounded border border-zinc-700 text-zinc-200 hover:bg-zinc-900" href="../../../">GFIS Home</a>
-                <a class="px-3 py-2 rounded border border-zinc-700 text-zinc-200 hover:bg-zinc-900" href="../../">Level 2</a>
-                <a class="px-3 py-2 rounded border border-zinc-700 text-zinc-200 hover:bg-zinc-900" href="index.html">Control Room</a>
-            </nav>
-            <div class="hidden xl:flex flex-col text-right text-xs text-slate-400 border-l border-slate-700 pl-4 py-1">
+            <div class="hidden lg:flex flex-col text-right text-xs text-slate-400 border-l border-slate-700 pl-4 py-1">
                 <span class="font-bold text-slate-200">Candidate: <span class="text-zinc-100 font-mono">Akash Shivadas Chatake</span></span>
                 <span>ID: 2024AB05226</span>
                 <span class="mt-1">Supervisor: Dr. Dipti Jadhav</span>
+                <span class="mt-1 text-orange-400">PIML framing credit: Prof. Mohana Murali G</span>
             </div>
         </div>
     </header>
@@ -162,6 +158,94 @@
                 <!-- Progress Line -->
                 <div class="w-full bg-slate-900 h-1 mt-4 rounded overflow-hidden">
                     <div id="simProgressBar" class="bg-gradient-to-r from-zinc-600 to-orange-600 h-full w-0 transition-all duration-75"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Control-room linked process variables -->
+        <section class="bg-[#11100f] border border-zinc-800 rounded-xl p-5">
+            <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4 mb-4">
+                <div>
+                    <h3 class="text-sm font-mono text-orange-500 uppercase tracking-widest mb-2">Control Room Scenario Link</h3>
+                    <h2 class="text-xl font-bold text-zinc-100">Process Variable Coordinator</h2>
+                    <p class="text-xs text-zinc-400 mt-1 max-w-3xl">
+                        Values can be imported from the Model Control Room or adjusted here during the 48-hour run. The simulator recalculates VFA/ALK risk, methane quality, yield and warning behavior from these operating conditions.
+                    </p>
+                </div>
+                <div class="flex flex-wrap gap-2">
+                    <a href="index.html" class="bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 text-zinc-100 font-mono text-xs py-2.5 px-4 rounded">Back to Control Room</a>
+                    <button id="btnApplyScenario" class="bg-orange-700 hover:bg-orange-600 text-white font-mono text-xs py-2.5 px-4 rounded">Apply Variables</button>
+                    <button id="btnResetProcess" class="bg-zinc-800 hover:bg-zinc-700 text-zinc-100 font-mono text-xs py-2.5 px-4 rounded">Reset Process</button>
+                    <button id="btnExportSimCsv" class="bg-zinc-800 hover:bg-zinc-700 text-zinc-100 font-mono text-xs py-2.5 px-4 rounded">Export CSV</button>
+                    <button id="btnExportSimReport" class="bg-zinc-800 hover:bg-zinc-700 text-zinc-100 font-mono text-xs py-2.5 px-4 rounded">Export Report</button>
+                    <button id="btnResetSimMemory" class="bg-rose-900/70 hover:bg-rose-800 text-white font-mono text-xs py-2.5 px-4 rounded">Reset Memory</button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-6 gap-3" id="processControls">
+                <label class="bg-black/25 border border-zinc-800 rounded-lg p-3">
+                    <span class="block text-[10px] text-zinc-500 font-mono uppercase">Temperature</span>
+                    <input id="proc_temperature" type="range" min="25" max="45" step="0.1" class="range-slider mt-3">
+                    <strong id="proc_temperature_value" class="block text-zinc-100 mt-2 font-mono text-sm"></strong>
+                </label>
+                <label class="bg-black/25 border border-zinc-800 rounded-lg p-3">
+                    <span class="block text-[10px] text-zinc-500 font-mono uppercase">pH</span>
+                    <input id="proc_pH" type="range" min="6" max="8.5" step="0.1" class="range-slider mt-3">
+                    <strong id="proc_pH_value" class="block text-zinc-100 mt-2 font-mono text-sm"></strong>
+                </label>
+                <label class="bg-black/25 border border-zinc-800 rounded-lg p-3">
+                    <span class="block text-[10px] text-zinc-500 font-mono uppercase">OLR</span>
+                    <input id="proc_OLR" type="range" min="1" max="6.5" step="0.1" class="range-slider mt-3">
+                    <strong id="proc_OLR_value" class="block text-zinc-100 mt-2 font-mono text-sm"></strong>
+                </label>
+                <label class="bg-black/25 border border-zinc-800 rounded-lg p-3">
+                    <span class="block text-[10px] text-zinc-500 font-mono uppercase">HRT</span>
+                    <input id="proc_HRT" type="range" min="10" max="45" step="0.1" class="range-slider mt-3">
+                    <strong id="proc_HRT_value" class="block text-zinc-100 mt-2 font-mono text-sm"></strong>
+                </label>
+                <label class="bg-black/25 border border-zinc-800 rounded-lg p-3">
+                    <span class="block text-[10px] text-zinc-500 font-mono uppercase">TS</span>
+                    <input id="proc_TS" type="range" min="4" max="16" step="0.1" class="range-slider mt-3">
+                    <strong id="proc_TS_value" class="block text-zinc-100 mt-2 font-mono text-sm"></strong>
+                </label>
+                <label class="bg-black/25 border border-zinc-800 rounded-lg p-3">
+                    <span class="block text-[10px] text-zinc-500 font-mono uppercase">VS</span>
+                    <input id="proc_VS" type="range" min="2.5" max="13" step="0.1" class="range-slider mt-3">
+                    <strong id="proc_VS_value" class="block text-zinc-100 mt-2 font-mono text-sm"></strong>
+                </label>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mt-4 text-xs">
+                <div class="bg-black/25 border border-zinc-800 rounded-lg p-3">
+                    <span class="block text-zinc-500 font-mono uppercase text-[10px]">Imported state</span>
+                    <strong id="linkedScenarioStatus" class="block text-zinc-100 mt-1">Standalone simulator mode</strong>
+                </div>
+                <div class="bg-black/25 border border-zinc-800 rounded-lg p-3">
+                    <span class="block text-zinc-500 font-mono uppercase text-[10px]">Expected VFA pressure</span>
+                    <strong id="linkedRiskStatus" class="block text-zinc-100 mt-1">Stable tendency</strong>
+                </div>
+                <div class="bg-black/25 border border-zinc-800 rounded-lg p-3">
+                    <span class="block text-zinc-500 font-mono uppercase text-[10px]">Digital twin meaning</span>
+                    <strong class="block text-zinc-100 mt-1">Control decisions alter simulated plant behavior.</strong>
+                </div>
+            </div>
+
+            <div class="mt-4 bg-black/25 border border-zinc-800 rounded-lg overflow-hidden">
+                <div class="px-3 py-2 border-b border-zinc-800 flex justify-between items-center">
+                    <span class="text-[10px] text-zinc-500 font-mono uppercase">Simulation Memory</span>
+                    <strong id="simMemoryCount" class="text-xs text-zinc-200">0 records</strong>
+                </div>
+                <div class="max-h-44 overflow-y-auto terminal-scroll">
+                    <table class="w-full text-[10px] font-mono">
+                        <thead class="bg-zinc-950 text-zinc-400 sticky top-0">
+                            <tr>
+                                <th class="text-left p-2">Time</th>
+                                <th class="text-left p-2">Action</th>
+                                <th class="text-left p-2">State / Effect</th>
+                            </tr>
+                        </thead>
+                        <tbody id="simMemoryRows" class="text-zinc-300"></tbody>
+                    </table>
                 </div>
             </div>
         </section>
@@ -346,6 +430,20 @@
         
         const SIM_MAX_HOURS = 48;
         const TARGET_TEMP = 800;
+        const SCENARIO_KEY = 'gfis.linkedScenario.v1';
+        const SIM_MEMORY_KEY = 'gfis.industrialSimulator.memory.v1';
+        const processDefaults = {
+            temperature: 37,
+            pH: 7.1,
+            OLR: 3.2,
+            HRT: 25,
+            TS: 9,
+            VS: 6.8,
+            C_N_ratio: 25,
+            ambient_temperature: 28,
+            moisture: 82
+        };
+        let processState = { ...processDefaults };
         
         let engine = {
             active: false,
@@ -393,9 +491,27 @@
             metVfaIcon: document.getElementById('metVfaIcon'),
             metH2CO: document.getElementById('metH2CO'),
             metBiogas: document.getElementById('metBiogas'),
+            linkedScenarioStatus: document.getElementById('linkedScenarioStatus'),
+            linkedRiskStatus: document.getElementById('linkedRiskStatus'),
+            btnApplyScenario: document.getElementById('btnApplyScenario'),
+            btnResetProcess: document.getElementById('btnResetProcess'),
+            btnExportSimCsv: document.getElementById('btnExportSimCsv'),
+            btnExportSimReport: document.getElementById('btnExportSimReport'),
+            btnResetSimMemory: document.getElementById('btnResetSimMemory'),
+            simMemoryCount: document.getElementById('simMemoryCount'),
+            simMemoryRows: document.getElementById('simMemoryRows'),
             
             chartWarn: document.getElementById('chartWarnBg')
         };
+
+        const processControls = [
+            ['temperature', 'C'],
+            ['pH', ''],
+            ['OLR', 'kg VS/m3d'],
+            ['HRT', 'd'],
+            ['TS', '%'],
+            ['VS', '%']
+        ];
 
         // --- Chart.js Configuration ---
         let chartCatObj, chartBioObj;
@@ -449,6 +565,130 @@
         }
 
         // --- Core Math & Physics Simulation ---
+        function clamp(value, min, max) {
+            return Math.min(max, Math.max(min, value));
+        }
+
+        function processStress() {
+            const olrStress = Math.max(0, processState.OLR - 3.4) * 0.08;
+            const acidStress = Math.max(0, 6.95 - processState.pH) * 0.22;
+            const tempStress = Math.abs(processState.temperature - 37) * 0.012;
+            const hrtStress = Math.max(0, 22 - processState.HRT) * 0.012;
+            const solidsStress = Math.max(0, processState.TS - 11) * 0.018 + Math.max(0, processState.VS - 8) * 0.015;
+            return clamp(olrStress + acidStress + tempStress + hrtStress + solidsStress, 0, 0.55);
+        }
+
+        function methaneProcessFactor() {
+            const tempFactor = clamp(1 - Math.abs(processState.temperature - 37) / 18, 0.55, 1.05);
+            const phFactor = clamp(1 - Math.abs(processState.pH - 7.1) / 1.8, 0.45, 1.05);
+            const olrFactor = clamp(1 + (processState.OLR - 3.2) * 0.08, 0.75, 1.22);
+            const hrtFactor = clamp(processState.HRT / 25, 0.72, 1.18);
+            const substrateFactor = clamp(processState.VS / 6.8, 0.65, 1.35);
+            return tempFactor * phFactor * olrFactor * hrtFactor * substrateFactor;
+        }
+
+        function getSimMemory() {
+            try {
+                return JSON.parse(localStorage.getItem(SIM_MEMORY_KEY) || '[]');
+            } catch {
+                return [];
+            }
+        }
+
+        function setSimMemory(records) {
+            localStorage.setItem(SIM_MEMORY_KEY, JSON.stringify(records.slice(-700)));
+            renderSimMemory();
+        }
+
+        function compactProcessState() {
+            return `OLR ${processState.OLR.toFixed(1)}, pH ${processState.pH.toFixed(1)}, T ${processState.temperature.toFixed(1)}C, HRT ${processState.HRT.toFixed(1)}, TS ${processState.TS.toFixed(1)}, VS ${processState.VS.toFixed(1)}`;
+        }
+
+        function addSimMemory(action, simState = null, effect = '') {
+            const records = getSimMemory();
+            records.push({
+                timestamp: new Date().toISOString(),
+                sim_hour: Number(engine.time.toFixed(2)),
+                action,
+                process_state: { ...processState },
+                sim_state: simState,
+                effect: effect || compactProcessState()
+            });
+            setSimMemory(records);
+        }
+
+        function renderSimMemory() {
+            const records = getSimMemory().slice().reverse();
+            if (!ui.simMemoryRows || !ui.simMemoryCount) return;
+            ui.simMemoryCount.textContent = `${records.length} records`;
+            ui.simMemoryRows.innerHTML = records.slice(0, 45).map((r) => {
+                const s = r.sim_state;
+                const effect = s
+                    ? `${r.effect} | CH4 ${Number(s.ch4).toFixed(2)} | VFA ${Number(s.vfa).toFixed(2)} | quality ${Number(s.qual).toFixed(1)}%`
+                    : r.effect;
+                return `<tr class="border-b border-zinc-900">
+                    <td class="p-2">${new Date(r.timestamp).toLocaleTimeString()} / h${r.sim_hour}</td>
+                    <td class="p-2">${r.action}</td>
+                    <td class="p-2">${effect}</td>
+                </tr>`;
+            }).join('');
+        }
+
+        function downloadSimFile(filename, mime, content) {
+            const blob = new Blob([content], { type: mime });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = filename;
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            URL.revokeObjectURL(url);
+        }
+
+        function exportSimCsv() {
+            const records = getSimMemory();
+            const header = ['timestamp','sim_hour','action','temperature','pH','OLR','HRT','TS','VS','ch4','vfa','quality','effect'];
+            const csv = [header.join(',')].concat(records.map((r) => {
+                const values = [
+                    r.timestamp, r.sim_hour, r.action,
+                    r.process_state.temperature, r.process_state.pH, r.process_state.OLR, r.process_state.HRT, r.process_state.TS, r.process_state.VS,
+                    r.sim_state?.ch4 ?? '', r.sim_state?.vfa ?? '', r.sim_state?.qual ?? '', r.effect
+                ];
+                return values.map((v) => `"${String(v).replaceAll('"','""')}"`).join(',');
+            })).join('\\n');
+            downloadSimFile(`gfis-industrial-simulation-memory-${Date.now()}.csv`, 'text/csv', csv);
+        }
+
+        function exportSimReport() {
+            const records = getSimMemory();
+            const critical = records.filter((r) => Number(r.sim_state?.vfa || 0) >= 0.4).length;
+            const report = [
+                '# GFIS Industrial Simulator Run Report',
+                '',
+                `Generated: ${new Date().toLocaleString()}`,
+                `Records: ${records.length}`,
+                `Critical VFA records: ${critical}`,
+                '',
+                '## Current process state',
+                compactProcessState(),
+                '',
+                '## Interpretation',
+                'This report records the 48-hour simulator memory generated by process-variable changes and accelerated plant simulation. It captures how OLR, pH, temperature, HRT, TS and VS influence VFA/ALK pressure, methane yield and methane quality.',
+                '',
+                '## Records',
+                ...records.map((r, i) => `${i + 1}. h${r.sim_hour} | ${r.action} | ${r.effect}`)
+            ].join('\\n');
+            downloadSimFile(`gfis-industrial-simulation-report-${Date.now()}.md`, 'text/markdown', report);
+        }
+
+        function resetSimMemory() {
+            if (!confirm('Export required simulator data before reset. Clear simulator memory now?')) return;
+            localStorage.removeItem(SIM_MEMORY_KEY);
+            renderSimMemory();
+            logMsg('Simulator memory cleared by operator.', 'warn');
+        }
+
         function calculateState(t) {
             // 1. Thermal Ramp (Gasifier Cold Start takes ~5 hours)
             let temp = 25;
@@ -471,18 +711,21 @@
 
             // 4. Biological VFA/ALK (Anomaly generator)
             // Introduce a biological stress event around hour 24
-            let vfa = 0.12 + (Math.random() * 0.01 - 0.005);
+            const stress = processStress();
+            let vfa = 0.12 + stress + (Math.random() * 0.01 - 0.005);
             if (t > 24) {
                 // Logistic growth of VFA mimicking acid accumulation
-                vfa = 0.12 + (0.5 / (1 + Math.exp(-0.35 * (t - 32))));
+                vfa = 0.12 + stress + ((0.22 + stress * 0.85) / (1 + Math.exp(-0.35 * (t - 32))));
             }
+            vfa = clamp(vfa, 0.08, 0.82);
 
             // 5. Methane Yield (LSTM output bounded by physics)
             let ch4 = 0;
             let qual = 0;
             if (t > 8) { // Latency from gasifier to AD
-                ch4 = 2.85 + (Math.sin(t * 0.5) * 0.1); 
-                qual = 68.5 + (Math.random() * 2 - 1);
+                const factor = methaneProcessFactor();
+                ch4 = (2.85 + (Math.sin(t * 0.5) * 0.1)) * factor;
+                qual = (68.5 + (Math.random() * 2 - 1)) * clamp(0.9 + factor * 0.1, 0.82, 1.08);
                 
                 // Physics/Biological Constraint Check
                 if (vfa > 0.38) { // Acidogenic collapse
@@ -493,6 +736,87 @@
             }
 
             return { temp, eff, h2co, vfa, ch4, qual };
+        }
+
+        function readScenarioFromUrl() {
+            const params = new URLSearchParams(window.location.search);
+            let found = false;
+            Object.keys(processDefaults).forEach((key) => {
+                if (params.has(key)) {
+                    const value = Number(params.get(key));
+                    if (Number.isFinite(value)) {
+                        processState[key] = value;
+                        found = true;
+                    }
+                }
+            });
+            return found;
+        }
+
+        function readScenarioFromStorage() {
+            try {
+                const raw = localStorage.getItem(SCENARIO_KEY);
+                if (!raw) return false;
+                const payload = JSON.parse(raw);
+                if (!payload || !payload.state) return false;
+                Object.keys(processDefaults).forEach((key) => {
+                    if (Number.isFinite(Number(payload.state[key]))) {
+                        processState[key] = Number(payload.state[key]);
+                    }
+                });
+                return payload;
+            } catch {
+                return false;
+            }
+        }
+
+        function updateProcessControls() {
+            processControls.forEach(([key, unit]) => {
+                const input = document.getElementById(`proc_${key}`);
+                const label = document.getElementById(`proc_${key}_value`);
+                if (!input || !label) return;
+                input.value = processState[key];
+                label.textContent = `${Number(processState[key]).toFixed(key === 'pH' ? 1 : 1)} ${unit}`;
+            });
+            const stress = processStress();
+            const risk = stress > 0.35 ? 'Critical tendency' : stress > 0.18 ? 'Warning tendency' : 'Stable tendency';
+            if (ui.linkedRiskStatus) ui.linkedRiskStatus.textContent = `${risk} | stress index ${stress.toFixed(2)}`;
+        }
+
+        function installProcessControlHandlers() {
+            processControls.forEach(([key, unit]) => {
+                const input = document.getElementById(`proc_${key}`);
+                const label = document.getElementById(`proc_${key}_value`);
+                if (!input || !label) return;
+                input.addEventListener('input', (event) => {
+                    processState[key] = Number(event.target.value);
+                    label.textContent = `${processState[key].toFixed(1)} ${unit}`;
+                    updateProcessControls();
+                    updateUI(calculateState(engine.time), engine.time);
+                });
+            });
+        }
+
+        function applyScenarioSource() {
+            const fromUrl = readScenarioFromUrl();
+            const fromStorage = fromUrl ? false : readScenarioFromStorage();
+            if (ui.linkedScenarioStatus) {
+                if (fromUrl) {
+                    ui.linkedScenarioStatus.textContent = 'Imported from control room URL handoff';
+                } else if (fromStorage) {
+                    ui.linkedScenarioStatus.textContent = `Imported from ${fromStorage.source || 'control room storage'}`;
+                } else {
+                    ui.linkedScenarioStatus.textContent = 'Standalone simulator mode';
+                }
+            }
+            updateProcessControls();
+        }
+
+        function resetProcessState() {
+            processState = { ...processDefaults };
+            updateProcessControls();
+            updateUI(calculateState(engine.time), engine.time);
+            logMsg('Process variables reset to nominal mesophilic case.', 'info');
         }
 
         // --- Terminal Subsystem ---
@@ -634,6 +958,10 @@
                     chartBioObj.data.datasets[0].data = engine.hist.ch4;
                     chartBioObj.data.datasets[1].data = engine.hist.vfa;
                     chartBioObj.update();
+
+                    if (engine.hist.labels.length % 6 === 0 || state.vfa >= 0.4 || engine.time === SIM_MAX_HOURS) {
+                        addSimMemory('simulation sample', state, `h${engine.time.toFixed(1)} | ${compactProcessState()}`);
+                    }
                 }
             }
             requestAnimationFrame(updateLoop);
@@ -648,10 +976,12 @@
                 ui.btnMain.innerHTML = '&#9208; PAUSE INFERENCE';
                 ui.btnMain.className = 'w-full sm:w-48 bg-amber-600 hover:bg-amber-500 text-white font-mono text-sm py-3 px-4 rounded transition-colors flex justify-center items-center gap-2 shadow-[0_0_15px_rgba(217,119,6,0.3)]';
                 logMsg(`AI Engine Running. Stride: ${engine.speedMult.toLocaleString()}x`, 'ml');
+                addSimMemory('simulation started', calculateState(engine.time), `Started with ${compactProcessState()}`);
             } else {
                 ui.btnMain.innerHTML = '&#9654; RESUME';
                 ui.btnMain.className = 'w-full sm:w-44 bg-zinc-900 hover:bg-zinc-800 border border-orange-600/70 text-white font-mono text-sm py-3 px-4 rounded transition-colors flex justify-center items-center gap-2 shadow-[0_0_15px_rgba(249,115,22,0.22)]';
                 logMsg(`Execution halted by operator.`, 'warn');
+                addSimMemory('simulation paused', calculateState(engine.time), `Paused at h${engine.time.toFixed(1)}`);
             }
         });
 
@@ -675,7 +1005,21 @@
             ui.vfaTxt.className = "text-[10px] text-zinc-100 font-mono mt-1";
             
             updateUI(calculateState(0), 0);
+            addSimMemory('simulation reset', calculateState(0), 'Simulation clock reset; memory retained until exported/reset.');
         });
+
+        ui.btnApplyScenario.addEventListener('click', () => {
+            updateProcessControls();
+            const s = calculateState(engine.time);
+            updateUI(s, engine.time);
+            logMsg(`Operator applied process state: OLR=${processState.OLR.toFixed(1)}, pH=${processState.pH.toFixed(1)}, T=${processState.temperature.toFixed(1)}C.`, 'ml');
+            addSimMemory('process variables applied', s, `Operator changed process state: ${compactProcessState()}`);
+        });
+
+        ui.btnResetProcess.addEventListener('click', resetProcessState);
+        ui.btnExportSimCsv.addEventListener('click', exportSimCsv);
+        ui.btnExportSimReport.addEventListener('click', exportSimReport);
+        ui.btnResetSimMemory.addEventListener('click', resetSimMemory);
 
         // Speed Slider mapping (0-1000 slider maps to 1x - 10000x speed non-linearly)
         ui.slider.addEventListener('input', (e) => {
@@ -698,8 +1042,11 @@
                 console.error('GFIS industrial simulation controls failed to mount.');
                 return;
             }
+            installProcessControlHandlers();
+            applyScenarioSource();
             initCharts();
             updateUI(calculateState(0), 0);
+            renderSimMemory();
             requestAnimationFrame(updateLoop);
         });
     </script>

@@ -1,0 +1,181 @@
+{
+  "generated_at": "2026-05-05T18:24:35.392419+00:00",
+  "project_root": "/Users/akashchatake/Downloads/MTech/Semester_4/Dissertation_Prepared_Files/04_Drafts_and_Working_Documents/05_Implementation/GFIS_Project",
+  "dataset_files": {
+    "raw": "/Users/akashchatake/Downloads/MTech/Semester_4/Dissertation_Prepared_Files/04_Drafts_and_Working_Documents/05_Implementation/GFIS_Project/data/raw/synthetic_anaerobic_digestion.csv",
+    "processed": "/Users/akashchatake/Downloads/MTech/Semester_4/Dissertation_Prepared_Files/04_Drafts_and_Working_Documents/05_Implementation/GFIS_Project/data/processed/synthetic_anaerobic_digestion.csv"
+  },
+  "metrics": {
+    "lstm": {
+      "r2": 0.29416269063949585,
+      "rmse": 11.571170999126045,
+      "mae": 9.06853199005127
+    },
+    "tabular": {
+      "r2": 0.7556127423729537,
+      "rmse": 6.793285942119104,
+      "mae": 5.551657139502193
+    },
+    "ensemble": {
+      "r2": 0.7554224812122894,
+      "rmse": 6.811350835696742,
+      "mae": 5.569943568863635
+    },
+    "physics_guided_ensemble": {
+      "r2": 0.7554224812122894,
+      "rmse": 6.811350835696742,
+      "mae": 5.569943568863635
+    },
+    "physics_violation_count": 0,
+    "samples": 2400,
+    "epochs": 24,
+    "tabular_model": "XGBRegressor",
+    "ensemble_lstm_weight": 0.0,
+    "experiment_id": 3
+  },
+  "nominal_prediction": {
+    "methane_yield": 199.941,
+    "physics_upper_bound": 234.4,
+    "physics_violation": false,
+    "vfa_alk_ratio": 0.189,
+    "stability_label": "Stable"
+  },
+  "olr_sweep": [
+    {
+      "temperature": 37.0,
+      "pH": 7.1,
+      "OLR": 2.0,
+      "HRT": 25.0,
+      "TS": 9.0,
+      "VS": 6.8,
+      "C_N_ratio": 25.0,
+      "ambient_temperature": 28.0,
+      "moisture": 82.0,
+      "methane_yield_lag1": 200.0,
+      "methane_yield_roll3": 200.0,
+      "methane_yield": 199.711,
+      "physics_upper_bound": 234.4,
+      "physics_violation": false,
+      "vfa_alk_ratio": 0.176,
+      "stability_label": "Stable"
+    },
+    {
+      "temperature": 37.0,
+      "pH": 7.1,
+      "OLR": 2.8,
+      "HRT": 25.0,
+      "TS": 9.0,
+      "VS": 6.8,
+      "C_N_ratio": 25.0,
+      "ambient_temperature": 28.0,
+      "moisture": 82.0,
+      "methane_yield_lag1": 200.0,
+      "methane_yield_roll3": 200.0,
+      "methane_yield": 199.818,
+      "physics_upper_bound": 234.4,
+      "physics_violation": false,
+      "vfa_alk_ratio": 0.178,
+      "stability_label": "Stable"
+    },
+    {
+      "temperature": 37.0,
+      "pH": 7.1,
+      "OLR": 3.6,
+      "HRT": 25.0,
+      "TS": 9.0,
+      "VS": 6.8,
+      "C_N_ratio": 25.0,
+      "ambient_temperature": 28.0,
+      "moisture": 82.0,
+      "methane_yield_lag1": 200.0,
+      "methane_yield_roll3": 200.0,
+      "methane_yield": 200.621,
+      "physics_upper_bound": 234.4,
+      "physics_violation": false,
+      "vfa_alk_ratio": 0.226,
+      "stability_label": "Stable"
+    },
+    {
+      "temperature": 37.0,
+      "pH": 7.1,
+      "OLR": 4.4,
+      "HRT": 25.0,
+      "TS": 9.0,
+      "VS": 6.8,
+      "C_N_ratio": 25.0,
+      "ambient_temperature": 28.0,
+      "moisture": 82.0,
+      "methane_yield_lag1": 200.0,
+      "methane_yield_roll3": 200.0,
+      "methane_yield": 200.547,
+      "physics_upper_bound": 234.4,
+      "physics_violation": false,
+      "vfa_alk_ratio": 0.25,
+      "stability_label": "Stable"
+    },
+    {
+      "temperature": 37.0,
+      "pH": 7.1,
+      "OLR": 5.2,
+      "HRT": 25.0,
+      "TS": 9.0,
+      "VS": 6.8,
+      "C_N_ratio": 25.0,
+      "ambient_temperature": 28.0,
+      "moisture": 82.0,
+      "methane_yield_lag1": 200.0,
+      "methane_yield_roll3": 200.0,
+      "methane_yield": 200.805,
+      "physics_upper_bound": 234.4,
+      "physics_violation": false,
+      "vfa_alk_ratio": 0.306,
+      "stability_label": "Warning"
+    }
+  ],
+  "optimized_operating_point": {
+    "methane_yield": 202.143,
+    "physics_upper_bound": 234.4,
+    "physics_violation": false,
+    "vfa_alk_ratio": 0.257,
+    "stability_label": "Stable",
+    "temperature": 40.0,
+    "pH": 7.1,
+    "OLR": 4.6
+  },
+  "plant_trace_summary": {
+    "hours": 48,
+    "first_hour": {
+      "hour": 0,
+      "temperature": 37.0,
+      "pH": 7.1,
+      "OLR": 3.2,
+      "methane_yield": 199.941,
+      "physics_upper_bound": 234.4,
+      "physics_violation": false,
+      "vfa_alk_ratio": 0.189,
+      "stability_label": "Stable"
+    },
+    "last_hour": {
+      "hour": 47,
+      "temperature": 36.988,
+      "pH": 7.064,
+      "OLR": 3.204,
+      "methane_yield": 198.043,
+      "physics_upper_bound": 234.4,
+      "physics_violation": false,
+      "vfa_alk_ratio": 0.193,
+      "stability_label": "Stable"
+    },
+    "min_methane_yield": 198.043,
+    "max_methane_yield": 199.995,
+    "average_methane_yield": 199.342,
+    "stability_counts": {
+      "Stable": 48
+    }
+  },
+  "database_counts_after_run": {
+    "experiments": 3,
+    "predictions": 5943,
+    "simulations": 93
+  }
+}

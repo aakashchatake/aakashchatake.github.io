@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>GFIS Level 1 | Government Proposal Workbench</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="hero">
+      <nav>
+        <strong>GFIS Level 1</strong>
+        <a href="../GFIS_Control_Room_and_Industrial_Simulator_Local_Copy/index.html">Level 2 Control Room</a>
+        <a href="../../07_Level1_and_IP_Reference/GFIS_Level_1_Student_Project_Report_DIPEX_2026.pdf">DIPEX Report</a>
+        <a href="../../07_Level1_and_IP_Reference/GFIS_Copyright_Application_LD-12628_2026-CO.pdf">Copyright File</a>
+      </nav>
+      <section>
+        <p class="eyebrow">GreenFuel Intelligence System</p>
+        <h1>AI-Driven Biogas Infrastructure Planning for District, State and National Deployment</h1>
+        <p class="lead">
+          Level 1 explains GFIS as a government-scale planning system: where to place plants, how to cluster villages, how to estimate methane potential, and how to monitor rural waste-to-energy infrastructure.
+        </p>
+        <div class="hero-actions">
+          <button id="runPlanner">Run ML Location Planner</button>
+          <button id="exportProposal">Export Proposal Note</button>
+          <button id="resetPlanner">Reset</button>
+        </div>
+      </section>
+    </header>
+
+    <main>
+      <section class="grid metrics">
+        <article><span>Vision</span><strong>10,000+ plants</strong><p>Scalable rural biogas network planning.</p></article>
+        <article><span>District case</span><strong>Solapur</strong><p>Hub-and-spoke model with village clusters.</p></article>
+        <article><span>ML modules</span><strong>GIS + K-Means + XGBoost</strong><p>Location, yield and operations intelligence.</p></article>
+        <article><span>IP status</span><strong>GFIS copyright file present</strong><p>Application and acknowledgement copied into this pack.</p></article>
+      </section>
+
+      <section class="split">
+        <article class="panel">
+          <p class="eyebrow">Level 1 Concept</p>
+          <h2>National plant distribution engine</h2>
+          <p>
+            The Level 1 student project frames GFIS as an AI-driven planning system for rural Maharashtra and national expansion. It combines geospatial AI, methane-yield ML, computer vision feedstock classification and IoT monitoring.
+          </p>
+          <ul>
+            <li>Identify high-feedstock villages and taluka clusters.</li>
+            <li>Score candidate sites using livestock, crop waste, roads, grid, water and market access.</li>
+            <li>Run K-Means clustering for hub/spoke distribution.</li>
+            <li>Estimate methane and carbon-credit potential for each plant cluster.</li>
+            <li>Send operational plants into Level 2 PIML monitoring.</li>
+          </ul>
+        </article>
+        <article class="panel">
+          <p class="eyebrow">Suitability Model</p>
+          <h2>Plant Viability Score</h2>
+          <div class="formula">Score = 0.40F + 0.25I + 0.20E + 0.15V</div>
+          <p>
+            F = feedstock availability, I = infrastructure access, E = economics, V = environmental suitability. This is the planning layer before the Level 2 reactor intelligence begins.
+          </p>
+          <div class="bars">
+            <label>Feedstock <input id="feedstock" type="range" min="0" max="100" value="82"></label>
+            <label>Infrastructure <input id="infra" type="range" min="0" max="100" value="74"></label>
+            <label>Economics <input id="economics" type="range" min="0" max="100" value="68"></label>
+            <label>Environment <input id="environment" type="range" min="0" max="100" value="79"></label>
+          </div>
+          <div class="scorebox"><span>Current viability</span><strong id="score">--</strong></div>
+        </article>
+      </section>
+
+      <section class="panel">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">ML Location Prediction</p>
+            <h2>Candidate plant clusters</h2>
+          </div>
+          <span id="plannerStatus">Awaiting run</span>
+        </div>
+        <div class="map-grid" id="clusterMap"></div>
+      </section>
+
+      <section class="split">
+        <article class="panel">
+          <p class="eyebrow">Government Proposal Story</p>
+          <h2>Business case</h2>
+          <p>
+            GFIS can be presented to government as a planning-and-monitoring platform: Level 1 selects where plants should be installed; Level 2 monitors and simulates plant operation; the legal/IP package protects GFIS software, brand and deployment logic.
+          </p>
+          <table>
+            <tr><th>Layer</th><th>Government value</th></tr>
+            <tr><td>Village GIS scoring</td><td>Objective plant placement and subsidy targeting</td></tr>
+            <tr><td>District hubs</td><td>Central monitoring of 50-200 plants per hub</td></tr>
+            <tr><td>ML yield forecasting</td><td>Energy planning and revenue estimation</td></tr>
+            <tr><td>IoT monitoring</td><td>Failure prevention, audit trail and service accountability</td></tr>
+            <tr><td>Carbon accounting</td><td>MRV-ready reporting for climate finance</td></tr>
+          </table>
+        </article>
+        <article class="panel">
+          <p class="eyebrow">IP and Copyright Position</p>
+          <h2>GFIS ownership documents</h2>
+          <p>
+            The pack includes GFIS copyright registration/application documents and author NOC copies from the legacy GreenWorks legal folder. Use this as evidence that GFIS is being treated as protected software/IP, while final legal claims should be checked by counsel.
+          </p>
+          <div class="doc-links">
+            <a href="../../07_Level1_and_IP_Reference/GFIS_Copyright_Application_LD-12628_2026-CO.pdf">Copyright application</a>
+            <a href="../../07_Level1_and_IP_Reference/GFIS_Copyright_Acknowledgement_Slip.pdf">Acknowledgement slip</a>
+            <a href="../../07_Level1_and_IP_Reference/GFIS_NOC_of_Author.pdf">Author NOC</a>
+            <a href="../../07_Level1_and_IP_Reference/GFIS_Level_1_Student_Project_Report_DIPEX_2026.pdf">Level 1 DIPEX report</a>
+          </div>
+        </article>
+      </section>
+
+      <section class="panel">
+        <p class="eyebrow">Generated proposal note</p>
+        <h2>Export-ready summary</h2>
+        <pre id="proposalNote"></pre>
+      </section>
+    </main>
+
+    <script src="planner.js"></script>
+  </body>
+</html>

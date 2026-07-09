@@ -17,6 +17,10 @@ const specs = [
 
 const controls = document.getElementById("controls");
 const state = {};
+const scenarioStorageKey = "gfis.linkedScenario.v1";
+const memoryStorageKey = "gfis.controlRoom.memory.v1";
+let lastPrediction = null;
+let lastStateSnapshot = null;
 
 function initControls() {
   specs.forEach(([key, label, min, max, value, unit]) => {
@@ -31,9 +35,12 @@ function initControls() {
     wrapper.querySelector("input").addEventListener("input", (event) => {
       state[key] = Number(event.target.value);
       document.getElementById(`${key}Value`).textContent = `${state[key]} ${unit}`;
+      recordParameterChange(key, Number(event.target.value));
+      publishScenario("Process variables updated");
       predict();
     });
   });
+  publishScenario("Initial process state ready");
 }
 
 async function api(path, options = {}) {
@@ -61,6 +68,150 @@ function fallbackPredict(input) {
     physics_violation: methane > bound,
     stability_label: vfa > 0.8 ? "Critical" : vfa > 0.4 ? "Warning" : "Stable"
   };
+}
+
+function getMemory() {
+  try {
+    return JSON.parse(localStorage.getItem(memoryStorageKey) || "[]");
+  } catch {
+    return [];
+  }
+}
+
+function setMemory(records) {
+  localStorage.setItem(memoryStorageKey, JSON.stringify(records.slice(-300)));
+  renderMemory();
+}
+
+function compactState(input = state) {
+  return `T ${input.temperature?.toFixed?.(1) ?? input.temperature} C, pH ${input.pH?.toFixed?.(1) ?? input.pH}, OLR ${input.OLR?.toFixed?.(1) ?? input.OLR}, HRT ${input.HRT?.toFixed?.(1) ?? input.HRT}, TS ${input.TS?.toFixed?.(1) ?? input.TS}, VS ${input.VS?.toFixed?.(1) ?? input.VS}`;
+}
+
+function describeEffect(previous, current, result) {
+  const parts = [];
+  if (previous) {
+    ["OLR", "pH", "temperature", "HRT", "TS", "VS"].forEach((key) => {
+      const diff = current[key] - previous[key];
+      if (Math.abs(diff) >= 0.09) parts.push(`${key} ${diff > 0 ? "+" : ""}${diff.toFixed(1)}`);
+    });
+  }
+  if (result) {
+    parts.push(`CH4 ${Number(result.methane_yield).toFixed(2)}`);
+    parts.push(`VFA/ALK ${Number(result.vfa_alk_ratio).toFixed(3)}`);
+    parts.push(result.stability_label);
+    if (result.physics_violation) parts.push("physics violation");
+  }
+  return parts.length ? parts.join(" | ") : "Baseline state";
+}
+
+function addMemory(action, result = null, extra = {}) {
+  const records = getMemory();
+  const record = {
+    id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
+    timestamp: new Date().toISOString(),
+    action,
+    state: { ...state },
+    result,
+    effect: extra.effect || describeEffect(lastStateSnapshot, state, result),
+    notes: extra.notes || ""
+  };
+  records.push(record);
+  setMemory(records);
+  lastStateSnapshot = { ...state };
+  if (result) lastPrediction = result;
+}
+
+function recordParameterChange(key, value) {
+  if (!lastStateSnapshot) {
+    lastStateSnapshot = { ...state };
+    return;
+  }
+  const before = lastStateSnapshot[key];
+  if (before === undefined || Math.abs(value - before) < 0.09) return;
+  addMemory("Parameter changed", lastPrediction, {
+    effect: `${key} changed from ${Number(before).toFixed(1)} to ${Number(value).toFixed(1)}; next prediction/simulation records the response.`
+  });
+}
+
+function renderMemory() {
+  const records = getMemory().slice().reverse();
+  const rows = document.getElementById("memoryRows");
+  const count = document.getElementById("memoryCount");
+  const action = document.getElementById("latestAction");
+  const effect = document.getElementById("latestEffect");
+  if (!rows || !count || !action || !effect) return;
+  count.textContent = String(records.length);
+  action.textContent = records[0]?.action || "No runs yet";
+  effect.textContent = records[0]?.effect || "Waiting for parameter change";
+  rows.innerHTML = records.slice(0, 40).map((record) => {
+    const output = record.result
+      ? `CH4 ${Number(record.result.methane_yield).toFixed(2)}, VFA/ALK ${Number(record.result.vfa_alk_ratio).toFixed(3)}, ${record.result.stability_label || "state n/a"}`
+      : record.effect;
+    return `<tr>
+      <td>${new Date(record.timestamp).toLocaleString()}</td>
+      <td>${record.action}</td>
+      <td>${compactState(record.state)}</td>
+      <td>${output}<br><small>${record.notes || ""}</small></td>
+    </tr>`;
+  }).join("");
+}
+
+function downloadFile(filename, mime, content) {
+  const blob = new Blob([content], { type: mime });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = filename;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+}
+
+function exportMemoryJson() {
+  downloadFile(`gfis-control-room-memory-${Date.now()}.json`, "application/json", JSON.stringify(getMemory(), null, 2));
+}
+
+function exportMemoryCsv() {
+  const rows = getMemory();
+  const header = ["timestamp", "action", "temperature", "pH", "OLR", "HRT", "TS", "VS", "methane_yield", "vfa_alk_ratio", "stability_label", "effect"];
+  const csv = [header.join(",")].concat(rows.map((record) => {
+    const result = record.result || {};
+    return header.map((key) => {
+      const value = record.state?.[key] ?? result[key] ?? record[key] ?? "";
+      return `"${String(value).replaceAll('"', '""')}"`;
+    }).join(",");
+  })).join("\n");
+  downloadFile(`gfis-control-room-memory-${Date.now()}.csv`, "text/csv", csv);
+}
+
+function exportMemoryReport() {
+  const rows = getMemory();
+  const latest = rows.at(-1);
+  const warnings = rows.filter((r) => r.result?.stability_label && r.result.stability_label !== "Stable").length;
+  const report = [
+    "# GFIS Control Room Experiment Report",
+    "",
+    `Generated: ${new Date().toLocaleString()}`,
+    `Total records: ${rows.length}`,
+    `Warning/Critical records: ${warnings}`,
+    "",
+    "## Latest Run",
+    latest ? `- Action: ${latest.action}\n- State: ${compactState(latest.state)}\n- Effect: ${latest.effect}` : "No records available.",
+    "",
+    "## Interpretation",
+    "This local report captures operator parameter changes, model outputs, OLR sweeps, 48-hour trace runs and simulator handoffs. It is browser-local evidence for the digital-twin-ready workflow and can be exported before clearing memory.",
+    "",
+    "## Records",
+    ...rows.map((r, i) => `${i + 1}. ${r.timestamp} | ${r.action} | ${compactState(r.state)} | ${r.effect}`)
+  ].join("\n");
+  downloadFile(`gfis-control-room-report-${Date.now()}.md`, "text/markdown", report);
+}
+
+function resetMemory() {
+  if (!confirm("Export required data before reset. Clear all local GFIS control-room memory now?")) return;
+  localStorage.removeItem(memoryStorageKey);
+  renderMemory();
 }
 
 function fallbackSimulate(scenarios) {
@@ -117,21 +268,23 @@ function setStability(label) {
 }
 
 async function predict() {
+  let result;
   try {
-    const result = await api("/predict", { method: "POST", body: JSON.stringify(state) });
+    result = await api("/predict", { method: "POST", body: JSON.stringify(state) });
     document.getElementById("methaneMetric").textContent = result.methane_yield.toFixed(2);
     document.getElementById("boundMetric").textContent = result.physics_upper_bound.toFixed(2);
     document.getElementById("vfaMetric").textContent = result.vfa_alk_ratio.toFixed(3);
     document.getElementById("violationMetric").textContent = result.physics_violation ? "Yes" : "No";
     setStability(result.stability_label);
   } catch (error) {
-    const result = fallbackPredict(state);
+    result = fallbackPredict(state);
     document.getElementById("methaneMetric").textContent = result.methane_yield.toFixed(2);
     document.getElementById("boundMetric").textContent = result.physics_upper_bound.toFixed(2);
     document.getElementById("vfaMetric").textContent = result.vfa_alk_ratio.toFixed(3);
     document.getElementById("violationMetric").textContent = result.physics_violation ? "Yes" : "No";
     setStability(result.stability_label);
   }
+  addMemory("Prediction", result);
 }
 
 async function simulate() {
@@ -143,8 +296,11 @@ async function simulate() {
       body: JSON.stringify({ base: state, scenarios })
     });
     drawChart(outputs);
+    addMemory("What-if OLR sweep", outputs.at(-1), { notes: `${outputs.length} OLR scenarios evaluated.` });
   } catch {
-    drawChart(fallbackSimulate(scenarios));
+    const outputs = fallbackSimulate(scenarios);
+    drawChart(outputs);
+    addMemory("What-if OLR sweep", outputs.at(-1), { notes: `${outputs.length} fallback OLR scenarios evaluated.` });
   } finally {
     release();
   }
@@ -161,11 +317,14 @@ async function plantTrace() {
       OLR: `${item.hour}h`,
       methane_yield: item.methane_yield
     })));
+    addMemory("48h plant trace", outputs.at(-1), { notes: "48-hour API trace completed." });
   } catch {
-    drawChart(fallbackPlantTrace().filter((_, index) => index % 6 === 0).map((item) => ({
+    const outputs = fallbackPlantTrace();
+    drawChart(outputs.filter((_, index) => index % 6 === 0).map((item) => ({
       OLR: `${item.hour}h`,
       methane_yield: item.methane_yield
     })));
+    addMemory("48h plant trace", outputs.at(-1), { notes: "48-hour fallback trace completed." });
   } finally {
     release();
   }
@@ -183,6 +342,49 @@ function drawChart(outputs) {
     bar.innerHTML = `<span>${item.OLR}</span>`;
     chart.appendChild(bar);
   });
+}
+
+function scenarioPayload(reason = "Manual update") {
+  const payload = {
+    source: "GFIS Model Control Room",
+    reason,
+    updated_at: new Date().toISOString(),
+    state: { ...state },
+    interpretation: {
+      current_vfa_risk:
+        state.OLR >= 4.5 || state.pH < 6.8 ? "Warning/Critical tendency" : "Stable tendency",
+      expected_response:
+        "Industrial simulator will adjust acidification rate, methane projection, feed depletion and soft-sensor alarms from these variables."
+    }
+  };
+  const params = new URLSearchParams();
+  Object.entries(state).forEach(([key, value]) => params.set(key, String(value)));
+  payload.simulator_url = `industrial_simulation.html?${params.toString()}`;
+  return payload;
+}
+
+function publishScenario(reason) {
+  const payload = scenarioPayload(reason);
+  try {
+    localStorage.setItem(scenarioStorageKey, JSON.stringify(payload));
+  } catch {
+    // Local files can run in stricter browser contexts; query parameters still carry the state.
+  }
+  const status = document.getElementById("scenarioStatus");
+  if (status) {
+    status.textContent = `OLR ${state.OLR.toFixed(1)}, pH ${state.pH.toFixed(1)}, Temp ${state.temperature.toFixed(1)} C`;
+  }
+  const openLink = document.getElementById("openLinkedSimulator");
+  if (openLink) openLink.href = payload.simulator_url;
+  return payload;
+}
+
+function sendToIndustrialSimulator() {
+  const payload = publishScenario("Sent from control room");
+  addMemory("Sent to industrial simulator", lastPrediction, {
+    notes: `Simulator URL: ${payload.simulator_url}`
+  });
+  window.location.href = payload.simulator_url;
 }
 
 async function optimize() {
@@ -203,6 +405,7 @@ async function optimize() {
       input.dispatchEvent(new Event("input"));
     }
   });
+  addMemory("Optimization applied", lastPrediction, { notes: "Operating point updated by optimizer." });
 }
 
 async function loadEvaluation() {
@@ -221,9 +424,15 @@ async function loadEvaluation() {
 document.getElementById("runSimulation").addEventListener("click", simulate);
 document.getElementById("runPlantTrace").addEventListener("click", plantTrace);
 document.getElementById("optimize").addEventListener("click", optimize);
+document.getElementById("sendToIndustrial").addEventListener("click", sendToIndustrialSimulator);
+document.getElementById("exportCsv").addEventListener("click", exportMemoryCsv);
+document.getElementById("exportJson").addEventListener("click", exportMemoryJson);
+document.getElementById("exportReport").addEventListener("click", exportMemoryReport);
+document.getElementById("resetMemory").addEventListener("click", resetMemory);
 
 initControls();
 checkApi();
 predict();
 simulate();
 loadEvaluation();
+renderMemory();

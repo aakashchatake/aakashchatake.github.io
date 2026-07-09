@@ -16,11 +16,9 @@
     </header>
 
     <nav class="demo-nav" aria-label="GFIS demo views">
-      <a href="../../../">GFIS Home</a>
-      <a href="../../">Level 2 Home</a>
       <a href="index.html" aria-current="page">Model Control Room</a>
       <a href="industrial_simulation.html">Industrial 48h Simulation</a>
-      <a id="apiDocsLink" href="#">API Docs</a>
+      <a id="apiDocsLink" href="https://y3kgjnwetp.us-east-1.awsapprunner.com/docs">API Docs</a>
     </nav>
 
     <main class="layout">
@@ -93,9 +91,42 @@
             <p class="eyebrow">Scenario Simulation</p>
             <h2>What-if OLR Sweep</h2>
           </div>
-          <button id="runPlantTrace">Run 48h Plant Trace</button>
+          <div class="button-row">
+            <button id="runPlantTrace">Run 48h Plant Trace</button>
+            <button id="sendToIndustrial">Send to Industrial Simulator</button>
+          </div>
         </div>
+        <p class="helper-text">
+          This control room now acts as the coordinator. Process variables selected here are packaged as a scenario state and can be handed off to the 48-hour industrial simulator.
+        </p>
         <div class="chart" id="chart"></div>
+      </section>
+
+      <section class="wide-panel coordinator-panel">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Twin Coordinator</p>
+            <h2>Control Room to 48h Simulator Link</h2>
+          </div>
+          <a id="openLinkedSimulator" class="link-button" href="industrial_simulation.html">Open linked simulator</a>
+        </div>
+        <div class="coordinator-grid">
+          <article>
+            <span>Current state package</span>
+            <strong id="scenarioStatus">Waiting for process variables</strong>
+            <p>The simulator imports these values for OLR, pH, temperature, HRT, TS, VS, C/N, moisture and ambient temperature.</p>
+          </article>
+          <article>
+            <span>Operator workflow</span>
+            <strong>Adjust, publish, simulate</strong>
+            <p>Change process sliders, run a prediction, then send the same state into the industrial page to observe the 48-hour response.</p>
+          </article>
+          <article>
+            <span>Research interpretation</span>
+            <strong>Digital-twin-ready coordination</strong>
+            <p>This is not full IoT synchronization yet; it is a local cyber-physical handoff pattern that can later be replaced by live plant telemetry.</p>
+          </article>
+        </div>
       </section>
 
       <section class="wide-panel two-col">
@@ -116,9 +147,53 @@
           </ul>
         </div>
       </section>
+
+      <section class="wide-panel memory-panel">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Experiment Memory</p>
+            <h2>Run Logs, Parameter Effects and Export</h2>
+          </div>
+          <div class="button-row">
+            <button id="exportCsv">Export CSV</button>
+            <button id="exportJson">Export JSON</button>
+            <button id="exportReport">Export Report</button>
+            <button id="resetMemory">Reset Memory</button>
+          </div>
+        </div>
+        <p class="helper-text">
+          GFIS stores local experiment memory in this browser. Every prediction, optimization, OLR sweep, 48-hour trace and simulator handoff records the process variables, outputs and detected parameter effects.
+        </p>
+        <div class="memory-grid">
+          <article>
+            <span>Total records</span>
+            <strong id="memoryCount">0</strong>
+          </article>
+          <article>
+            <span>Latest action</span>
+            <strong id="latestAction">No runs yet</strong>
+          </article>
+          <article>
+            <span>Latest effect</span>
+            <strong id="latestEffect">Waiting for parameter change</strong>
+          </article>
+        </div>
+        <div class="memory-table-wrap">
+          <table class="memory-table">
+            <thead>
+              <tr>
+                <th>Time</th>
+                <th>Action</th>
+                <th>Process state</th>
+                <th>Output / effect</th>
+              </tr>
+            </thead>
+            <tbody id="memoryRows"></tbody>
+          </table>
+        </div>
+      </section>
     </main>
 
-    <script src="config.js"></script>
     <script src="app.js"></script>
   </body>
 </html>

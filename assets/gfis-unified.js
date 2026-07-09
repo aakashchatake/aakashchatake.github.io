@@ -22,3 +22,28 @@ const style = document.createElement("style");
 style.textContent = ".is-visible{opacity:1!important;transform:translateY(0)!important}";
 document.head.appendChild(style);
 
+const collaborationForm = document.querySelector("#collaborationForm");
+
+if (collaborationForm) {
+  collaborationForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const data = new FormData(collaborationForm);
+    const subject = encodeURIComponent(`GFIS Collaboration Inquiry - ${data.get("interest") || "General"}`);
+    const body = encodeURIComponent(
+      [
+        "GFIS collaboration/support inquiry",
+        "",
+        `Name: ${data.get("name") || ""}`,
+        `Email: ${data.get("email") || ""}`,
+        `Organization: ${data.get("organization") || ""}`,
+        `Interest area: ${data.get("interest") || ""}`,
+        "",
+        "Message:",
+        data.get("message") || "",
+        "",
+        "Submitted from gfis.chatakeinnoworks.com contact page."
+      ].join("\n")
+    );
+    window.location.href = `mailto:gfis@chatakeinnoworks.com?cc=greenworks@chatakeinnoworks.com,research@chatakeinnoworks.com&subject=${subject}&body=${body}`;
+  });
+}

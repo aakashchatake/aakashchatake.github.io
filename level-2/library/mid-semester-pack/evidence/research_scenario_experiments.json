@@ -1,0 +1,399 @@
+{
+  "generated_at": "2026-05-05T18:23:21.834539+00:00",
+  "hours_per_case": 48,
+  "case_count": 7,
+  "cases": [
+    {
+      "name": "Nominal mesophilic operation",
+      "research_purpose": "Reference condition for stable methane production.",
+      "inputs": {
+        "temperature": 37.0,
+        "pH": 7.1,
+        "OLR": 3.2,
+        "HRT": 25.0,
+        "TS": 9.0,
+        "VS": 6.8,
+        "C_N_ratio": 25.0,
+        "ambient_temperature": 28.0,
+        "moisture": 82.0,
+        "methane_yield_lag1": 200.0,
+        "methane_yield_roll3": 200.0
+      },
+      "point_prediction": {
+        "methane_yield": 199.941,
+        "physics_upper_bound": 234.4,
+        "physics_violation": false,
+        "vfa_alk_ratio": 0.189,
+        "stability_label": "Stable"
+      },
+      "trace_summary": {
+        "hours": 48,
+        "mean_methane_yield": 199.342,
+        "min_methane_yield": 198.043,
+        "max_methane_yield": 199.995,
+        "max_vfa_alk_ratio": 0.197,
+        "final_stability": "Stable",
+        "warning_or_critical_hours": 0,
+        "physics_violation_hours": 0
+      },
+      "first_hour": {
+        "hour": 0,
+        "temperature": 37.0,
+        "pH": 7.1,
+        "OLR": 3.2,
+        "methane_yield": 199.941,
+        "physics_upper_bound": 234.4,
+        "physics_violation": false,
+        "vfa_alk_ratio": 0.189,
+        "stability_label": "Stable"
+      },
+      "last_hour": {
+        "hour": 47,
+        "temperature": 36.988,
+        "pH": 7.064,
+        "OLR": 3.204,
+        "methane_yield": 198.043,
+        "physics_upper_bound": 234.4,
+        "physics_violation": false,
+        "vfa_alk_ratio": 0.193,
+        "stability_label": "Stable"
+      }
+    },
+    {
+      "name": "Organic overload",
+      "research_purpose": "Tests whether the soft sensor detects rising VFA/ALK risk under high organic loading.",
+      "inputs": {
+        "temperature": 37.0,
+        "pH": 7.1,
+        "OLR": 5.8,
+        "HRT": 25.0,
+        "TS": 9.0,
+        "VS": 6.8,
+        "C_N_ratio": 25.0,
+        "ambient_temperature": 28.0,
+        "moisture": 82.0,
+        "methane_yield_lag1": 202.0,
+        "methane_yield_roll3": 201.0
+      },
+      "point_prediction": {
+        "methane_yield": 201.86,
+        "physics_upper_bound": 234.4,
+        "physics_violation": false,
+        "vfa_alk_ratio": 0.331,
+        "stability_label": "Warning"
+      },
+      "trace_summary": {
+        "hours": 48,
+        "mean_methane_yield": 200.932,
+        "min_methane_yield": 200.499,
+        "max_methane_yield": 201.86,
+        "max_vfa_alk_ratio": 0.335,
+        "final_stability": "Warning",
+        "warning_or_critical_hours": 48,
+        "physics_violation_hours": 0
+      },
+      "first_hour": {
+        "hour": 0,
+        "temperature": 37.0,
+        "pH": 7.1,
+        "OLR": 5.8,
+        "methane_yield": 201.86,
+        "physics_upper_bound": 234.4,
+        "physics_violation": false,
+        "vfa_alk_ratio": 0.331,
+        "stability_label": "Warning"
+      },
+      "last_hour": {
+        "hour": 47,
+        "temperature": 36.988,
+        "pH": 7.064,
+        "OLR": 5.804,
+        "methane_yield": 200.784,
+        "physics_upper_bound": 234.4,
+        "physics_violation": false,
+        "vfa_alk_ratio": 0.332,
+        "stability_label": "Warning"
+      }
+    },
+    {
+      "name": "pH acidification shock",
+      "research_purpose": "Simulates acidification stress and checks whether methane prediction remains physics-bounded.",
+      "inputs": {
+        "temperature": 37.0,
+        "pH": 6.35,
+        "OLR": 4.8,
+        "HRT": 25.0,
+        "TS": 9.0,
+        "VS": 6.8,
+        "C_N_ratio": 25.0,
+        "ambient_temperature": 28.0,
+        "moisture": 82.0,
+        "methane_yield_lag1": 186.0,
+        "methane_yield_roll3": 190.0
+      },
+      "point_prediction": {
+        "methane_yield": 168.845,
+        "physics_upper_bound": 234.4,
+        "physics_violation": false,
+        "vfa_alk_ratio": 0.272,
+        "stability_label": "Stable"
+      },
+      "trace_summary": {
+        "hours": 48,
+        "mean_methane_yield": 152.935,
+        "min_methane_yield": 152.154,
+        "max_methane_yield": 168.732,
+        "max_vfa_alk_ratio": 0.284,
+        "final_stability": "Stable",
+        "warning_or_critical_hours": 0,
+        "physics_violation_hours": 0
+      },
+      "first_hour": {
+        "hour": 0,
+        "temperature": 37.0,
+        "pH": 6.35,
+        "OLR": 4.8,
+        "methane_yield": 168.732,
+        "physics_upper_bound": 234.4,
+        "physics_violation": false,
+        "vfa_alk_ratio": 0.271,
+        "stability_label": "Stable"
+      },
+      "last_hour": {
+        "hour": 47,
+        "temperature": 36.988,
+        "pH": 6.314,
+        "OLR": 4.804,
+        "methane_yield": 152.302,
+        "physics_upper_bound": 234.4,
+        "physics_violation": false,
+        "vfa_alk_ratio": 0.271,
+        "stability_label": "Stable"
+      }
+    },
+    {
+      "name": "Low-temperature disturbance",
+      "research_purpose": "Tests loss of mesophilic efficiency during a thermal disturbance.",
+      "inputs": {
+        "temperature": 30.0,
+        "pH": 7.1,
+        "OLR": 3.2,
+        "HRT": 25.0,
+        "TS": 9.0,
+        "VS": 6.8,
+        "C_N_ratio": 25.0,
+        "ambient_temperature": 20.0,
+        "moisture": 82.0,
+        "methane_yield_lag1": 182.0,
+        "methane_yield_roll3": 187.0
+      },
+      "point_prediction": {
+        "methane_yield": 182.792,
+        "physics_upper_bound": 234.4,
+        "physics_violation": false,
+        "vfa_alk_ratio": 0.219,
+        "stability_label": "Stable"
+      },
+      "trace_summary": {
+        "hours": 48,
+        "mean_methane_yield": 183.397,
+        "min_methane_yield": 182.792,
+        "max_methane_yield": 184.026,
+        "max_vfa_alk_ratio": 0.227,
+        "final_stability": "Stable",
+        "warning_or_critical_hours": 0,
+        "physics_violation_hours": 0
+      },
+      "first_hour": {
+        "hour": 0,
+        "temperature": 30.0,
+        "pH": 7.1,
+        "OLR": 3.2,
+        "methane_yield": 182.792,
+        "physics_upper_bound": 234.4,
+        "physics_violation": false,
+        "vfa_alk_ratio": 0.218,
+        "stability_label": "Stable"
+      },
+      "last_hour": {
+        "hour": 47,
+        "temperature": 29.988,
+        "pH": 7.064,
+        "OLR": 3.204,
+        "methane_yield": 183.386,
+        "physics_upper_bound": 234.4,
+        "physics_violation": false,
+        "vfa_alk_ratio": 0.218,
+        "stability_label": "Stable"
+      }
+    },
+    {
+      "name": "Reduced HRT washout risk",
+      "research_purpose": "Represents short retention time and potential biomass washout risk.",
+      "inputs": {
+        "temperature": 37.0,
+        "pH": 7.1,
+        "OLR": 4.6,
+        "HRT": 12.0,
+        "TS": 9.0,
+        "VS": 6.8,
+        "C_N_ratio": 25.0,
+        "ambient_temperature": 28.0,
+        "moisture": 82.0,
+        "methane_yield_lag1": 176.0,
+        "methane_yield_roll3": 184.0
+      },
+      "point_prediction": {
+        "methane_yield": 181.19,
+        "physics_upper_bound": 234.4,
+        "physics_violation": false,
+        "vfa_alk_ratio": 0.261,
+        "stability_label": "Stable"
+      },
+      "trace_summary": {
+        "hours": 48,
+        "mean_methane_yield": 194.579,
+        "min_methane_yield": 181.12,
+        "max_methane_yield": 196.161,
+        "max_vfa_alk_ratio": 0.278,
+        "final_stability": "Stable",
+        "warning_or_critical_hours": 0,
+        "physics_violation_hours": 0
+      },
+      "first_hour": {
+        "hour": 0,
+        "temperature": 37.0,
+        "pH": 7.1,
+        "OLR": 4.6,
+        "methane_yield": 181.12,
+        "physics_upper_bound": 234.4,
+        "physics_violation": false,
+        "vfa_alk_ratio": 0.262,
+        "stability_label": "Stable"
+      },
+      "last_hour": {
+        "hour": 47,
+        "temperature": 36.988,
+        "pH": 7.064,
+        "OLR": 4.604,
+        "methane_yield": 195.804,
+        "physics_upper_bound": 234.4,
+        "physics_violation": false,
+        "vfa_alk_ratio": 0.261,
+        "stability_label": "Stable"
+      }
+    },
+    {
+      "name": "High-solids feedstock",
+      "research_purpose": "Tests high TS/VS operation and the volatile-solids methane upper-bound layer.",
+      "inputs": {
+        "temperature": 37.0,
+        "pH": 7.1,
+        "OLR": 4.2,
+        "HRT": 25.0,
+        "TS": 14.0,
+        "VS": 11.0,
+        "C_N_ratio": 25.0,
+        "ambient_temperature": 28.0,
+        "moisture": 72.0,
+        "methane_yield_lag1": 210.0,
+        "methane_yield_roll3": 206.0
+      },
+      "point_prediction": {
+        "methane_yield": 211.753,
+        "physics_upper_bound": 268.0,
+        "physics_violation": false,
+        "vfa_alk_ratio": 0.236,
+        "stability_label": "Stable"
+      },
+      "trace_summary": {
+        "hours": 48,
+        "mean_methane_yield": 213.273,
+        "min_methane_yield": 211.753,
+        "max_methane_yield": 213.576,
+        "max_vfa_alk_ratio": 0.251,
+        "final_stability": "Stable",
+        "warning_or_critical_hours": 0,
+        "physics_violation_hours": 0
+      },
+      "first_hour": {
+        "hour": 0,
+        "temperature": 37.0,
+        "pH": 7.1,
+        "OLR": 4.2,
+        "methane_yield": 211.753,
+        "physics_upper_bound": 268.0,
+        "physics_violation": false,
+        "vfa_alk_ratio": 0.236,
+        "stability_label": "Stable"
+      },
+      "last_hour": {
+        "hour": 47,
+        "temperature": 36.988,
+        "pH": 7.064,
+        "OLR": 4.204,
+        "methane_yield": 213.291,
+        "physics_upper_bound": 268.0,
+        "physics_violation": false,
+        "vfa_alk_ratio": 0.236,
+        "stability_label": "Stable"
+      }
+    },
+    {
+      "name": "Corrective recovery operation",
+      "research_purpose": "Tests an operator intervention with lower OLR, higher HRT, and near-neutral pH.",
+      "inputs": {
+        "temperature": 37.0,
+        "pH": 7.25,
+        "OLR": 2.4,
+        "HRT": 32.0,
+        "TS": 9.0,
+        "VS": 6.8,
+        "C_N_ratio": 25.0,
+        "ambient_temperature": 28.0,
+        "moisture": 82.0,
+        "methane_yield_lag1": 196.0,
+        "methane_yield_roll3": 194.0
+      },
+      "point_prediction": {
+        "methane_yield": 196.944,
+        "physics_upper_bound": 234.4,
+        "physics_violation": false,
+        "vfa_alk_ratio": 0.15,
+        "stability_label": "Stable"
+      },
+      "trace_summary": {
+        "hours": 48,
+        "mean_methane_yield": 196.719,
+        "min_methane_yield": 196.476,
+        "max_methane_yield": 196.944,
+        "max_vfa_alk_ratio": 0.152,
+        "final_stability": "Stable",
+        "warning_or_critical_hours": 0,
+        "physics_violation_hours": 0
+      },
+      "first_hour": {
+        "hour": 0,
+        "temperature": 37.0,
+        "pH": 7.25,
+        "OLR": 2.4,
+        "methane_yield": 196.944,
+        "physics_upper_bound": 234.4,
+        "physics_violation": false,
+        "vfa_alk_ratio": 0.15,
+        "stability_label": "Stable"
+      },
+      "last_hour": {
+        "hour": 47,
+        "temperature": 36.988,
+        "pH": 7.214,
+        "OLR": 2.404,
+        "methane_yield": 196.678,
+        "physics_upper_bound": 234.4,
+        "physics_violation": false,
+        "vfa_alk_ratio": 0.149,
+        "stability_label": "Stable"
+      }
+    }
+  ]
+}

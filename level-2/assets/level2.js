@@ -169,7 +169,7 @@ function wireProtectedLinks() {
 }
 
 function configureRuntimeLinks() {
-  const streamlitUrl = window.GFIS_STREAMLIT_URL || "https://gfis-streamlit.chatakeinnoworks.com/";
+  const streamlitUrl = window.GFIS_STREAMLIT_URL || "https://ea4js82me5.us-east-1.awsapprunner.com/";
   document.querySelectorAll(".streamlit-link").forEach((link) => {
     link.href = streamlitUrl;
   });

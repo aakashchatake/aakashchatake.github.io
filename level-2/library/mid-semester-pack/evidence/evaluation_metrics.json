@@ -1,0 +1,28 @@
+{
+  "lstm": {
+    "r2": 0.29416269063949585,
+    "rmse": 11.571170999126045,
+    "mae": 9.06853199005127
+  },
+  "tabular": {
+    "r2": 0.7556127423729537,
+    "rmse": 6.793285942119104,
+    "mae": 5.551657139502193
+  },
+  "ensemble": {
+    "r2": 0.7554224812122894,
+    "rmse": 6.811350835696742,
+    "mae": 5.569943568863635
+  },
+  "physics_guided_ensemble": {
+    "r2": 0.7554224812122894,
+    "rmse": 6.811350835696742,
+    "mae": 5.569943568863635
+  },
+  "physics_violation_count": 0,
+  "samples": 2400,
+  "epochs": 24,
+  "tabular_model": "XGBRegressor",
+  "ensemble_lstm_weight": 0.0,
+  "experiment_id": 3
+}
